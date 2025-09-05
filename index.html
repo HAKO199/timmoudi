@@ -20,18 +20,154 @@
     img{max-width:100%;display:block}
 
     /* ====== Header / Navbar ====== */
-    .nav{position:sticky;top:0;z-index:50;background:linear-gradient( to right, rgba(20,26,47,.85), rgba(14,18,34,.85));backdrop-filter: blur(10px); border-bottom:1px solid rgba(255,255,255,.06)}
-    .container{max-width:1200px;margin-inline:auto;padding:14px 20px}
-    .nav__row{display:flex;align-items:center;gap:14px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
-    .brand__logo{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:conic-gradient(from 120deg, var(--accent), var(--accent2));box-shadow:0 6px 20px rgba(124,92,255,.35)}
-    .brand__text{font-size:20px}
-    .nav__links{display:flex;gap:14px;margin-inline-start:auto;flex-wrap:wrap}
-    .nav__link{padding:8px 12px;border-radius:12px;background:transparent;border:1px solid transparent}
-    .nav__link.active,.nav__link:hover{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
-    .nav__cta{margin-inline-start:8px}
-    .btn{cursor:pointer;user-select:none;border:0;border-radius:14px;padding:10px 14px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0b1020;box-shadow:0 10px 24px rgba(0,212,255,.25),0 10px 24px rgba(124,92,255,.25);transition:transform .15s ease}
-    .btn:hover{transform:translateY(-2px)}
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(to right, rgba(20,26,47,.85), rgba(14,18,34,.85));
+      backdrop-filter: blur(10px);
+      border-bottom: 1.5px solid rgba(124,92,255,.13);
+      box-shadow: 0 2px 24px rgba(124,92,255,.07);
+    }
+    .container {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding: 14px 20px;
+    }
+    .nav__row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 70px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      font-size: 1.7rem;
+      user-select: none;
+    }
+    .brand__logo {
+      width: 60px;
+      height: 60px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: conic-gradient(from 120deg, var(--accent), var(--accent2), var(--accent), #fff 80%);
+      box-shadow: 0 8px 32px rgba(124,92,255,.25), 0 2px 12px rgba(0,212,255,.10);
+      border: 2.5px solid #fff2;
+      overflow: hidden;
+      transition: transform .18s;
+    }
+    .brand__logo img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px #7c5cff44);
+    }
+    .brand__logo:hover {
+      transform: scale(1.07) rotate(-3deg);
+      box-shadow: 0 12px 36px rgba(124,92,255,.30);
+    }
+    .brand__text {
+      font-size: 2.1rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-shadow: 0 2px 8px #7c5cff22;
+    }
+    .nav__links {
+      display: flex;
+      gap: 18px;
+      margin-inline-start: auto;
+      flex-wrap: wrap;
+      font-size: 1.13rem;
+    }
+    .nav__link {
+      padding: 10px 16px;
+      border-radius: 14px;
+      background: transparent;
+      border: 1.5px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      transition: background .15s, border .15s, color .15s;
+      position: relative;
+    }
+    .nav__link.active,
+    .nav__link:hover {
+      border-color: rgba(124,92,255,.22);
+      background: linear-gradient(90deg,rgba(124,92,255,.10),rgba(0,212,255,.10));
+      color: var(--accent);
+      box-shadow: 0 2px 12px rgba(124,92,255,.07);
+    }
+    .nav__link::before {
+      content: attr(data-emoji);
+      margin-left: 4px;
+      font-size: 1.2em;
+      vertical-align: middle;
+      opacity: .85;
+      display: inline-block;
+      transition: transform .13s;
+    }
+    .nav__link.active::before,
+    .nav__link:hover::before {
+      transform: scale(1.15) rotate(-8deg);
+    }
+    .nav__cta {
+      margin-inline-start: 12px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(0,212,255,.13), 0 2px 8px rgba(124,92,255,.10);
+    }
+    .btn {
+      cursor: pointer;
+      user-select: none;
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 22px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b1020;
+      box-shadow: 0 10px 24px rgba(0,212,255,.18), 0 10px 24px rgba(124,92,255,.18);
+      transition: transform .15s, box-shadow .15s;
+      font-size: 1.1rem;
+      letter-spacing: .2px;
+    }
+    .btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 16px 32px rgba(124,92,255,.18);
+      filter: brightness(1.07);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 760px) {
+      .brand__logo { width: 40px; height: 40px; }
+      .brand__text { font-size: 1.3rem; }
+      .nav__row { min-height: 54px; gap: 10px; }
+      .nav__links { gap: 8px; font-size: 1rem; }
+      .btn { padding: 9px 14px; font-size: 1rem; }
+    }
+
+    /* ====== NEWS ====== */
+    .news-full{white-space:pre-wrap}
+    .comments{background:var(--bg1);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px;max-height:200px;overflow:auto}
+    .comment{border-bottom:1px solid rgba(255,255,255,.06);padding:6px 0}
+    .comment:last-child{border-bottom:0}
+    .comment strong{color:var(--accent)}
+    .comment p{margin:4px 0 0;opacity:.9;font-size:14px}
+    .comment time{font-size:12px;color:var(--muted)}
+      });
 
     /* ====== Hero ====== */
     .hero{padding:42px 20px 20px}
@@ -87,6 +223,134 @@
     @media (max-width: 1100px){ .card{grid-column:span 4} }
     @media (max-width: 760px){ .nav__links{display:none} .card{grid-column:span 6} .hero h1{font-size:22px} }
     @media (max-width: 520px){ .card{grid-column:span 12} }
+    <style>
+    :root{
+      --bg1:#0e1222; --bg2:#141a2f; --accent:#7c5cff; --accent2:#00d4ff; --card: rgba(255,255,255,.08);
+      --text:#f8f9fb; --muted:#cbd5e1;
+    }
+    body.light{
+      --bg1:#f4f6fc; --bg2:#fff; --card:rgba(0,0,0,.05);
+      --text:#1a1a1a; --muted:#444;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Tajawal',system-ui; background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--text);transition:background .3s,color .3s}
+    a{text-decoration:none;color:inherit}
+
+    .nav{position:sticky;top:0;z-index:50;background:linear-gradient(to right,rgba(20,26,47,.85),rgba(14,18,34,.85));backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .container{max-width:1200px;margin:auto;padding:14px 20px}
+    .nav__row{display:flex;align-items:center;gap:14px}
+    .brand{font-weight:800;font-size:20px}
+    .nav__links{display:flex;gap:14px;margin-inline-start:auto}
+    .nav__link{padding:8px 12px;border-radius:12px}
+    .btn{cursor:pointer;border:0;border-radius:12px;padding:8px 14px;font-weight:700}
+
+    /* login modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}
+    .modal.open{display:flex}
+    .modal__box{background:var(--bg2);padding:20px;border-radius:16px;max-width:320px;width:90%}
+    .modal__box h3{margin:0 0 12px}
+    .modal__box input{width:100%;margin:6px 0;padding:10px;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:var(--card);color:var(--text)}
+    .modal__box button{margin-top:10px;width:100%}
+
+    .toggle-theme{cursor:pointer;font-size:18px;margin-inline-start:8px}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav__row">
+      <div class="brand">🎯 تيمودي</div>
+      <div class="nav__links">
+        <a class="nav__link" href="#photos">📷 صور</a>
+        <a class="nav__link" href="#videos">🎬 فيديو</a>
+        <a class="nav__link" href="#news">📰 أخبار</a>
+      </div>
+      <div>
+        <span class="toggle-theme" id="themeToggle">🌙</span>
+        <button class="btn" id="loginBtn">تسجيل دخول</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="padding:40px 20px">
+    <div style="overflow:hidden;white-space:nowrap;">
+      <h1 class="rainbow-marquee">
+        مرحبا بك في <b>تيمودي</b>
+      </h1>
+    </div>
+  </div>
+  <style>
+  .rainbow-marquee {
+    display: inline-block;
+    font-size: 2.2rem;
+    font-weight: 900;
+    padding: 0.2em 1.5em;
+    background: linear-gradient(90deg, #ff005a, #ffae00, #00ffb2, #00c3ff, #7c5cff, #ff005a 60%);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: rainbow-move 3.5s linear infinite, marquee-move 12s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes rainbow-move {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+  @keyframes marquee-move {
+    0% { transform: translateX(100%);}
+    100% { transform: translateX(-100%);}
+  }
+  </style>
+
+  <!-- نافذة تسجيل الدخول -->
+  <div class="modal" id="loginModal">
+    <div class="modal__box">
+      <h3>تسجيل الدخول</h3>
+      <input type="text" id="username" placeholder="اسم المستخدم" />
+      <input type="email" id="email" placeholder="البريد الإلكتروني" />
+      <button class="btn" id="saveLogin">حفظ</button>
+    </div>
+  </div>
+
+  <script>
+    // === Theme toggle ===
+    const body=document.body;
+    const themeToggle=document.getElementById('themeToggle');
+    if(localStorage.getItem('theme')==='light'){body.classList.add('light');themeToggle.textContent='☀️';}
+    themeToggle.addEventListener('click',()=>{
+      body.classList.toggle('light');
+      const isLight=body.classList.contains('light');
+      themeToggle.textContent=isLight?'☀️':'🌙';
+      localStorage.setItem('theme',isLight?'light':'dark');
+    });
+
+    // === Login system ===
+    const loginBtn=document.getElementById('loginBtn');
+    const loginModal=document.getElementById('loginModal');
+    const saveLogin=document.getElementById('saveLogin');
+
+    const user=JSON.parse(localStorage.getItem('timodi_user')||'null');
+    if(user){ loginBtn.textContent=user.name; }
+
+    loginBtn.addEventListener('click',()=>{
+      if(localStorage.getItem('timodi_user')){ 
+        if(confirm("تسجيل الخروج؟")){ localStorage.removeItem('timodi_user'); location.reload(); }
+      } else {
+        loginModal.classList.add('open');
+      }
+    });
+    saveLogin.addEventListener('click',()=>{
+      const name=document.getElementById('username').value.trim();
+      const email=document.getElementById('email').value.trim();
+      if(!name||!email) return alert("املأ كل الحقول");
+      localStorage.setItem('timodi_user',JSON.stringify({name,email}));
+      loginBtn.textContent=name;
+      loginModal.classList.remove('open');
+    });
+    loginModal.addEventListener('click',e=>{if(e.target===loginModal) loginModal.classList.remove('open');});
+  </script>
+</body>
+</html>
   </style>
 </head>
 <body>
@@ -94,7 +358,9 @@
   <div class="nav">
     <div class="container nav__row">
       <div class="brand">
-        <div class="brand__logo">🎯</div>
+        <div class="brand__logo">
+            <img src="ChatGPT Image 2 sept. 2025, 17_35_50.png" alt="شعار منصة تيمودي - تصميم دائري ملون مع نص عربي تيمودي بخط عصري وجريء" />
+        </div>
         <div class="brand__text">تيمودي <span style="opacity:.6;font-weight:600">Timodi</span></div>
       </div>
       <div class="nav__links">
@@ -240,44 +506,113 @@
   <section id="news" class="section container">
     <div class="section__head"><h2>📰 الأخبار والمقالات</h2></div>
     <div class="section__grid">
-      <article class="card media-item" data-type="news" data-title="إطلاق لعبة جديدة">
-        <div class="card__media" style="aspect-ratio:16/9"><img src="https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375" alt="خبر"/></div>
-        <div class="card__body">
-          <div class="card__title"> بلدية تيمودي تستقبل أوّل وزير منذ عام 1962! </div>
-          <div class="meta">بقلم تيمودي · قبل 2 يوم</div>
-          <p style="opacity:.9;margin:.2rem 0 0"> أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.
-
-وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي.
-
-وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن. في زيارة تُعد “حدثا غير مسبوق” لِوزير إلى هذه البلدية.
-
-وثمّن وزير الشباب والرياضة سيد علي خالدي الطاقات الشبّانية الهائلة لِولاية بشار، ودعا المسؤولين المحلّيين لِضرورة الإرتفاع إلى مستوى تطلّعات هذه الثروة الحيوية للوطن.
-
-وإذا كان من حق الوزير الجديد للشباب والرياضة سيد علي خالدي أن يفتخر، بِكونه كسّر “طابو”، واخترق جدارا سميكا، بِزيارته لِبلدية تيمودي التابعة إداريا لِولاية بشار. فإن التساؤل يبقى قائما عن نوعية المناطق التي يتفقّدها الوزراء، وهل هناك انتقاء ومجاملة في الأمر، بِدون الحديث عن التوازن الجهوي والعدالة الإجتماعية وتكافؤ الفرص.
-
-وليست بلدية تيمودي وحدها مَنْ لم يزرها وزير، بل حتى بلديات مجاورة للعاصمة لم تنل نصيبها من هذا “الحق”. أليست بعض هذه المناطق لا يُلتفت إليها تنمويا، سوى بِاقتطاع حيّز من أراضيها الفلاحية أو البور، لِتشييد سكنات جديدة وتخفيف العبء عن العاصمة؟ ثم هل ارتاحت العاصمة فعلا بعد هذه السياسات المُتشابهة والمُتعاقبة؟ وهل جرّب وزير أن ينتقل يوميا عبر سيارته الخاصة، من مقر سكناه بِولاية مُجاورة للعاصمة إلى مقر عمله بِالعاصمة (صباحا للذهاب ومساءً للعودة)، ويُعايش ازدحام المرور واختناق المسالك المُستفزَّين، والضّغط النّفسي الرّهيب، والإحتراق البطيء للأعصاب؟ </p>
-          <div class="actions">
-            <button class="iconbtn like" data-id="n1">👍 <span>0</span></button>
-            <button class="iconbtn" onclick="openComments('n1')">💬 تعليقات</button>
+      <!-- خبر رئيسي -->
+      <article class="card media-item" data-type="news" data-title="إطلاق لعبة جديدة" style="overflow:visible;box-shadow:0 8px 32px rgba(124,92,255,.10)">
+        <div class="card__media" style="aspect-ratio:16/9;position:relative;">
+          <img src="https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375" alt="خبر" style="border-radius:12px 12px 0 0;object-fit:cover;width:100%;height:100%;">
+          <span style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(2px);padding:6px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px;">
+            🏛️ سياسة
+          </span>
+        </div>
+        <div class="card__body" style="padding-bottom:18px;">
+          <div class="card__title" style="font-size:18px;display:flex;align-items:center;gap:6px;">
+            🏅 بلدية تيمودي تستقبل أوّل وزير منذ عام 1962!
+          </div>
+          <div class="meta" style="margin-bottom:6px;">
+            ✍️ بقلم <b>تيمودي</b> · <span>قبل 2 يوم</span>
+          </div>
+          <p style="opacity:.95;margin:.2rem 0 0;max-height:2.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></p>
+            أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي...
+          </p>
+          <button class="iconbtn" onclick="toggleNews(this)" style="margin-top:8px">📖 قراءة المزيد</button>
+          <div class="news-full" style="display:none;opacity:.95;margin:.5rem 0 0;line-height:1.8">
+            أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.<br>
+            وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي.<br>
+            وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن.
+          </div>
+          <div class="actions" style="margin-top:10px;gap:12px">
+            <button class="iconbtn like" data-id="n1">👍 إعجاب <span>0</span></button>
+            <button class="iconbtn" onclick="openComments('n1')">💬 تعليق</button>
+            <span style="font-size:18px;opacity:.7">🗨️</span>
           </div>
           <div class="comments" id="c-n1" style="display:none;margin-top:10px"></div>
         </div>
       </article>
-      <article class="card media-item" data-type="news" data-title="تحديث ضخم">
-        <div class="card__media" style="aspect-ratio:16/9"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop" alt="تحديث"/></div>
-        <div class="card__body">
-          <div class="card__title">تحديث ضخم لمحرك اللعبة</div>
-          <div class="meta">#تقنية</div>
-          <div class="actions">
-            <b style="opacity:.9;margin:.2rem 0 0;">     </b>
-            <button class="iconbtn like" data-id="n2">👍 <span>0</span></button>
-            <button class="iconbtn" onclick="openComments('n2')">💬 تعليقات</button>
+      <!-- خبر ثانوي -->
+      <article class="card media-item" data-type="news" data-title="تحديث ضخم" style="overflow:visible;box-shadow:0 8px 32px rgba(0,212,255,.08)">
+        <div class="card__media" style="aspect-ratio:16/9;position:relative;">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop" alt="تحديث" style="border-radius:12px 12px 0 0;object-fit:cover;width:100%;height:100%;">
+          <span style="position:absolute;top:10px;left:10px;background:rgba(0,212,255,.15);backdrop-filter:blur(2px);padding:6px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px;">
+            🛠️ تقنية
+          </span>
+        </div>
+        <div class="card__body" style="padding-bottom:18px;">
+          <div class="card__title" style="font-size:18px;display:flex;align-items:center;gap:6px;">
+            🚀 تحديث ضخم لمحرك اللعبة
+          </div>
+          <div class="meta" style="margin-bottom:6px;">
+            🕹️ #تقنية · <span>اليوم</span>
+          </div>
+          <p style="opacity:.95;margin:.2rem 0 0;max-height:2.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            تم إصدار تحديث كبير لمحرك اللعبة مع تحسينات في الأداء ودعم ميزات جديدة...
+          </p>
+          <button class="iconbtn" onclick="toggleNews(this)" style="margin-top:8px">📖 قراءة المزيد</button>
+          <div class="news-full" style="display:none;opacity:.95;margin:.5rem 0 0;line-height:1.8">
+            تم إصدار تحديث كبير لمحرك اللعبة مع تحسينات في الأداء ودعم ميزات جديدة للمطورين. يشمل التحديث دعم رسومات أفضل، وتحسين الذكاء الاصطناعي، وزيادة الاستقرار في اللعب الجماعي.
+          </div>
+          <div class="actions" style="margin-top:10px;gap:12px">
+            <button class="iconbtn like" data-id="n2">👍 إعجاب <span>0</span></button>
+            <button class="iconbtn" onclick="openComments('n2')">💬 تعليق</button>
+            <span style="font-size:18px;opacity:.7">✨</span>
           </div>
           <div class="comments" id="c-n2" style="display:none;margin-top:10px"></div>
         </div>
       </article>
+      <!-- مثال لمقال إضافي -->
+      <article class="card media-item" data-type="news" data-title="مقال رأي" style="overflow:visible;box-shadow:0 8px 32px rgba(255,93,122,.08)">
+        <div class="card__media" style="aspect-ratio:16/9;position:relative;">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop" alt="مقال" style="border-radius:12px 12px 0 0;object-fit:cover;width:100%;height:100%;">
+          <span style="position:absolute;top:10px;left:10px;background:rgba(255,93,122,.15);backdrop-filter:blur(2px);padding:6px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px;">
+            📝 رأي
+          </span>
+        </div>
+        <div class="card__body" style="padding-bottom:18px;">
+          <div class="card__title" style="font-size:18px;display:flex;align-items:center;gap:6px;">
+            💡 مستقبل الألعاب في الجزائر
+          </div>
+          <div class="meta" style="margin-bottom:6px;">
+            ✍️ بقلم <b>سارة</b> · <span>قبل 5 ساعات</span>
+          </div>
+          <p style="opacity:.95;margin:.2rem 0 0;max-height:2.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            مع تطور التكنولوجيا، أصبح للألعاب الإلكترونية مستقبل واعد في الجزائر...
+          </p>
+          <button class="iconbtn" onclick="toggleNews(this)" style="margin-top:8px">📖 قراءة المزيد</button>
+          <div class="news-full" style="display:none;opacity:.95;margin:.5rem 0 0;line-height:1.8">
+            مع تطور التكنولوجيا، أصبح للألعاب الإلكترونية مستقبل واعد في الجزائر، حيث يزداد عدد اللاعبين والمطورين المحليين. الاستثمار في هذا المجال سيخلق فرص عمل جديدة ويعزز الاقتصاد الرقمي الوطني.
+          </div>
+          <div class="actions" style="margin-top:10px;gap:12px">
+            <button class="iconbtn like" data-id="n3">👍 إعجاب <span>0</span></button>
+            <button class="iconbtn" onclick="openComments('n3')">💬 تعليق</button>
+            <span style="font-size:18px;opacity:.7">🎮</span>
+          </div>
+          <div class="comments" id="c-n3" style="display:none;margin-top:10px"></div>
+        </div>
+      </article>
     </div>
   </section>
+      </article>
+    </div>
+  </section>
+  <script>
+    function toggleNews(btn) {
+      const full = btn.parentElement.querySelector('.news-full');
+      const short = btn.parentElement.querySelector('p');
+      const opened = full.style.display === 'block';
+      full.style.display = opened ? 'none' : 'block';
+      short.style.display = opened ? '' : 'none';
+      btn.textContent = opened ? '📖 قراءة المزيد' : '✖ إغلاق';
+    }
+  </script>
 
   <!-- ====== AUDIO ====== -->
   <section id="audio" class="section container">
@@ -343,7 +678,7 @@
         </div>
       </article>
     </div>
-    <small style="color:var(--muted)">ملاحظة: قد تحتاج لتعديل وسيطة <b>parent</b> في Twitch حسب الدومين الخاص بك.</small>
+    <small style="color:var(--muted)">ملاحظة: قد تحتاج  لمشاهدة بثوث ممتعة  <b>هنا </b>   حسب الدومين الخاص بك.</small>
   </section>
 
   <!-- ====== GAMES ====== -->
@@ -393,7 +728,7 @@
   <footer>
     <div class="container" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
       <div>© <span id="year"></span> تيمودي • Timodi</div>
-      <div>بُني بواجهات أنيقة وتأثيرات زجاجية — استبدل المحتوى بروابطك الحقيقية.</div>
+      <div> مرحبا بك في بلدية تيمودي  </div>
     </div>
   </footer>
 
