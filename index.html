@@ -764,161 +764,624 @@
     </div>
   </footer>
 
-  <script>
-    // ===== Year =====
-    document.getElementById('year').textContent = new Date().getFullYear();
+<script>
+const TimodiApp = {
+  likes: JSON.parse(localStorage.getItem("timodi_likes") || "{}"),
+  commentsDB: JSON.parse(localStorage.getItem("timodi_comments") || "{}"),
+  user: JSON.parse(localStorage.getItem("timodi_user") || "null"),
 
-    // ===== Likes with localStorage =====
-    const likeButtons = document.querySelectorAll('.like');
-    const likes = JSON.parse(localStorage.getItem('timodi_likes')||'{}');
-    likeButtons.forEach(btn=>{
-      const id = btn.dataset.id; const span = btn.querySelector('span');
-      span.textContent = likes[id]||0;
-      btn.addEventListener('click',()=>{ likes[id]=(likes[id]||0)+1; span.textContent=likes[id]; localStorage.setItem('timodi_likes', JSON.stringify(likes)); });
+  init() {
+    this.setYear();
+    this.initLikes();
+    this.initLightbox();
+    this.initFilters();
+    this.bindUploads();
+  },
+
+  // ===== Year =====
+  setYear() {
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  },
+
+  // ===== Likes (عام) =====
+  initLikes() {
+    document.querySelectorAll(".like").forEach(btn => {
+      const id = btn.dataset.id;
+      const span = btn.querySelector("span");
+      span.textContent = this.likes[id] || 0;
+
+      btn.onclick = () => {
+        if(localStorage.getItem("liked-"+id)) return this.toast("سبق أن أعجبت 👍");
+        this.likes[id] = (this.likes[id] || 0) + 1;
+        span.textContent = this.likes[id];
+        localStorage.setItem("timodi_likes", JSON.stringify(this.likes));
+        localStorage.setItem("liked-"+id, true);
+        this.toast("تم تسجيل إعجابك 👍");
+      };
     });
+  },
 
-    // ===== Comments (simple demo) =====
-    const commentsDB = JSON.parse(localStorage.getItem('timodi_comments')||'{}');
-    function openComments(key){
-      const box = document.getElementById('c-'+key); const opened = box.style.display==='block';
-      box.style.display = opened ? 'none' : 'block';
-      if(!opened){ renderComments(key); }
+  // ===== Comments =====
+  openComments(key) {
+    const box = document.getElementById("c-" + key);
+    const opened = box.style.display === "block";
+    box.style.display = opened ? "none" : "block";
+    if (!opened) this.renderComments(key);
+  },
+
+  renderComments(key) {
+    const box = document.getElementById("c-" + key);
+    const items = this.commentsDB[key] || [];
+
+    if (!this.user) {
+      box.innerHTML = `<p style="color:var(--muted)">⚠️ يجب تسجيل الدخول للتعليق.</p>`;
+      return;
     }
-    function renderComments(key){
-      const box = document.getElementById('c-'+key);
-      const items = commentsDB[key] || [];
-      box.innerHTML = `
-        <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
-          <input id="u-${key}" placeholder="اسمك" style="flex:1;min-width:120px;padding:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);border-radius:10px"/>
-          <input id="t-${key}" placeholder="أضف تعليقًا..." style="flex:2;min-width:200px;padding:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);border-radius:10px"/>
-          <button class="iconbtn" onclick="addComment('${key}')">➕ إضافة</button>
+
+    box.innerHTML = `
+      <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
+        <input id="t-${key}" placeholder="أضف تعليقًا..." style="flex:2;min-width:200px;padding:10px;border:1px solid rgba(255,255,255,.12);background:var(--card);color:var(--text);border-radius:10px"/>
+        <button class="iconbtn" data-action="add" data-key="${key}">➕ إضافة</button>
+      </div>
+    ` + items.map((c,i)=>`
+      <div class="comment-item" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:10px;border-radius:10px;margin:6px 0">
+        <b>${c.user.name}</b> <small>(${c.user.email})</small> — <small style="opacity:.7">${c.time}</small>
+        <div style="opacity:.9;margin-top:6px" id="comment-text-${key}-${i}">${c.text}</div>
+        <div style="margin-top:6px;display:flex;gap:6px;align-items:center">
+          <button class="iconbtn like" data-id="c-${key}-${i}">👍 <span>${this.likes["c-"+key+"-"+i]||0}</span></button>
+          ${this.user && this.user.email===c.user.email ? `
+            <button class="iconbtn" data-action="edit" data-key="${key}" data-idx="${i}">✏️ تعديل</button>
+            <button class="iconbtn" data-action="del" data-key="${key}" data-idx="${i}">🗑️ حذف</button>
+          ` : ""}
         </div>
-      ` + items.map(c=>`<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:10px;border-radius:10px;margin:6px 0"><b>${c.user||'مجهول'}</b> — <small style="opacity:.7">${c.time}</small><div style="opacity:.9;margin-top:6px">${c.text}</div></div>`).join('');
-    }
-    function addComment(key){
-      const u = document.getElementById('u-'+key).value.trim()||'مجهول';
-      const t = document.getElementById('t-'+key).value.trim();
-      if(!t) return;
-      (commentsDB[key]=commentsDB[key]||[]).unshift({user:u,text:t,time:new Date().toLocaleString('ar-EG')});
-      localStorage.setItem('timodi_comments', JSON.stringify(commentsDB));
-      renderComments(key);
-    }
+      </div>`).join("");
 
-    // ===== Lightbox for images =====
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lightboxImg');
-    document.querySelectorAll('[data-img]').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const img = btn.closest('.card').querySelector('img');
-        lbImg.src = img.src; lb.classList.add('open');
-      })
+    // ربط الأحداث
+    box.querySelectorAll("[data-action]").forEach(btn=>{
+      btn.addEventListener("click", e=>{
+        const action=btn.dataset.action;
+        if(action==="add") this.addComment(btn.dataset.key);
+        if(action==="del") this.deleteComment(btn.dataset.key, btn.dataset.idx);
+        if(action==="edit") this.editComment(btn.dataset.key, btn.dataset.idx);
+      });
     });
-    lb.addEventListener('click',()=> lb.classList.remove('open'));
 
-    // ===== Filter (chips + search) =====
-    const chips = document.querySelectorAll('.chip');
-    const items = document.querySelectorAll('.media-item');
-    const searchInput = document.getElementById('searchInput');
+    // ربط إعجابات التعليقات
+    this.initLikes();
+  },
+
+  addComment(key) {
+    const t = document.getElementById("t-" + key).value.trim();
+    if (!t) return;
+    (this.commentsDB[key] = this.commentsDB[key] || []).unshift({
+      user:this.user,
+      text:t,
+      time:new Date().toLocaleString("ar-EG")
+    });
+    localStorage.setItem("timodi_comments", JSON.stringify(this.commentsDB));
+    this.toast("تم إضافة تعليق ✅");
+    this.renderComments(key);
+  },
+
+  deleteComment(key, idx) {
+    this.commentsDB[key].splice(idx,1);
+    localStorage.setItem("timodi_comments", JSON.stringify(this.commentsDB));
+    this.toast("تم حذف التعليق 🗑️");
+    this.renderComments(key);
+  },
+
+  editComment(key, idx) {
+    const comment = this.commentsDB[key][idx];
+    const textDiv = document.getElementById(`comment-text-${key}-${idx}`);
+    textDiv.innerHTML = `
+      <input id="edit-${key}-${idx}" value="${comment.text}" style="width:100%;padding:6px;border-radius:6px"/>
+      <button class="iconbtn" onclick="TimodiApp.saveEdit('${key}',${idx})">💾 حفظ</button>
+    `;
+  },
+
+  saveEdit(key, idx) {
+    const input = document.getElementById(`edit-${key}-${idx}`);
+    const newText = input.value.trim();
+    if(!newText) return alert("النص فارغ!");
+    this.commentsDB[key][idx].text = newText;
+    this.commentsDB[key][idx].time = new Date().toLocaleString("ar-EG");
+    localStorage.setItem("timodi_comments", JSON.stringify(this.commentsDB));
+    this.toast("تم تعديل التعليق ✏️");
+    this.renderComments(key);
+  },
+
+  // ===== Lightbox =====
+  initLightbox() {
+    const lb=document.getElementById("lightbox");
+    const lbImg=document.getElementById("lightboxImg");
+    document.querySelectorAll("[data-img]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const img=btn.closest(".card").querySelector("img");
+        lbImg.src=img.src;
+        lb.classList.add("open");
+      });
+    });
+    lb.addEventListener("click",()=>lb.classList.remove("open"));
+  },
+
+  // ===== Filter =====
+  initFilters() {
+    const chips=document.querySelectorAll(".chip");
+    const items=document.querySelectorAll(".media-item");
+    const searchInput=document.getElementById("searchInput");
+
     function applyFilter(){
-      const active = document.querySelector('.chip.active')?.dataset.filter || 'all';
-      const q = (searchInput.value||'').toLowerCase();
+      const active=document.querySelector(".chip.active")?.dataset.filter || "all";
+      const q=(searchInput.value||"").toLowerCase();
       items.forEach(el=>{
-        const type = el.dataset.type, title = (el.dataset.title||'').toLowerCase();
-        const okType = active==='all' || type===active;
-        const okText = !q || title.includes(q);
-        el.style.display = (okType && okText) ? '' : 'none';
+        const type=el.dataset.type, title=(el.dataset.title||"").toLowerCase();
+        const okType=active==="all"||type===active;
+        const okText=!q||title.includes(q);
+        el.style.display=(okType&&okText)? "":"none";
       });
     }
-    chips.forEach(c=> c.addEventListener('click',()=>{ chips.forEach(x=>x.classList.remove('active')); c.classList.add('active'); applyFilter(); }));
-    searchInput.addEventListener('input', applyFilter);
+    chips.forEach(c=>c.addEventListener("click",()=>{
+      chips.forEach(x=>x.classList.remove("active"));
+      c.classList.add("active");
+      applyFilter();
+    }));
+    searchInput.addEventListener("input",applyFilter);
+  },
 
-    // ===== Dummy upload (preview only) =====
-    document.getElementById('uploadPhoto').addEventListener('click',()=>{
-      const input = Object.assign(document.createElement('input'),{type:'file',accept:'image/*'});
-      input.onchange = e=>{
-        const file = e.target.files[0]; if(!file) return;
-        const url = URL.createObjectURL(file);
-        const grid = document.getElementById('grid-photos');
-        const id = 'p'+(Math.random()*1e6|0);
-        grid.insertAdjacentHTML('afterbegin', `
-          <article class="card media-item" data-type="photos" data-title="مرفوع جديد">
-            <div class="card__media"><img src="${url}" alt="new"/></div>
-            <div class="card__body">
-              <div class="card__title">صورة مرفوعة للتجربة</div>
-              <div class="meta">الآن</div>
-              <div class="actions">
-                <button class="iconbtn like" data-id="${id}">👍 <span>0</span></button>
-                <button class="iconbtn view" data-img>🔍 تكبير</button>
-              </div>
-            </div>
-          </article>`);
-        // rebind like + lightbox
-        const newBtn = grid.querySelector(`[data-id='${id}']`);
-        const span = newBtn.querySelector('span'); span.textContent = 0; newBtn.addEventListener('click',()=>{ likes[id]=(likes[id]||0)+1; span.textContent=likes[id]; localStorage.setItem('timodi_likes', JSON.stringify(likes)); });
-        grid.querySelector('.card [data-img]').addEventListener('click', (ev)=>{
-          const img = ev.target.closest('.card').querySelector('img'); lbImg.src = img.src; lb.classList.add('open');
-        });
-      };
-      input.click();
-    });
+  // ===== Uploads =====
+  bindUploads() {
+    document.getElementById("uploadPhoto")?.addEventListener("click",()=>this.uploadPhoto());
+    document.getElementById("uploadVideo")?.addEventListener("click",()=>this.uploadVideo());
+    document.getElementById("uploadAudio")?.addEventListener("click",()=>this.uploadAudio());
+    document.getElementById("uploadNews")?.addEventListener("click",()=>this.uploadNews());
+  },
 
-    document.getElementById('uploadVideo').addEventListener('click',()=>{
-      const url = prompt('ألصق رابط فيديو YouTube (مثال: https://www.youtube.com/watch?v=lxXCW5eFeOE أو https://youtu.be/lxXCW5eFeOE)');
-      if(!url) return;
-      const id = (url.match(/[?&]v=([^&]+)/)||[])[1] || url.split('/').pop();
-      if(!id) return alert('تعذّر استخراج معرف الفيديو');
-      const card = `
-        <article class="card media-item" data-type="videos" data-title="فيديو جديد">
-          <div class="card__media" style="aspect-ratio:16/9"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div>
+  uploadPhoto() {
+    const input=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"});
+    input.onchange=e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const url=URL.createObjectURL(file);
+      const grid=document.getElementById("grid-photos");
+      const id="p"+(Math.random()*1e6|0);
+      grid.insertAdjacentHTML("afterbegin",`
+        <article class="card media-item" data-type="photos" data-title="مرفوع جديد">
+          <div class="card__media"><img src="${url}" alt="new"/></div>
           <div class="card__body">
-            <div class="card__title">فيديو مضاف</div>
-            <div class="meta">YouTube</div>
-            <div class="actions"><button class="iconbtn like" data-id="v${Date.now()}">👍 <span>0</span></button></div>
-          </div>
-        </article>`;
-      document.querySelector('#videos .section__grid').insertAdjacentHTML('afterbegin', card);
-    });
-
-    document.getElementById('uploadAudio').addEventListener('click',()=>{
-      const input = Object.assign(document.createElement('input'),{type:'file',accept:'audio/*'});
-      input.onchange = e=>{
-        const file = e.target.files[0]; if(!file) return; const url = URL.createObjectURL(file);
-        const card = `
-          <article class="card media-item" data-type="audio" data-title="صوت جديد">
-            <div class="card__media" style="aspect-ratio:16/5; padding:12px; display:flex;align-items:center">
-              <audio controls src="${url}"></audio>
-            </div>
-            <div class="card__body">
-              <div class="card__title">مقطع صوتي</div>
-              <div class="meta">محلي</div>
-              <div class="actions"><button class="iconbtn like" data-id="a${Date.now()}">👍 <span>0</span></button></div>
-            </div>
-          </article>`;
-        document.querySelector('#audio .section__grid').insertAdjacentHTML('afterbegin', card);
-      };
-      input.click();
-    });
-
-    document.getElementById('uploadNews').addEventListener('click',()=>{
-      const title = prompt('عنوان الخبر/المقال'); const text = prompt('المحتوى المختصر');
-      if(!title) return;
-      const key = 'n'+(Math.random()*1e6|0);
-      const card = `
-        <article class="card media-item" data-type="news" data-title="${title}">
-          <div class="card__media" style="aspect-ratio:16/9"><img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop"/></div>
-          <div class="card__body">
-            <div class="card__title">${title}</div>
-            <div class="meta">بقلمك الآن</div>
-            <p style="opacity:.9;margin:.2rem 0 0">${text||''}</p>
+            <div class="card__title">صورة مرفوعة</div>
+            <div class="meta">الآن</div>
             <div class="actions">
-              <button class="iconbtn like" data-id="${key}">👍 <span>0</span></button>
-              <button class="iconbtn" onclick="openComments('${key}')">💬 تعليقات</button>
+              <button class="iconbtn like" data-id="${id}">👍 <span>0</span></button>
+              <button class="iconbtn view" data-img>🔍 تكبير</button>
             </div>
-            <div class="comments" id="c-${key}" style="display:none;margin-top:10px"></div>
+          </div>
+        </article>`);
+      this.initLikes();
+      this.initLightbox();
+      this.toast("تم رفع صورة 📷");
+    };
+    input.click();
+  },
+
+  uploadVideo() {
+    const url=prompt("ألصق رابط فيديو YouTube:");
+    if(!url) return;
+    const id=(url.match(/[?&]v=([^&]+)/)||[])[1]||url.split("/").pop();
+    if(!id) return alert("تعذر استخراج معرف الفيديو");
+    document.querySelector("#videos .section__grid").insertAdjacentHTML("afterbegin",`
+      <article class="card media-item" data-type="videos" data-title="فيديو جديد">
+        <div class="card__media" style="aspect-ratio:16/9"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div>
+        <div class="card__body">
+          <div class="card__title">فيديو مضاف</div>
+          <div class="meta">YouTube</div>
+          <div class="actions"><button class="iconbtn like" data-id="v${Date.now()}">👍 <span>0</span></button></div>
+        </div>
+      </article>`);
+    this.initLikes();
+    this.toast("تم إضافة فيديو 🎬");
+  },
+
+  uploadAudio() {
+    const input=Object.assign(document.createElement("input"),{type:"file",accept:"audio/*"});
+    input.onchange=e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const url=URL.createObjectURL(file);
+      document.querySelector("#audio .section__grid").insertAdjacentHTML("afterbegin",`
+        <article class="card media-item" data-type="audio" data-title="صوت جديد">
+          <div class="card__media" style="aspect-ratio:16/5; padding:12px; display:flex;align-items:center">
+            <audio controls src="${url}"></audio>
+          </div>
+          <div class="card__body">
+            <div class="card__title">مقطع صوتي</div>
+            <div class="meta">محلي</div>
+            <div class="actions"><button class="iconbtn like" data-id="a${Date.now()}">👍 <span>0</span></button></div>
+          </div>
+        </article>`);
+      this.initLikes();
+      this.toast("تم رفع صوت 🎧");
+    };
+    input.click();
+  },
+
+  uploadNews() {
+    const title=prompt("عنوان الخبر/المقال"); 
+    const text=prompt("المحتوى المختصر");
+    if(!title) return;
+    const key="n"+(Math.random()*1e6|0);
+    document.querySelector("#news .section__grid").insertAdjacentHTML("afterbegin",`
+      <article class="card media-item" data-type="news" data-title="${title}">
+        <div class="card__media" style="aspect-ratio:16/9"><img src="https://picsum.photos/600/300?random=1"/></div>
+        <div class="card__body">
+          <div class="card__title">${title}</div>
+          <div class="meta">بقلمك الآن</div>
+          <p>${text||""}</p>
+          <div class="actions">
+            <button class="iconbtn like" data-id="${key}">👍 <span>0</span></button>
+            <button class="iconbtn" onclick="TimodiApp.openComments('${key}')">💬 تعليقات</button>
+          </div>
+          <div class="comments" id="c-${key}" style="display:none;margin-top:10px"></div>
+        </div>
+      </article>`);
+    this.initLikes();
+    this.toast("تم نشر مقال 📰");
+  },
+
+  // ===== Notifications (Toast) =====
+  toast(msg){
+    const t=document.createElement("div");
+    t.textContent=msg;
+    t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);padding:10px 20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.3);z-index:200;transition:.3s";
+    document.body.appendChild(t);
+    setTimeout(()=>t.style.opacity="0",2000);
+    setTimeout(()=>t.remove(),2500);
+  }
+};
+const TimodiUploader = {
+  storageKey: "timodi_uploads",
+  data: JSON.parse(localStorage.getItem("timodi_uploads") || "[]"),
+
+  init() {
+    this.renderAll();
+    document.getElementById("uploadPhoto")?.addEventListener("click",()=>this.uploadPhoto());
+    document.getElementById("uploadVideo")?.addEventListener("click",()=>this.uploadVideo());
+    document.getElementById("uploadAudio")?.addEventListener("click",()=>this.uploadAudio());
+    document.getElementById("uploadNews")?.addEventListener("click",()=>this.uploadNews());
+  },
+
+  save() {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+  },
+
+  genId(prefix="x") {
+    return prefix + Date.now() + "-" + Math.floor(Math.random()*1e6);
+  },
+
+  // --- Render جميع العناصر عند فتح الموقع
+  renderAll() {
+    this.data.forEach(item => this.addCard(item,false));
+  },
+
+  // --- دالة رئيسية لإضافة أي بطاقة
+  addCard(item,save=true) {
+    let html="";
+    if(item.type==="photo"){
+      html=`
+        <article class="card media-item" data-type="photos" data-title="${item.title}">
+          <div class="card__media"><img src="${item.src}" alt="img"/></div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <div class="actions">
+              <button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button>
+              <button class="iconbtn view" data-img>🔍 تكبير</button>
+            </div>
           </div>
         </article>`;
-      document.querySelector('#news .section__grid').insertAdjacentHTML('afterbegin', card);
-    });
-  </script>
+      document.getElementById("grid-photos").insertAdjacentHTML("afterbegin",html);
+    }
+    else if(item.type==="video"){
+      html=`
+        <article class="card media-item" data-type="videos" data-title="${item.title}">
+          <div class="card__media" style="aspect-ratio:16/9"><iframe src="${item.src}" allowfullscreen></iframe></div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <div class="actions"><button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button></div>
+          </div>
+        </article>`;
+      document.querySelector("#videos .section__grid").insertAdjacentHTML("afterbegin",html);
+    }
+    else if(item.type==="audio"){
+      html=`
+        <article class="card media-item" data-type="audio" data-title="${item.title}">
+          <div class="card__media" style="aspect-ratio:16/5;padding:12px;display:flex;align-items:center">
+            <audio controls src="${item.src}"></audio>
+          </div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <div class="actions"><button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button></div>
+          </div>
+        </article>`;
+      document.querySelector("#audio .section__grid").insertAdjacentHTML("afterbegin",html);
+    }
+    else if(item.type==="news"){
+      html=`
+        <article class="card media-item" data-type="news" data-title="${item.title}">
+          <div class="card__media" style="aspect-ratio:16/9"><img src="https://picsum.photos/600/300?random=1"/></div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <p>${item.text||""}</p>
+            <div class="actions">
+              <button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button>
+              <button class="iconbtn" onclick="TimodiApp.openComments('${item.id}')">💬 تعليقات</button>
+            </div>
+            <div class="comments" id="c-${item.id}" style="display:none;margin-top:10px"></div>
+          </div>
+        </article>`;
+      document.querySelector("#news .section__grid").insertAdjacentHTML("afterbegin",html);
+    }
+
+    // حفظ في التخزين
+    if(save){
+      this.data.unshift(item);
+      this.save();
+    }
+
+    // إعادة ربط اللايكات
+    TimodiApp?.initLikes();
+  },
+
+  // --- رفع صورة
+  uploadPhoto() {
+    const input=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"});
+    input.onchange=e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const url=URL.createObjectURL(file);
+      const item={id:this.genId("p"),type:"photo",title:"صورة مرفوعة",meta:"الآن",src:url};
+      this.addCard(item,true);
+      TimodiApp.toast("📷 تم رفع صورة");
+    };
+    input.click();
+  },
+
+  // --- رفع فيديو YouTube
+  uploadVideo() {
+    const url=prompt("ألصق رابط فيديو YouTube:");
+    if(!url) return;
+    const id=(url.match(/[?&]v=([^&]+)/)||[])[1]||url.split("/").pop();
+    if(!id) return alert("تعذر استخراج معرف الفيديو");
+    const item={id:this.genId("v"),type:"video",title:"فيديو جديد",meta:"YouTube",src:`https://www.youtube.com/embed/${id}`};
+    this.addCard(item,true);
+    TimodiApp.toast("🎬 تم إضافة فيديو");
+  },
+
+  // --- رفع صوت
+  uploadAudio() {
+    const input=Object.assign(document.createElement("input"),{type:"file",accept:"audio/*"});
+    input.onchange=e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const url=URL.createObjectURL(file);
+      const item={id:this.genId("a"),type:"audio",title:"مقطع صوتي",meta:"محلي",src:url};
+      this.addCard(item,true);
+      TimodiApp.toast("🎧 تم رفع مقطع صوتي");
+    };
+    input.click();
+  },
+
+  // --- نشر مقال/خبر
+  uploadNews() {
+    const title=prompt("عنوان الخبر/المقال"); 
+    const text=prompt("المحتوى المختصر");
+    if(!title) return;
+    const item={id:this.genId("n"),type:"news",title,meta:"بقلمك الآن",text,src:""};
+    this.addCard(item,true);
+    TimodiApp.toast("📰 تم نشر مقال");
+  }
+};
+
+window.addEventListener("DOMContentLoaded",()=>TimodiUploader.init());
+</script>
+✅ الميزات الجديدة:
+أي ملف/مقال يتم رفعه → يُخزن في localStorage → يظهر بعد إعادة تحميل الصفحة.
+
+معاينة مباشرة للصور/الصوت.
+
+كود منظم جدًا بدالة موحدة addCard().
+
+IDs فريدة تضمن عدم تضارب اللايكات/التعليقات.
+
+تحبني أضيف كمان خيار حذف الملفات المرفوعة (زر 🗑️ بجانب كل عنصر) بحيث يقدر المستخدم يمسح ما رفعه؟
+
+
+
+
+
+
+
+Vous avez dit :
+نعم
+
+
+ChatGPT a dit :
+تمام ✅
+خليني أعدل لك السكريبت بحيث يصير عند كل عنصر مرفوع زر 🗑️ حذف، وإذا المستخدم ضغطه:
+
+ينمسح العنصر من الصفحة.
+
+ينمسح أيضًا من localStorage.
+
+يظهر له إشعار صغير (Toast) "تم الحذف".
+
+🔥 النسخة المعدلة مع الحذف:
+html
+Copier le code
+<script>
+const TimodiUploader = {
+  storageKey: "timodi_uploads",
+  data: JSON.parse(localStorage.getItem("timodi_uploads") || "[]"),
+
+  init() {
+    this.renderAll();
+    document.getElementById("uploadPhoto")?.addEventListener("click",()=>this.uploadPhoto());
+    document.getElementById("uploadVideo")?.addEventListener("click",()=>this.uploadVideo());
+    document.getElementById("uploadAudio")?.addEventListener("click",()=>this.uploadAudio());
+    document.getElementById("uploadNews")?.addEventListener("click",()=>this.uploadNews());
+  },
+
+  save() {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+  },
+
+  genId(prefix="x") {
+    return prefix + Date.now() + "-" + Math.floor(Math.random()*1e6);
+  },
+
+  // --- Render جميع العناصر
+  renderAll() {
+    this.data.forEach(item => this.addCard(item,false));
+  },
+
+  // --- إضافة زر الحذف
+  deleteItem(id){
+    // حذف من المصفوفة
+    this.data = this.data.filter(x => x.id !== id);
+    this.save();
+    // حذف من DOM
+    document.querySelector(`[data-item='${id}']`)?.remove();
+    TimodiApp?.toast("🗑️ تم الحذف");
+  },
+
+  // --- دالة رئيسية لإضافة أي بطاقة
+  addCard(item,save=true) {
+    let html="";
+    if(item.type==="photo"){
+      html=`
+        <article class="card media-item" data-item="${item.id}" data-type="photos" data-title="${item.title}">
+          <div class="card__media"><img src="${item.src}" alt="img"/></div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <div class="actions">
+              <button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button>
+              <button class="iconbtn view" data-img>🔍 تكبير</button>
+              <button class="iconbtn" onclick="TimodiUploader.deleteItem('${item.id}')">🗑️ حذف</button>
+            </div>
+          </div>
+        </article>`;
+      document.getElementById("grid-photos").insertAdjacentHTML("afterbegin",html);
+    }
+    else if(item.type==="video"){
+      html=`
+        <article class="card media-item" data-item="${item.id}" data-type="videos" data-title="${item.title}">
+          <div class="card__media" style="aspect-ratio:16/9"><iframe src="${item.src}" allowfullscreen></iframe></div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <div class="actions">
+              <button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button>
+              <button class="iconbtn" onclick="TimodiUploader.deleteItem('${item.id}')">🗑️ حذف</button>
+            </div>
+          </div>
+        </article>`;
+      document.querySelector("#videos .section__grid").insertAdjacentHTML("afterbegin",html);
+    }
+    else if(item.type==="audio"){
+      html=`
+        <article class="card media-item" data-item="${item.id}" data-type="audio" data-title="${item.title}">
+          <div class="card__media" style="aspect-ratio:16/5;padding:12px;display:flex;align-items:center">
+            <audio controls src="${item.src}"></audio>
+          </div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <div class="actions">
+              <button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button>
+              <button class="iconbtn" onclick="TimodiUploader.deleteItem('${item.id}')">🗑️ حذف</button>
+            </div>
+          </div>
+        </article>`;
+      document.querySelector("#audio .section__grid").insertAdjacentHTML("afterbegin",html);
+    }
+    else if(item.type==="news"){
+      html=`
+        <article class="card media-item" data-item="${item.id}" data-type="news" data-title="${item.title}">
+          <div class="card__media" style="aspect-ratio:16/9"><img src="https://picsum.photos/600/300?random=1"/></div>
+          <div class="card__body">
+            <div class="card__title">${item.title}</div>
+            <div class="meta">${item.meta}</div>
+            <p>${item.text||""}</p>
+            <div class="actions">
+              <button class="iconbtn like" data-id="${item.id}">👍 <span>0</span></button>
+              <button class="iconbtn" onclick="TimodiApp.openComments('${item.id}')">💬 تعليقات</button>
+              <button class="iconbtn" onclick="TimodiUploader.deleteItem('${item.id}')">🗑️ حذف</button>
+            </div>
+            <div class="comments" id="c-${item.id}" style="display:none;margin-top:10px"></div>
+          </div>
+        </article>`;
+      document.querySelector("#news .section__grid").insertAdjacentHTML("afterbegin",html);
+    }
+
+    // حفظ في التخزين
+    if(save){
+      this.data.unshift(item);
+      this.save();
+    }
+
+    // إعادة ربط اللايكات
+    TimodiApp?.initLikes();
+  },
+
+  // --- رفع صورة
+  uploadPhoto() {
+    const input=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"});
+    input.onchange=e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const url=URL.createObjectURL(file);
+      const item={id:this.genId("p"),type:"photo",title:"صورة مرفوعة",meta:"الآن",src:url};
+      this.addCard(item,true);
+      TimodiApp.toast("📷 تم رفع صورة");
+    };
+    input.click();
+  },
+
+  // --- رفع فيديو YouTube
+  uploadVideo() {
+    const url=prompt("ألصق رابط فيديو YouTube:");
+    if(!url) return;
+    const id=(url.match(/[?&]v=([^&]+)/)||[])[1]||url.split("/").pop();
+    if(!id) return alert("تعذر استخراج معرف الفيديو");
+    const item={id:this.genId("v"),type:"video",title:"فيديو جديد",meta:"YouTube",src:`https://www.youtube.com/embed/${id}`};
+    this.addCard(item,true);
+    TimodiApp.toast("🎬 تم إضافة فيديو");
+  },
+
+  // --- رفع صوت
+  uploadAudio() {
+    const input=Object.assign(document.createElement("input"),{type:"file",accept:"audio/*"});
+    input.onchange=e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const url=URL.createObjectURL(file);
+      const item={id:this.genId("a"),type:"audio",title:"مقطع صوتي",meta:"محلي",src:url};
+      this.addCard(item,true);
+      TimodiApp.toast("🎧 تم رفع مقطع صوتي");
+    };
+    input.click();
+  },
+
+  // --- نشر مقال/خبر
+  uploadNews() {
+    const title=prompt("عنوان الخبر/المقال"); 
+    const text=prompt("المحتوى المختصر");
+    if(!title) return;
+    const item={id:this.genId("n"),type:"news",title,meta:"بقلمك الآن",text,src:""};
+    this.addCard(item,true);
+    TimodiApp.toast("📰 تم نشر مقال");
+  }
+};
+
+window.addEventListener("DOMContentLoaded",()=>TimodiApp.init());
+</script>
 </body>
 </html>
