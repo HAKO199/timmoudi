@@ -402,6 +402,7 @@
         <a class="nav__link" href="#audio">الصوتيات</a>
         <a class="nav__link" href="#live">البثوث</a>
         <a class="nav__link" href="#games">الألعاب</a>
+        <a class="nav__link" href="#STORE">المتجر</a>
       </div>
       <button class="btn nav__cta" id="openUpload">⬆️ رفع</button>
     </div>
@@ -425,6 +426,7 @@
         <div class="chip" data-filter="audio">صوتيات</div>
         <div class="chip" data-filter="live">بث مباشر</div>
         <div class="chip" data-filter="games">ألعاب</div>
+        <div class="chip" data-filter="STORE">المتجر</div>
       </div>
       <div class="uploadbar">
         <div class="uploadbtn" id="uploadPhoto">📷 رفع صورة</div>
@@ -645,6 +647,164 @@
       btn.textContent = opened ? '📖 قراءة المزيد' : '✖ إغلاق';
     }
   </script>
+  <!-- ====== STORE ====== -->
+<section id="store" class="section container">
+  <div class="section__head"><h2>🛒 المتجر</h2></div>
+  <div class="section__grid">
+    
+    <!-- منتج -->
+    <article class="card product-item">
+      <div class="card__media">
+        <img src="https://via.placeholder.com/400x250?text=تيشيرت+Gaming" alt="تيشيرت">
+      </div>
+      <div class="card__body">
+        <div class="card__title">تيشيرت جيمينغ</div>
+        <div class="meta">سعر: <b>2500 دج</b></div>
+        <div class="actions">
+          <button class="iconbtn" onclick="addToCart('تيشيرت جيمينغ',2500)">➕ أضف للسلة</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card product-item">
+      <div class="card__media">
+        <img src="https://via.placeholder.com/400x250?text=ماوس+RGB" alt="ماوس">
+      </div>
+      <div class="card__body">
+        <div class="card__title">ماوس RGB</div>
+        <div class="meta">سعر: <b>3500 دج</b></div>
+        <div class="actions">
+          <button class="iconbtn" onclick="addToCart('ماوس RGB',3500)">➕ أضف للسلة</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card product-item">
+      <div class="card__media">
+        <img src="https://via.placeholder.com/400x250?text=سماعات+Gaming" alt="سماعات">
+      </div>
+      <div class="card__body">
+        <div class="card__title">سماعات Gaming</div>
+        <div class="meta">سعر: <b>4200 دج</b></div>
+        <div class="actions">
+          <button class="iconbtn" onclick="addToCart('سماعات Gaming',4200)">➕ أضف للسلة</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+  <!-- ====== CART ====== -->
+<section id="cart" class="section container" style="display:none">
+  <div class="section__head"><h2>🧾 سلة المشتريات</h2></div>
+  <div id="cartItems"></div>
+  <div style="margin-top:15px; font-weight:bold;">الإجمالي: <span id="cartTotal">0</span> دج</div>
+  <div class="actions" style="margin-top:10px">
+    <button class="btn" onclick="openCheckoutForm()">✅ إتمام الطلب</button>
+    <button class="iconbtn" onclick="clearCart()">🗑️ تفريغ السلة</button>
+  </div>
+</section>
+
+<!-- ====== CHECKOUT FORM ====== -->
+<div id="checkoutForm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center">
+  <div style="background:var(--card);padding:20px;border-radius:16px;max-width:400px;width:90%;color:var(--text)">
+    <h3>📦 تفاصيل الطلب</h3>
+    <label>الاسم:</label>
+    <input id="custName" style="width:100%;padding:10px;margin:5px 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--text)">
+
+    <label>رقم الهاتف:</label>
+    <input id="custPhone" style="width:100%;padding:10px;margin:5px 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--text)">
+
+    <label>العنوان:</label>
+    <textarea id="custAddr" style="width:100%;padding:10px;margin:5px 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--text)"></textarea>
+
+    <div style="margin-top:10px;display:flex;justify-content:space-between;gap:10px">
+      <button class="btn" onclick="submitOrder()">📩 إرسال الطلب</button>
+      <button class="iconbtn" onclick="closeCheckoutForm()">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("timodi_cart")||"[]");
+
+function saveCart(){
+  localStorage.setItem("timodi_cart", JSON.stringify(cart));
+}
+
+function renderCart(){
+  const box=document.getElementById("cartItems");
+  const cartSec=document.getElementById("cart");
+  box.innerHTML="";
+  if(cart.length===0){
+    cartSec.style.display="none";
+    return;
+  }
+  cartSec.style.display="block";
+
+  let total=0;
+  cart.forEach((item,i)=>{
+    total+=item.price;
+    box.innerHTML+=`
+      <div style="background:rgba(255,255,255,.06);padding:10px;border-radius:10px;margin:6px 0;display:flex;justify-content:space-between;align-items:center">
+        <div>${item.name} — <b>${item.price} دج</b></div>
+        <button class="iconbtn" onclick="removeFromCart(${i})">❌</button>
+      </div>`;
+  });
+  document.getElementById("cartTotal").textContent=total;
+}
+
+function addToCart(name,price){
+  cart.push({name,price});
+  saveCart();
+  renderCart();
+  alert("✅ تمت إضافة "+name+" للسلة");
+}
+
+function removeFromCart(index){
+  cart.splice(index,1);
+  saveCart();
+  renderCart();
+}
+
+function clearCart(){
+  cart=[];
+  saveCart();
+  renderCart();
+}
+
+function openCheckoutForm(){
+  if(cart.length===0) return alert("❌ السلة فارغة");
+  document.getElementById("checkoutForm").style.display="flex";
+}
+
+function closeCheckoutForm(){
+  document.getElementById("checkoutForm").style.display="none";
+}
+
+function submitOrder(){
+  const name=document.getElementById("custName").value.trim();
+  const phone=document.getElementById("custPhone").value.trim();
+  const addr=document.getElementById("custAddr").value.trim();
+
+  if(!name||!phone||!addr){
+    alert("⚠️ يرجى ملء جميع الحقول");
+    return;
+  }
+
+  const total=document.getElementById("cartTotal").textContent;
+  alert(`🎉 شكراً ${name}!\nتم استلام طلبك بنجاح.\nالإجمالي: ${total} دج\nسيتم التواصل معك على ${phone}.`);
+
+  // تفريغ السلة
+  clearCart();
+  closeCheckoutForm();
+}
+
+// عرض السلة عند تحميل الصفحة
+renderCart();
+</script>
+
 
   <!-- ====== AUDIO ====== -->
   <section id="audio" class="section container">
