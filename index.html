@@ -1,307 +1,203 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تيمودي | منصة مشاركة الصور والفيديوات والأخبار والصوتيات والبثوث والألعاب</title>
-  <meta name="description" content="تيمودي — منصة عربية لمشاركة الصور والفيديوات والأخبار والصوتيات والبثوث المباشرة والألعاب" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg1:#0e1222; --bg2:#141a2f; --accent:#7c5cff; --accent2:#00d4ff; --card: rgba(255,255,255,.08);
-      --text:#f8f9fb; --muted:#cbd5e1; --danger:#ff5d7a; --success:#2ee59d; --warning:#ffc857;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial; background: radial-gradient(1200px 600px at 10% -10%, #1f2a59 0%, transparent 60%), linear-gradient(135deg, var(--bg1), var(--bg2)); color:var(--text);}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>تيمودي - مشروع مدموج</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220; --bg-2:#0f1a2b; --card:#0f1724; --muted:#9aa7bf;
+  --accent:#7c5cff; --accent-2:#00d4ff; --glass: rgba(255,255,255,0.03);
+  --text:#e9eef8;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:
+  radial-gradient(900px 400px at 10% -10%, #16213b 0%, transparent 40%), linear-gradient(180deg,var(--bg),var(--bg-2));
+  color:var(--text); -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:18px}
 
-    /* ====== Header / Navbar ====== */
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: linear-gradient(to right, rgba(20,26,47,.85), rgba(14,18,34,.85));
-      backdrop-filter: blur(10px);
-      border-bottom: 1.5px solid rgba(124,92,255,.13);
-      box-shadow: 0 2px 24px rgba(124,92,255,.07);
-    }
-    .container {
-      max-width: 1200px;
-      margin-inline: auto;
-      padding: 14px 20px;
-    }
-    .nav__row {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      min-height: 70px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-weight: 900;
-      letter-spacing: .2px;
-      font-size: 1.7rem;
-      user-select: none;
-    }
-    .brand__logo {
-      width: 60px;
-      height: 60px;
-      display: grid;
-      place-items: center;
-      border-radius: 18px;
-      background: conic-gradient(from 120deg, var(--accent), var(--accent2), var(--accent), #fff 80%);
-      box-shadow: 0 8px 32px rgba(124,92,255,.25), 0 2px 12px rgba(0,212,255,.10);
-      border: 2.5px solid #fff2;
-      overflow: hidden;
-      transition: transform .18s;
-    }
-    .brand__logo img {
-      width: 90%;
-      height: 90%;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 8px #7c5cff44);
-    }
-    .brand__logo:hover {
-      transform: scale(1.07) rotate(-3deg);
-      box-shadow: 0 12px 36px rgba(124,92,255,.30);
-    }
-    .brand__text {
-      font-size: 2.1rem;
-      font-weight: 900;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: .5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      text-shadow: 0 2px 8px #7c5cff22;
-    }
-    .nav__links {
-      display: flex;
-      gap: 18px;
-      margin-inline-start: auto;
-      flex-wrap: wrap;
-      font-size: 1.13rem;
-    }
-    .nav__link {
-      padding: 10px 16px;
-      border-radius: 14px;
-      background: transparent;
-      border: 1.5px solid transparent;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 700;
-      transition: background .15s, border .15s, color .15s;
-      position: relative;
-    }
-    .nav__link.active,
-    .nav__link:hover {
-      border-color: rgba(124,92,255,.22);
-      background: linear-gradient(90deg,rgba(124,92,255,.10),rgba(0,212,255,.10));
-      color: var(--accent);
-      box-shadow: 0 2px 12px rgba(124,92,255,.07);
-    }
-    .nav__link::before {
-      content: attr(data-emoji);
-      margin-left: 4px;
-      font-size: 1.2em;
-      vertical-align: middle;
-      opacity: .85;
-      display: inline-block;
-      transition: transform .13s;
-    }
-    .nav__link.active::before,
-    .nav__link:hover::before {
-      transform: scale(1.15) rotate(-8deg);
-    }
-    .nav__cta {
-      margin-inline-start: 12px;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 16px rgba(0,212,255,.13), 0 2px 8px rgba(124,92,255,.10);
-    }
-    .btn {
-      cursor: pointer;
-      user-select: none;
-      border: 0;
-      border-radius: 16px;
-      padding: 12px 22px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #0b1020;
-      box-shadow: 0 10px 24px rgba(0,212,255,.18), 0 10px 24px rgba(124,92,255,.18);
-      transition: transform .15s, box-shadow .15s;
-      font-size: 1.1rem;
-      letter-spacing: .2px;
-    }
-    .btn:hover {
-      transform: translateY(-2px) scale(1.04);
-      box-shadow: 0 16px 32px rgba(124,92,255,.18);
-      filter: brightness(1.07);
-    }
-    /* Responsive adjustments */
-    @media (max-width: 760px) {
-      .brand__logo { width: 40px; height: 40px; }
-      .brand__text { font-size: 1.3rem; }
-      .nav__row { min-height: 54px; gap: 10px; }
-      .nav__links { gap: 8px; font-size: 1rem; }
-      .btn { padding: 9px 14px; font-size: 1rem; }
-    }
+/* topbar */
+.topbar{position:sticky;top:0;z-index:90;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.03)}
+.inner{display:flex;align-items:center;gap:12px;padding:12px 18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:48px;height:48px;border-radius:10px;background:conic-gradient(from 120deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:900;color:#031025}
+.site-title{font-weight:800;font-size:1.05rem}
+.socials{display:flex;gap:8px;margin-inline-start:12px}
+.icon{width:36px;height:36;border-radius:8px;display:grid;place-items:center;background:var(--glass);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+.controls{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
 
-    /* ====== NEWS ====== */
-    .news-full{white-space:pre-wrap}
-    .comments{background:var(--bg1);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px;max-height:200px;overflow:auto}
-    .comment{border-bottom:1px solid rgba(255,255,255,.06);padding:6px 0}
-    .comment:last-child{border-bottom:0}
-    .comment strong{color:var(--accent)}
-    .comment p{margin:4px 0 0;opacity:.9;font-size:14px}
-    .comment time{font-size:12px;color:var(--muted)}
-      });
+/* small buttons */
+.btn{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071024;font-weight:700;cursor:pointer}
+.small-btn{padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
+.theme-toggle{font-size:18px;cursor:pointer}
 
-    /* ====== Hero ====== */
-    .hero{padding:42px 20px 20px}
-    .hero__wrap{display:grid;gap:18px;align-items:center}
-    .hero h1{font-size:28px;margin:6px 0}
-    .hero p{color:var(--muted);margin:0}
-    .search{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid rgba(255,255,255,.08); border-radius:16px;padding:10px 12px;margin-top:12px}
-    .search input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-size:15px}
-    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .chip{padding:7px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);cursor:pointer;font-weight:600}
-    .chip.active,.chip:hover{background:rgba(124,92,255,.15);border-color:rgba(124,92,255,.35)}
+/* frames */
+.frame{margin-top:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.frame h3{margin:0 0 12px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
+.card img{width:100%;height:140px;object-fit:cover;display:block}
+.card .meta{padding:10px;font-size:14px;color:var(--muted)}
 
-    /* ====== Sections ====== */
-    .section{padding:24px 20px}
-    .section__head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-    .section__head h2{font-size:22px;margin:0}
-    .section__grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+/* videos */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.vcard{display:flex;gap:10px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
+.vthumb{width:110px;height:70px;flex-shrink:0;border-radius:8px;overflow:hidden}
+.vthumb img{width:100%;height:100%;object-fit:cover}
 
-    /* ====== Cards ====== */
-    .card{grid-column:span 3;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease}
-    .card:hover{transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,0,0,.25)}
-    .card__media{position:relative;aspect-ratio:16/10;background:#0b1020;display:grid;place-items:center}
-    .card__body{padding:12px}
-    .card__title{font-weight:700;margin-bottom:4px}
-    .meta{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}
-    .actions{display:flex;gap:8px;margin-top:10px}
-    .iconbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.06);cursor:pointer}
-    .iconbtn:hover{background:rgba(255,255,255,.12)}
+/* audios */
+.audios{display:flex;flex-direction:column;gap:10px}
+.audio-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px}
 
-    /* Media specific */
-    .card img{width:100%;height:100%;object-fit:cover}
-    iframe{width:100%;height:100%;border:0}
-    audio{width:100%}
+/* store/games */
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 
-    /* ====== Upload Bar ====== */
-    .uploadbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .uploadbtn{border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.06);padding:10px 14px;border-radius:14px;cursor:pointer}
+/* news */
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.news-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);padding:12px;display:flex;flex-direction:column}
+.news-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+.news-card .title{font-weight:800;margin-top:8px}
+.news-card .excerpt{color:var(--muted);font-size:14px;max-height:72px;overflow:hidden;transition:max-height .3s ease}
+.news-card.expanded .excerpt{max-height:none}
 
-    /* ====== Lightbox ====== */
-    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:60}
-    .lightbox.open{display:flex}
-    .lightbox__content{max-width:90vw;max-height:82vh}
+/* comments */
+.comments{margin-top:10px}
+.comment-list{max-height:160px;overflow:auto;padding-right:6px}
+.comment{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin-bottom:8px}
+.comment strong{color:var(--accent)}
+.comment time{display:block;font-size:12px;color:var(--muted)}
 
-    /* ====== Live banner ====== */
-    .live{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,93,122,.15);border:1px solid rgba(255,93,122,.35)}
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--danger);box-shadow:0 0 0 6px rgba(255,93,122,.25);animation:pulse 1.2s infinite}
-    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+/* lightbox & modals */
+.lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:200}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:85vh;border-radius:8px}
+.vmodal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:210}
+.vmodal.open{display:flex}
+.vmodal-box{background:var(--card);padding:12px;border-radius:10px;max-width:900px;width:95%}
+.vmodal iframe{width:100%;height:500px;border:0;border-radius:8px}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:220}
+.modal.open{display:flex}
+.modal-box{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01));padding:18px;border-radius:12px;width:420px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
+.form-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+.label{min-width:120px;color:var(--muted)}
 
-    /* ====== Footer ====== */
-    footer{border-top:1px solid rgba(255,255,255,.08);margin-top:40px;padding:26px 20px;color:var(--muted)}
+/* responsive */
+@media (max-width:900px){ .vthumb{width:90px;height:60px} .card img{height:120px} .vmodal iframe{height:320px} }
+@media (max-width:600px){ .inner{flex-wrap:wrap} .controls{margin-inline-start:0;width:100%;justify-content:space-between} .logo{width:44px;height:44px} .site-title{font-size:1rem} .vmodal iframe{height:260px} }
 
-    /* ====== Responsive ====== */
-    @media (max-width: 1100px){ .card{grid-column:span 4} }
-    @media (max-width: 760px){ .nav__links{display:none} .card{grid-column:span 6} .hero h1{font-size:22px} }
-    @media (max-width: 520px){ .card{grid-column:span 12} }
-    <style>
-    :root{
-      --bg1:#0e1222; --bg2:#141a2f; --accent:#7c5cff; --accent2:#00d4ff; --card: rgba(255,255,255,.08);
-      --text:#f8f9fb; --muted:#cbd5e1;
-    }
-    body.light{
-      --bg1:#f4f6fc; --bg2:#fff; --card:rgba(0,0,0,.05);
-      --text:#1a1a1a; --muted:#444;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:'Tajawal',system-ui; background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--text);transition:background .3s,color .3s}
-    a{text-decoration:none;color:inherit}
-
-    .nav{position:sticky;top:0;z-index:50;background:linear-gradient(to right,rgba(20,26,47,.85),rgba(14,18,34,.85));backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
-    .container{max-width:1200px;margin:auto;padding:14px 20px}
-    .nav__row{display:flex;align-items:center;gap:14px}
-    .brand{font-weight:800;font-size:20px}
-    .nav__links{display:flex;gap:14px;margin-inline-start:auto}
-    .nav__link{padding:8px 12px;border-radius:12px}
-    .btn{cursor:pointer;border:0;border-radius:12px;padding:8px 14px;font-weight:700}
-
-    /* login modal */
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}
-    .modal.open{display:flex}
-    .modal__box{background:var(--bg2);padding:20px;border-radius:16px;max-width:320px;width:90%}
-    .modal__box h3{margin:0 0 12px}
-    .modal__box input{width:100%;margin:6px 0;padding:10px;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:var(--card);color:var(--text)}
-    .modal__box button{margin-top:10px;width:100%}
-
-    .toggle-theme{cursor:pointer;font-size:18px;margin-inline-start:8px}
-  </style>
-</head>
+/* socials official colors */
+.socials a{font-size:18px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff}
+.socials a.fb{color:#1877F2}.socials a.yt{color:#FF0000}.socials a.dc{color:#5865F2}.socials a.tt{color:#000}
+.nav-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.nav-links a{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px}
+.search-bar{text-align:center;margin:10px}
+.search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;
+  border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></head>
 <body>
-  <div class="nav">
-    <div class="container nav__row" style="gap: 10px;">
-      <div class="brand" style="gap:10px;">
-        <div class="brand__logo" style="width:36px;height:36px;">
-          <img src="ChatGPT Image 2 sept. 2025, 17_35_50.png" alt="شعار منصة تيمودي" style="width:90%;height:90%;object-fit:contain;" />
-        </div>
-        <div class="brand__text" style="font-size:1.2rem;">تيمودي <span style="opacity:.6;font-weight:600">Timodi</span></div>
-      </div>
-      <div class="nav__links" style="gap: 6px;display:flex;align-items:center;">
-        <a class="nav__link" href="https://www.facebook.com/HakoOnlin?mibextid=JRoKGi" target="_blank" title="فيسبوك" style="padding:6px 8px;">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="فيسبوك" style="width:20px;height:20px;vertical-align:middle;filter:invert(38%) sepia(99%) saturate(749%) hue-rotate(183deg) brightness(95%) contrast(92%);margin-left:4px;">
-          فيسبوك
-        </a>
-        <a class="nav__link" href="https://www.youtube.com/@abdelhakkerroumi/videos" target="_blank" title="يوتيوب" style="padding:6px 8px;">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="يوتيوب" style="width:20px;height:20px;vertical-align:middle;filter:invert(23%) sepia(97%) saturate(7497%) hue-rotate(357deg) brightness(97%) contrast(105%);margin-left:4px;">
-          يوتيوب
-        </a>
-        <a class="nav__link" href="https://discord.gg/g5BWtQ6zTy" target="_blank" title="ديسكورد" style="padding:6px 8px;">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" alt="ديسكورد" style="width:20px;height:20px;vertical-align:middle;filter:invert(53%) sepia(13%) saturate(749%) hue-rotate(203deg) brightness(97%) contrast(92%);margin-left:4px;">
-          ديسكورد
-        </a>
-        <a class="nav__link" href="https://www.twitch.tv/hakoonlin" target="_blank" title="تويتش" style="padding:6px 8px;">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitch.svg" alt="تويتش" style="width:20px;height:20px;vertical-align:middle;filter:invert(32%) sepia(92%) saturate(749%) hue-rotate(241deg) brightness(97%) contrast(105%);margin-left:4px;">
-          تويتش
-        </a>
-        <a class="nav__link" href="https://www.tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc" target="_blank" title="تيك توك" style="padding:6px 8px;">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="تيك توك" style="width:20px;height:20px;vertical-align:middle;filter:invert(0%) sepia(100%) saturate(749%) hue-rotate(320deg) brightness(97%) contrast(105%);margin-left:4px;">
-          تيك توك
-        </a>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-inline-start:12px">
-        <span class="toggle-theme" id="themeToggle">🌙</span>
-        <button class="btn" id="loginBtn">تسجيل دخول</button>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="inner container">
+      <div class="logo">
+      <img src= "https://yt3.ggpht.com/7dfnAeeOR4Olx-PVWzbY2_EE889DLhgqaNiBynzk13VeRIZMomGuUgzRQcQjjw_ElpLrFm_EyQKzlvw=s640-c-fcrop64=1,00000000ffffffff-rw-nd-v1" alt="Timodi Logo" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
+      <div>
+        <div class="site-title">تيمودي</div>
+        <div style="font-size:12px;color:var(--muted)">تيمودي</div>
       </div>
     </div>
-  </div>
+    
+    <div class="socials">
+      <a href="https://facebook.com" target="_blank" class="fb"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://youtube.com" target="_blank" class="yt"><i class="fab fa-youtube"></i></a>
+      <a href="https://discord.com" target="_blank" class="dc"><i class="fab fa-discord"></i></a>
+      <a href="https://tiktok.com" target="_blank" class="tt"><i class="fab fa-tiktok"></i></a>
+    </div>
+
+    <div class="nav-links">
+      <a href="#topGallery">📷 الصور</a>
+      <a href="#videosFrame">🎥 الفيديوهات</a>
+      <a href="#audioFrame">🎵 الصوتيات</a>
+      <a href="#newsFrame">📰 المقالات</a>
+      <a href="#liveFrame">📡 البث</a>
+      <a href="#gamesFrame">🎮 الألعاب</a>
+      <a href="#storeFrame">🛒 المتجر</a>
+    </div>
+
+    <div class="controls">
+      <div id="themeToggle" class="theme-toggle" title="وضع الليل/النهار">🌙</div>
+      <button id="settingsBtn" class="small-btn" title="الإعدادات">⚙️</button>
+      <button id="profileBtn" class="small-btn" title="تسجيل/الملف">👤</button>
     </div>
   </div>
-  <style>
-    .nav__links .nav__link img {
-      transition: transform .13s;
-    }
-    .nav__links .nav__link:hover img {
-      transform: scale(1.18) rotate(-6deg);
-    }
-  </style></a>
+
+  <!-- search bar -->
+  <div class="search-bar"><input type="text" id="search" placeholder="ابحث هنا..."></div>
+
+  <!-- gallery strip -->
+  <div class="container" style="padding-bottom:12px;padding-top:8px">
+    <div class="frame">
+      <h3>معرض صور سريع</h3>
+      <div class="gallery" id="topGallery"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top:16px">
+  <section class="frame" id="videosFrame">
+    <h3>فيديوهات (YouTube / Facebook / TikTok)</h3>
+    <div class="vgrid" id="videosGrid"></div>
+  </section>
+
+  <section class="frame" id="newsFrame">
+    <h3>📰 المقالات الإخبارية</h3>
+    <div class="news-grid" id="newsGrid"></div>
+  </section>
+</main>
+
+  <section class="frame" id="audioFrame">
+    <h3>الصوتيات</h3>
+    <div class="audios" id="audiosList"></div>
+  </section>
+
+  <section class="frame" id="storeFrame">
+    <h3>المتجر</h3>
+    <div class="store-grid" id="storeGrid"></div>
+  </section>
+
+  <section class="frame" id="gamesFrame">
+    <h3>الألعاب</h3>
+    <div class="games-grid" id="gamesGrid"></div>
+  </section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox"><img id="lightboxImg" alt="preview"/></div>
+
+<!-- Video Modal -->
+<div class="vmodal" id="videoModal"><div class="vmodal-box"><iframe id="videoFrame" allowfullscreen></iframe><div style="text-align:right;margin-top:8px"><button id="closeVideo" class="small-btn">إغلاق</button></div></div></div>
+
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal"><div class="modal-box"><h4>الإعدادات</h4>
+  <div class="form-row"><div class="label">اللغة</div><select id="langSelect"><option value="ar">العربية</option><option value="en">English</option></select></div>
+  <div class="form-row"><div class="label">حماية الصفحة</div><input type="checkbox" id="privacyToggle" /></div>
+  <div class="form-row"><div class="label">عرض الوسائط</div><select id="layoutMode"><option value="grid">شبكة</option><option value="list">قائمة</option></select></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button id="saveSettings" class="btn">حفظ</button><button id="closeSettings" class="small-btn">إغلاق</button></div>
+</div></div>
+
+<!-- Profile / Login Modal -->
+<div class="modal" id="profileModal"><div class="modal-box">
+  <h4>الملف الشخصي / تسجيل</h4>
+  <div class="form-row"><div class="label">الاسم</div><input id="pName" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"></div>
+  <div class="form-row"><div class="label">البريد</div><input id="pEmail" type="email" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button id="saveProfile" class="btn">حفظ</button><button id="closeProfile" class="small-btn">إغلاق</button></div>
+</div></div>
+</style></a>
+<!-- Welcome Marquee -->
 
   <div class="container" style="padding:40px 20px">
     <div style="overflow:hidden;white-space:nowrap;">
@@ -334,821 +230,270 @@
   }
   </style>
 
-  <!-- نافذة تسجيل الدخول -->
-  <div class="modal" id="loginModal">
-    <div class="modal__box">
-      <h3>تسجيل الدخول</h3>
-      <input type="text" id="username" placeholder="اسم المستخدم" />
-      <input type="email" id="email" placeholder="البريد الإلكتروني" />
-      <button class="btn" id="saveLogin">حفظ</button>
-    </div>
-  </div>
 
-  <script>
-    // === Theme toggle ===
-    const body=document.body;
-    const themeToggle=document.getElementById('themeToggle');
-    if(localStorage.getItem('theme')==='light'){body.classList.add('light');themeToggle.textContent='☀️';}
-    themeToggle.addEventListener('click',()=>{
-      body.classList.toggle('light');
-      const isLight=body.classList.contains('light');
-      themeToggle.textContent=isLight?'☀️':'🌙';
-      localStorage.setItem('theme',isLight?'light':'dark');
-    });
+<script>
+// helpers
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
 
-    // === Login system ===
-    const loginBtn=document.getElementById('loginBtn');
-    const loginModal=document.getElementById('loginModal');
-    const saveLogin=document.getElementById('saveLogin');
+// demo data
+const photos = [
+  {id:'p1',title:'غروب في ملعب الجديد تيمودي',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoHVk_cXCt_sHsaTRz8pGbTwS0Tgd3p66_vRy_1OU3VCxhlCx3sO6udiWGumzSQaLeIi7oqqvg8QtzKQ5xMK0NURzLQ28DALUv1WFIf9EWjls9bp193n4S7mcVI2eeA1xSr_9gVh7yDzOZbm0CGi2lKm27w46EWpgh0Bef7ba3CMp6BGYNfG7pK93CNOQ/s320-rw/IMG_20250516_193502.jpg'},
+  {id:'p2',title:'قصر الكبير تيمودي 🔥 ',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgCHkG0hyQ3FsmYuqowmwcVB9B-LgwAYiLuw-eJcg6K-RbBRSwrPuE-QoEP9-DBvIsRJ54aBUtfR1YHZ-ITr7t1B1Kn2ugOnOBQ_MEndJLgcp8PewVnnXN8GS2y0i9mhKNtW_KgLch0_Ws/s320/FB_IMG_1433399393728.jpg'},
+  {id:'p3',title:'تلاحم الغيوم فوق الرمال دهبية  ',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTVaREUkhmMa57VBzdmFX-1UeiXr1-0lkhkr54b5F3rWOgTGhxq4MJbKoGD2JUva_ZD21hAmLHBjZ1Mv6iYS2Vx0pHGxIFfoXzXlyGQTAxjjB6reDXfR4HF91Iq8h-68u1Mig2FyjDlak9C6wigOQkCegqlVZsQ174b__VzaPM7ViP9WHxphv_K2se7HE/s320-rw/20241016_123522.heic'},
+  {id:'p4',title:'ملهى الأطفال  ',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjp8pwdOst-zgEo_OGGidSqOYhS97Lp9DUHiOQnm5rlceNtlKMtcw6ZQOARc1e97eq7KHh6M44k8NCf2dOA1e3PEtIar1hi-_Edx9rtc13Zfto7BMBVYtdTiAFN2us4F0ntX4KdLrnC7qk/s320/FB_IMG_1433399429854.jpg'},
+  {id:'p5',title:'المولد النبوي الشريف بني عباس 2025 ',img:'https://cdn.elitihadcom.dz/wp-content/uploads/2018/11/mawlid-bechar.jpg'},
+  {id:'p6',title:'محمد الأمين كيحل ممثل ولاية بني عباس بالمجلس الأعلى للشباب تيمودي ',img:'https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/481958304_618352377607412_4440888128410987425_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFaoLHxZufO_KByLzx0IRrMdLMDIy4rrKt0swMjLiusq0xuPsfuOQSxgtSLsNNv0DxWs3xZLtmuD92geoA-ab-a&_nc_ohc=hlrSmkqs1TQQ7kNvwGLhNz4&_nc_oc=AdkChJn8lf5LWFQywV1YrwPPaj1Rt_6rkhfvRgkNywDSmLslAruZNbVrusx0kIpJvUw&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=2icK_iIGuq-RXzFAQtMqTw&oh=00_AfbtSX2IE2ZB0fGOhS8f5tEW_4VZIhEsdMO_bKtpYQpzrQ&oe=68C8D1AC'}
+];
+const videos = [
+  {id:'v1',title:'مونتاج ببجي',thumb:'https://i.ytimg.com/vi/Md4_36hnAMo/hqdefault.jpg',embed:'https://www.youtube.com/embed/Md4_36hnAMo'},
+  {id:'v1',title:'مدينة تيمودي ',thumb:'https://i9.ytimg.com/vi_webp/lxXCW5eFeOE/mq1.webp?sqp=CMiAnMYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShGMA8=&rs=AOn4CLCME5jvWWsqKLmg6U5zHSAZ_TWD7g',embed:'https://www.youtube.com/embed/lxXCW5eFeOE?start=70'},
+  {id:'v1',title:'ارخس كيبورد ميكانيكي في الجزائر / HAVIT kb435L dz ',thumb:'https://i9.ytimg.com/vi_webp/eRBwEuzC4Kk/mqdefault.webp?v=66f602f3&sqp=CPSCnMYG&rs=AOn4CLCYOWQs4ISm5X2KcS9CpuAzVKY1Yw',embed:'https://www.youtube.com/embed/eRBwEuzC4Kk'},
+  {id:'v1',title:'كال اوف دوتي وارزون موسم 3',thumb:'https://i9.ytimg.com/vi_webp/Hs8cfoTaDl4/mq2.webp?sqp=CMyHnMYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgXChJMA8=&rs=AOn4CLD_lXasckapUzoLK4rw-X3JEwJe3A',embed:'https://www.youtube.com/embed/Hs8cfoTaDl4'},
+  {id:'v1',title:'محمد الأمين كيحل: ممثل ولاية بني عباس بالمجلس الأعلى للشباب',thumb:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKl_Bt-OQTE5-pdpK82mQxxWhIzFxzgIY-2_m2wkMpGfV0-HI7t_7t4XJhEtAITDeinj8&usqp=CAU',embed:'https://www.youtube.com/embed/IGSuGA0MeXI'},
+  {id:'v2',title:'تيك توك مثال',thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg',embed:'https://www.tiktok.com/embed//7490353107705007365?is_from_webapp=1'},
+  {id:'v3',title:'فيديو فيسبوك',thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg',embed:'https://www.facebook.com/HakoOnlin/videos/4953952824698468'}
+];
+const news = [
+  {id:'n1',title:'حدث هام اليوم',img:'https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375',excerpt:'.🏅 بلدية تيمودي تستقبل أوّل وزير منذ عام 1962! .',full:'أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962. وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي. وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن. " المزيد'}
+];
+const audios = [
+  {id:'a1',title:'موسيقى خلفية',src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'}
+];
+const store = [
+  {id:'s1',title:'تيشيرت تيمودي',img:'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop',price:'00ج'},
+];
+const games = [
+  {id:'g1',title:'PUBG',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyOmU7UkYUBKS3vcrWq-A9k8UeBRD9CmYXwplLMtCaaY75Ty12mahaCF6FKunfit3aUHQ&usqp=CAU'}
+];
 
-    const user=JSON.parse(localStorage.getItem('timodi_user')||'null');
-    if(user){ loginBtn.textContent=user.name; }
+// storage
+let settings = JSON.parse(localStorage.getItem('site_settings')||'{"theme":"dark","lang":"ar","privacy":false,"layout":"grid"}');
+let user = JSON.parse(localStorage.getItem('site_user')||'null');
+let commentsDB = JSON.parse(localStorage.getItem('site_comments')||'{}');
 
-    loginBtn.addEventListener('click',()=>{
-      if(localStorage.getItem('timodi_user')){ 
-        if(confirm("تسجيل الخروج؟")){ localStorage.removeItem('timodi_user'); location.reload(); }
+// apply settings
+function applySettings(){
+  $('#themeToggle').textContent = settings.theme==='dark' ? '🌙' : '☀️';
+  if(settings.layout==='list'){
+    $$('.gallery, .vgrid, .store-grid, .games-grid, .news-grid').forEach(el=>el.style.gridTemplateColumns='1fr');
+  } else {
+    $$('.gallery').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(200px,1fr))');
+    $$('.vgrid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(220px,1fr))');
+    $$('.store-grid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(160px,1fr))');
+    $$('.games-grid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(200px,1fr))');
+    $$('.news-grid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(280px,1fr))');
+  }
+  if(settings.privacy){
+    document.querySelectorAll('main, .frame, .gallery').forEach(el=> el.style.filter='blur(6px)');
+  } else {
+    document.querySelectorAll('main, .frame, .gallery').forEach(el=> el.style.filter='none');
+  }
+  localStorage.setItem('site_settings', JSON.stringify(settings));
+}
+
+// renderers
+function renderTopGallery(){
+  const g = $('#topGallery'); g.innerHTML='';
+  photos.forEach(p=>{
+    const c = document.createElement('div'); c.className='card'; c.dataset.id=p.id;
+    c.innerHTML = `<img src="${p.img}" alt="${escapeHtml(p.title)}"><div class="meta"><strong>${escapeHtml(p.title)}</strong></div>`;
+    c.addEventListener('click', ()=> openLightbox(p.img));
+    g.appendChild(c);
+  });
+}
+
+function renderVideos(){
+  const g = $('#videosGrid'); g.innerHTML='';
+  videos.forEach(v=>{
+    const el = document.createElement('div'); el.className='vcard';
+    el.innerHTML = `<div class="vthumb"><img src="${v.thumb}" alt="${escapeHtml(v.title)}"></div><div style="flex:1"><div style="font-weight:700">${escapeHtml(v.title)}</div><div style="color:var(--muted);font-size:13px">${v.embed.includes('youtube')?'YouTube':v.embed.includes('tiktok')?'TikTok':'Other'}</div></div>`;
+    el.addEventListener('click', ()=> openVideoModal(v.embed));
+    g.appendChild(el);
+  });
+}
+
+function renderAudios(){
+  const g = $('#audiosList'); g.innerHTML='';
+  audios.forEach(a=>{
+    const d = document.createElement('div'); d.className='audio-item';
+    d.innerHTML = `<div style="flex:1;font-weight:700">${escapeHtml(a.title)}</div><audio controls src="${a.src}"></audio>`;
+    g.appendChild(d);
+  });
+}
+
+function renderStore(){
+  const g = $('#storeGrid'); g.innerHTML='';
+  store.forEach(s=>{
+    const d = document.createElement('div'); d.className='store-item';
+    d.innerHTML = `<img src="${s.img}" style="width:100%;height:120px;object-fit:cover;border-radius:8px"><div style="font-weight:700;margin-top:8px">${escapeHtml(s.title)}</div><div style="color:var(--muted);margin:8px 0">${escapeHtml(s.price)}</div>`;
+    // comments container
+    const comments = document.createElement('div'); comments.className='comments'; comments.id='c-'+s.id;
+    comments.innerHTML = `<div class="comment-list"></div>`;
+    d.appendChild(comments);
+    g.appendChild(d);
+    renderComments(s.id);
+  });
+}
+
+function renderGames(){
+  const g = $('#gamesGrid'); g.innerHTML='';
+  games.forEach(item=>{
+    const d = document.createElement('div'); d.className='card';
+    d.innerHTML = `<img src="${item.img}" style="height:140px;object-fit:cover"><div class="meta" style="padding:10px;font-weight:700">${escapeHtml(item.title)}</div>`;
+    const comments = document.createElement('div'); comments.className='comments'; comments.id='c-'+item.id;
+    comments.innerHTML = `<div class="comment-list"></div>`;
+    d.appendChild(comments);
+    g.appendChild(d);
+    renderComments(item.id);
+  });
+}
+
+function renderNews(){
+  const g = $('#newsGrid'); g.innerHTML='';
+  news.forEach(n=>{
+    const d = document.createElement('div'); d.className='news-card'; d.dataset.id=n.id;
+    d.innerHTML = `<img src="${n.img}" alt="${escapeHtml(n.title)}"><div class="title">${escapeHtml(n.title)}</div><div class="excerpt">${escapeHtml(n.excerpt)}</div>`;
+    const btn = document.createElement('button'); btn.className='small-btn'; btn.textContent='اقرأ المزيد';
+    btn.addEventListener('click', ()=>{
+      if(!d.classList.contains('expanded')){
+        d.querySelector('.excerpt').textContent = n.full;
+        d.classList.add('expanded');
+        btn.textContent='إخفاء';
       } else {
-        loginModal.classList.add('open');
+        d.querySelector('.excerpt').textContent = n.excerpt;
+        d.classList.remove('expanded');
+        btn.textContent='اقرأ المزيد';
       }
     });
-    saveLogin.addEventListener('click',()=>{
-      const name=document.getElementById('username').value.trim();
-      const email=document.getElementById('email').value.trim();
-      if(!name||!email) return alert("املأ كل الحقول");
-      localStorage.setItem('timodi_user',JSON.stringify({name,email}));
-      loginBtn.textContent=name;
-      loginModal.classList.remove('open');
-    });
-    loginModal.addEventListener('click',e=>{if(e.target===loginModal) loginModal.classList.remove('open');});
-  </script>
-</body>
-</html>
-  </style>
-</head>
-<body>
-  <!-- ====== NAVBAR ====== -->
-  <div class="nav">
-    <div class="container nav__row">
-      <div class="brand">
-        <div class="brand__logo">
-            <img src="ChatGPT Image 2 sept. 2025, 17_35_50.png" alt="شعار منصة تيمودي - تصميم دائري ملون مع نص عربي تيمودي بخط عصري وجريء" />
-        </div>
-        <div class="brand__text">تيمودي <span style="opacity:.6;font-weight:600">Timodi</span></div>
-      </div>
-      <div class="nav__links">
-        <a class="nav__link active" href="#photos">الصور</a>
-        <a class="nav__link" href="#videos">الفيديوات</a>
-        <a class="nav__link" href="#news">الأخبار</a>
-        <a class="nav__link" href="#audio">الصوتيات</a>
-        <a class="nav__link" href="#live">البثوث</a>
-        <a class="nav__link" href="#games">الألعاب</a>
-        <a class="nav__link" href="#STORE">المتجر</a>
-      </div>
-      <button class="btn nav__cta" id="openUpload">⬆️ رفع</button>
-    </div>
-  </div>
-
-  <!-- ====== HERO ====== -->
-  <section class="hero container" style="padding-top:26px">
-    <div class="hero__wrap">
-      <span class="live"><span class="dot"></span> منصة عربية لمحتوى متعدد</span>
-      <h1>شارك صورك وفيديوهاتك وأخبارك وصوتياتك وابدأ <span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">بثك المباشر</span> على <b>تيمودي</b>.</h1>
-      <p>كل شيء في مكان واحد — مع واجهة سهلة، تنقّل سريع، وبطاقات أنيقة.</p>
-      <div class="search">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="11" r="7" stroke="#cbd5e1" stroke-width="2"/></svg>
-        <input id="searchInput" placeholder="ابحث في تيمودي…" />
-      </div>
-      <div class="chips" id="chips">
-        <div class="chip active" data-filter="all">الكل</div>
-        <div class="chip" data-filter="photos">صور</div>
-        <div class="chip" data-filter="videos">فيديو</div>
-        <div class="chip" data-filter="news">أخبار</div>
-        <div class="chip" data-filter="audio">صوتيات</div>
-        <div class="chip" data-filter="live">بث مباشر</div>
-        <div class="chip" data-filter="games">ألعاب</div>
-        <div class="chip" data-filter="STORE">المتجر</div>
-      </div>
-      <div class="uploadbar">
-        <div class="uploadbtn" id="uploadPhoto">📷 رفع صورة</div>
-        <div class="uploadbtn" id="uploadVideo">🎬 رابط يوتيوب</div>
-        <div class="uploadbtn" id="uploadAudio">🎧 ملف صوتي</div>
-        <div class="uploadbtn" id="uploadNews">📰 مقال خبر</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ====== PHOTOS ====== -->
-  <section id="photos" class="section container">
-    <div class="section__head"><h2>📷 الصور</h2></div>
-    <div class="section__grid" id="grid-photos">
-      <!-- Sample photo cards -->
-      <article class="card media-item" data-type="photos" data-title="بطولة ألعاب">
-        <div class="card__media"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoHVk_cXCt_sHsaTRz8pGbTwS0Tgd3p66_vRy_1OU3VCxhlCx3sO6udiWGumzSQaLeIi7oqqvg8QtzKQ5xMK0NURzLQ28DALUv1WFIf9EWjls9bp193n4S7mcVI2eeA1xSr_9gVh7yDzOZbm0CGi2lKm27w46EWpgh0Bef7ba3CMp6BGYNfG7pK93CNOQ/s320-rw/IMG_20250516_193502.jpg" alt="بطولة ألعاب" /></div>
-        <div class="card__body">
-          <div class="card__title">لقطات  رياضية </div>
-          <div class="meta">#رياضات_ اليوم</div>
-          <div class="actions">
-            <button class="iconbtn like" data-id="p1">👍 <span>0</span></button>
-            <button class="iconbtn view" data-img>🔍 تكبير</button>
-          </div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="photos" data-title="لان بارتي">
-        <div class="card__media"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgCHkG0hyQ3FsmYuqowmwcVB9B-LgwAYiLuw-eJcg6K-RbBRSwrPuE-QoEP9-DBvIsRJ54aBUtfR1YHZ-ITr7t1B1Kn2ugOnOBQ_MEndJLgcp8PewVnnXN8GS2y0i9mhKNtW_KgLch0_Ws/s320/FB_IMG_1433399393728.jpg" alt="LAN Party" /></div>
-        <div class="card__body">
-          <div class="card__title"> قصر الكبير تيمودي 🔥</div>
-          <div class="meta">#مجتمع · أمس</div>
-          <div class="actions">
-            <button class="iconbtn like" data-id="p2">👍 <span>0</span></button>
-            <button class="iconbtn view" data-img>🔍 تكبير</button>
-          </div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="photos" data-title="أجهزة">
-        <div class="card__media"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTVaREUkhmMa57VBzdmFX-1UeiXr1-0lkhkr54b5F3rWOgTGhxq4MJbKoGD2JUva_ZD21hAmLHBjZ1Mv6iYS2Vx0pHGxIFfoXzXlyGQTAxjjB6reDXfR4HF91Iq8h-68u1Mig2FyjDlak9C6wigOQkCegqlVZsQ174b__VzaPM7ViP9WHxphv_K2se7HE/s320-rw/20241016_123522.heic" alt="Gaming Setup" /></div>
-        <div class="card__body">
-          <div class="card__title">  منظر صحراوي  </div>
-          <div class="meta">#هاردوير · قبل 3 أيام</div>
-          <div class="actions">
-            <button class="iconbtn like" data-id="p3">👍 <span>0</span></button>
-            <button class="iconbtn view" data-img>🔍 تكبير</button>
-          </div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="photos" data-title="كوزبلاي">
-        <div class="card__media"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjp8pwdOst-zgEo_OGGidSqOYhS97Lp9DUHiOQnm5rlceNtlKMtcw6ZQOARc1e97eq7KHh6M44k8NCf2dOA1e3PEtIar1hi-_Edx9rtc13Zfto7BMBVYtdTiAFN2us4F0ntX4KdLrnC7qk/s320/FB_IMG_1433399429854.jpg" alt="Cosplay" /></div>
-        <div class="card__body">
-          <div class="card__title">Cosplay من فعالية أطفال</div>
-          <div class="meta">#انمي · قبل أسبوع</div>
-          <div class="actions">
-            <button class="iconbtn like" data-id="p4">👍 <span>0</span></button>
-            <button class="iconbtn view" data-img>🔍 تكبير</button>
-          </div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="photos" data-title="تصميم جرافيك">
-        <div class="card__media"><img src="https://cdn.elitihadcom.dz/wp-content/uploads/2018/11/mawlid-bechar.jpg" alt="Cosplay" /></div>
-        <div class="card__body">
-          <div class="card__title"> المولد النبوي الشريف بني عباس 2025 </div>
-          <div class="meta">إحتفال · قبل أسبوع</div>
-          <div class="actions">
-            <button class="iconbtn like" data-id="p4">👍 <span>0</span></button>
-            <button class="iconbtn view" data-img>🔍 تكبير</button>
-          </div>
-        </div>
-      </article> 
-    </div>
-  </section>
-
-  <!-- ====== VIDEOS ====== -->
-  <section id="videos" class="section container">
-    <div class="section__head"><h2>🎬 الفيديوات</h2></div>
-    <div class="section__grid">
-      <article class="card media-item" data-type="videos" data-title="مونتاج ببجي">
-        <div class="card__media" style="aspect-ratio:16/9">
-          <iframe src="https://www.youtube.com/embed/Md4_36hnAMo" title="PUBG Montage" allowfullscreen></iframe>
-        </div>
-        <div class="card__body">
-          <div class="card__title">مونتاج لقطات ببجي</div>
-          <div class="meta">#PUBG · 4K</div>
-          <div class="actions"><button class="iconbtn like" data-id="v1">👍 <span>0</span></button></div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="videos" data-title="وارزون">
-        <div class="card__media" style="aspect-ratio:16/9">
-          <iframe src="https://www.youtube.com/embed/lxXCW5eFeOE?start=7" title="تيمودي Highlights" allowfullscreen></iframe>
-        </div>
-        <div class="card__body">
-          <div class="card__title">مدينة تيمودي</div>
-          <div class="meta"><div id="timoudi"></div></div>
-          <div class="actions"><button class="iconbtn like" data-id="v2">👍 <span>0</span></button></div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="videos" data-title="نصائح">
-        <div class="card__media" style="aspect-ratio:16/9">
-          <iframe src="https://www.youtube.com/embed/eRBwEuzC4Kk" title="Tips" allowfullscreen></iframe>
-        </div>
-        <div class="card__body">
-          <div class="card__title">أفضل نصائح للاعبين الجدد</div>
-          <div class="meta">#تعليم</div>
-          <div class="actions"><button class="iconbtn like" data-id="v3">👍 <span>0</span></button></div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="videos" data-title="مراجعة لعبة">
-        <div class="card__media" style="aspect-ratio:16/9">
-          <iframe src="https://www.youtube.com/embed/Hs8cfoTaDl4?start=100" title="Game Review" allowfullscreen></iframe>
-        </div>
-        <div class="card__body">
-          <div class="card__title"> كال اوف دوتي وارزون موسم 3 </div>
-          <div class="meta">#مراجعة · قبل 4 أيام</div>
-          <div class="actions"><button class="iconbtn like" data-id="v4">👍 <span>0</span></button></div>
-        </div>
-      </article> 
-    </div>
-  </section>
-
-  <!-- ====== NEWS ====== -->
-  <section id="news" class="section container">
-    <div class="section__head"><h2>📰 الأخبار والمقالات</h2></div>
-    <div class="section__grid">
-      <!-- خبر رئيسي -->
-      <article class="card media-item" data-type="news" data-title="إطلاق لعبة جديدة" style="overflow:visible;box-shadow:0 8px 32px rgba(124,92,255,.10)">
-        <div class="card__media" style="aspect-ratio:16/9;position:relative;">
-          <img src="https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375" alt="خبر" style="border-radius:12px 12px 0 0;object-fit:cover;width:100%;height:100%;">
-          <span style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(2px);padding:6px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px;">
-            🏛️ سياسة
-          </span>
-        </div>
-        <div class="card__body" style="padding-bottom:18px;">
-          <div class="card__title" style="font-size:18px;display:flex;align-items:center;gap:6px;">
-            🏅 بلدية تيمودي تستقبل أوّل وزير منذ عام 1962!
-          </div>
-          <div class="meta" style="margin-bottom:6px;">
-            ✍️ بقلم <b>تيمودي</b> · <span>قبل 2 يوم</span>
-          </div>
-          <p style="opacity:.95;margin:.2rem 0 0;max-height:2.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></p>
-            أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي...
-          </p>
-          <button class="iconbtn" onclick="toggleNews(this)" style="margin-top:8px">📖 قراءة المزيد</button>
-          <div class="news-full" style="display:none;opacity:.95;margin:.5rem 0 0;line-height:1.8">
-            أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.<br>
-            وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي.<br>
-            وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن.
-          </div>
-          <div class="actions" style="margin-top:10px;gap:12px">
-            <button class="iconbtn like" data-id="n1">👍 إعجاب <span>0</span></button>
-            <button class="iconbtn" onclick="openComments('n1')">💬 تعليق</button>
-            <span style="font-size:18px;opacity:.7">🗨️</span>
-          </div>
-          <div class="comments" id="c-n1" style="display:none;margin-top:10px"></div>
-        </div>
-      </article>
-      <!-- خبر ثانوي -->
-      <article class="card media-item" data-type="news" data-title="تحديث ضخم" style="overflow:visible;box-shadow:0 8px 32px rgba(0,212,255,.08)">
-        <div class="card__media" style="aspect-ratio:16/9;position:relative;">
-          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop" alt="تحديث" style="border-radius:12px 12px 0 0;object-fit:cover;width:100%;height:100%;">
-          <span style="position:absolute;top:10px;left:10px;background:rgba(0,212,255,.15);backdrop-filter:blur(2px);padding:6px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px;">
-            🛠️ تقنية
-          </span>
-        </div>
-        <div class="card__body" style="padding-bottom:18px;">
-          <div class="card__title" style="font-size:18px;display:flex;align-items:center;gap:6px;">
-            🚀 تحديث ضخم لمحرك اللعبة
-          </div>
-          <div class="meta" style="margin-bottom:6px;">
-            🕹️ #تقنية · <span>اليوم</span>
-          </div>
-          <p style="opacity:.95;margin:.2rem 0 0;max-height:2.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            تم إصدار تحديث كبير لمحرك اللعبة مع تحسينات في الأداء ودعم ميزات جديدة...
-          </p>
-          <button class="iconbtn" onclick="toggleNews(this)" style="margin-top:8px">📖 قراءة المزيد</button>
-          <div class="news-full" style="display:none;opacity:.95;margin:.5rem 0 0;line-height:1.8">
-            تم إصدار تحديث كبير لمحرك اللعبة مع تحسينات في الأداء ودعم ميزات جديدة للمطورين. يشمل التحديث دعم رسومات أفضل، وتحسين الذكاء الاصطناعي، وزيادة الاستقرار في اللعب الجماعي.
-          </div>
-          <div class="actions" style="margin-top:10px;gap:12px">
-            <button class="iconbtn like" data-id="n2">👍 إعجاب <span>0</span></button>
-            <button class="iconbtn" onclick="openComments('n2')">💬 تعليق</button>
-            <span style="font-size:18px;opacity:.7">✨</span>
-          </div>
-          <div class="comments" id="c-n2" style="display:none;margin-top:10px"></div>
-        </div>
-      </article>
-      <!-- مثال لمقال إضافي -->
-      <article class="card media-item" data-type="news" data-title="مقال رأي" style="overflow:visible;box-shadow:0 8px 32px rgba(255,93,122,.08)">
-        <div class="card__media" style="aspect-ratio:16/9;position:relative;">
-          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop" alt="مقال" style="border-radius:12px 12px 0 0;object-fit:cover;width:100%;height:100%;">
-          <span style="position:absolute;top:10px;left:10px;background:rgba(255,93,122,.15);backdrop-filter:blur(2px);padding:6px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px;">
-            📝 رأي
-          </span>
-        </div>
-        <div class="card__body" style="padding-bottom:18px;">
-          <div class="card__title" style="font-size:18px;display:flex;align-items:center;gap:6px;">
-            💡 مستقبل الألعاب في الجزائر
-          </div>
-          <div class="meta" style="margin-bottom:6px;">
-            ✍️ بقلم <b>سارة</b> · <span>قبل 5 ساعات</span>
-          </div>
-          <p style="opacity:.95;margin:.2rem 0 0;max-height:2.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            مع تطور التكنولوجيا، أصبح للألعاب الإلكترونية مستقبل واعد في الجزائر...
-          </p>
-          <button class="iconbtn" onclick="toggleNews(this)" style="margin-top:8px">📖 قراءة المزيد</button>
-          <div class="news-full" style="display:none;opacity:.95;margin:.5rem 0 0;line-height:1.8">
-            مع تطور التكنولوجيا، أصبح للألعاب الإلكترونية مستقبل واعد في الجزائر، حيث يزداد عدد اللاعبين والمطورين المحليين. الاستثمار في هذا المجال سيخلق فرص عمل جديدة ويعزز الاقتصاد الرقمي الوطني.
-          </div>
-          <div class="actions" style="margin-top:10px;gap:12px">
-            <button class="iconbtn like" data-id="n3">👍 إعجاب <span>0</span></button>
-            <button class="iconbtn" onclick="openComments('n3')">💬 تعليق</button>
-            <span style="font-size:18px;opacity:.7">🎮</span>
-          </div>
-          <div class="comments" id="c-n3" style="display:none;margin-top:10px"></div>
-        </div>
-      </article>
-    </div>
-  </section>
-      </article>
-    </div>
-  </section>
-  <script>
-    function toggleNews(btn) {
-      const full = btn.parentElement.querySelector('.news-full');
-      const short = btn.parentElement.querySelector('p');
-      const opened = full.style.display === 'block';
-      full.style.display = opened ? 'none' : 'block';
-      short.style.display = opened ? '' : 'none';
-      btn.textContent = opened ? '📖 قراءة المزيد' : '✖ إغلاق';
-    }
-  </script>
-  <!-- ====== STORE ====== -->
-<section id="store" class="section container">
-  <div class="section__head"><h2>🛒 المتجر</h2></div>
-  <div class="section__grid">
-    
-    <!-- منتج -->
-    <article class="card product-item">
-      <div class="card__media">
-        <img src="https://via.placeholder.com/400x250?text=تيشيرت+Gaming" alt="تيشيرت">
-      </div>
-      <div class="card__body">
-        <div class="card__title">تيشيرت جيمينغ</div>
-        <div class="meta">سعر: <b>2500 دج</b></div>
-        <div class="actions">
-          <button class="iconbtn" onclick="addToCart('تيشيرت جيمينغ',2500)">➕ أضف للسلة</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="card product-item">
-      <div class="card__media">
-        <img src="https://via.placeholder.com/400x250?text=ماوس+RGB" alt="ماوس">
-      </div>
-      <div class="card__body">
-        <div class="card__title">ماوس RGB</div>
-        <div class="meta">سعر: <b>3500 دج</b></div>
-        <div class="actions">
-          <button class="iconbtn" onclick="addToCart('ماوس RGB',3500)">➕ أضف للسلة</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="card product-item">
-      <div class="card__media">
-        <img src="https://via.placeholder.com/400x250?text=سماعات+Gaming" alt="سماعات">
-      </div>
-      <div class="card__body">
-        <div class="card__title">سماعات Gaming</div>
-        <div class="meta">سعر: <b>4200 دج</b></div>
-        <div class="actions">
-          <button class="iconbtn" onclick="addToCart('سماعات Gaming',4200)">➕ أضف للسلة</button>
-        </div>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-  <!-- ====== CART ====== -->
-<section id="cart" class="section container" style="display:none">
-  <div class="section__head"><h2>🧾 سلة المشتريات</h2></div>
-  <div id="cartItems"></div>
-  <div style="margin-top:15px; font-weight:bold;">الإجمالي: <span id="cartTotal">0</span> دج</div>
-  <div class="actions" style="margin-top:10px">
-    <button class="btn" onclick="openCheckoutForm()">✅ إتمام الطلب</button>
-    <button class="iconbtn" onclick="clearCart()">🗑️ تفريغ السلة</button>
-  </div>
-</section>
-
-<!-- ====== CHECKOUT FORM ====== -->
-<div id="checkoutForm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center">
-  <div style="background:var(--card);padding:20px;border-radius:16px;max-width:400px;width:90%;color:var(--text)">
-    <h3>📦 تفاصيل الطلب</h3>
-    <label>الاسم:</label>
-    <input id="custName" style="width:100%;padding:10px;margin:5px 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--text)">
-
-    <label>رقم الهاتف:</label>
-    <input id="custPhone" style="width:100%;padding:10px;margin:5px 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--text)">
-
-    <label>العنوان:</label>
-    <textarea id="custAddr" style="width:100%;padding:10px;margin:5px 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--text)"></textarea>
-
-    <div style="margin-top:10px;display:flex;justify-content:space-between;gap:10px">
-      <button class="btn" onclick="submitOrder()">📩 إرسال الطلب</button>
-      <button class="iconbtn" onclick="closeCheckoutForm()">❌ إلغاء</button>
-    </div>
-  </div>
-</div>
-
-<script>
-let cart = JSON.parse(localStorage.getItem("timodi_cart")||"[]");
-
-function saveCart(){
-  localStorage.setItem("timodi_cart", JSON.stringify(cart));
-}
-
-function renderCart(){
-  const box=document.getElementById("cartItems");
-  const cartSec=document.getElementById("cart");
-  box.innerHTML="";
-  if(cart.length===0){
-    cartSec.style.display="none";
-    return;
-  }
-  cartSec.style.display="block";
-
-  let total=0;
-  cart.forEach((item,i)=>{
-    total+=item.price;
-    box.innerHTML+=`
-      <div style="background:rgba(255,255,255,.06);padding:10px;border-radius:10px;margin:6px 0;display:flex;justify-content:space-between;align-items:center">
-        <div>${item.name} — <b>${item.price} دج</b></div>
-        <button class="iconbtn" onclick="removeFromCart(${i})">❌</button>
-      </div>`;
+    d.appendChild(btn);
+    // comments area
+    const comments = document.createElement('div'); comments.className='comments'; comments.id='c-'+n.id;
+    comments.innerHTML = `<div class="comment-list"></div>`;
+    // comment form
+    const form = document.createElement('div'); form.className='comment-form'; form.style.display='flex'; form.style.gap='8px'; form.style.marginTop='8px';
+    const input = document.createElement('input'); input.placeholder='أضف تعليقاً...'; input.id='t-'+n.id; input.style.flex='1'; input.style.padding='8px'; input.style.borderRadius='8px'; input.style.background='rgba(255,255,255,0.02)'; input.style.border='1px solid rgba(255,255,255,0.03)';
+    const send = document.createElement('button'); send.className='btn'; send.textContent='إرسال'; send.type='button';
+    send.addEventListener('click', ()=> addComment(n.id));
+    form.appendChild(input); form.appendChild(send);
+    comments.appendChild(form);
+    d.appendChild(comments);
+    g.appendChild(d);
+    renderComments(n.id);
   });
-  document.getElementById("cartTotal").textContent=total;
 }
 
-function addToCart(name,price){
-  cart.push({name,price});
-  saveCart();
-  renderCart();
-  alert("✅ تمت إضافة "+name+" للسلة");
-}
-
-function removeFromCart(index){
-  cart.splice(index,1);
-  saveCart();
-  renderCart();
-}
-
-function clearCart(){
-  cart=[];
-  saveCart();
-  renderCart();
-}
-
-function openCheckoutForm(){
-  if(cart.length===0) return alert("❌ السلة فارغة");
-  document.getElementById("checkoutForm").style.display="flex";
-}
-
-function closeCheckoutForm(){
-  document.getElementById("checkoutForm").style.display="none";
-}
-
-function submitOrder(){
-  const name=document.getElementById("custName").value.trim();
-  const phone=document.getElementById("custPhone").value.trim();
-  const addr=document.getElementById("custAddr").value.trim();
-
-  if(!name||!phone||!addr){
-    alert("⚠️ يرجى ملء جميع الحقول");
-    return;
-  }
-
-  const total=document.getElementById("cartTotal").textContent;
-  alert(`🎉 شكراً ${name}!\nتم استلام طلبك بنجاح.\nالإجمالي: ${total} دج\nسيتم التواصل معك على ${phone}.`);
-
-  // تفريغ السلة
-  clearCart();
-  closeCheckoutForm();
-}
-
-// عرض السلة عند تحميل الصفحة
-renderCart();
-</script>
-
-
-  <!-- ====== AUDIO ====== -->
-  <section id="audio" class="section container">
-    <div class="section__head"><h2>🎧 الصوتيات</h2></div>
-    <div class="section__grid">
-      <article class="card media-item" data-type="audio" data-title="بودكاست ألعاب">
-        <div class="card__media" style="aspect-ratio:16/5; padding:12px; display:flex;align-items:center">
-          <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-        </div>
-        <div class="card__body">
-          <div class="card__title">بودكاست: تكتيكات الفوز</div>
-          <div class="meta">مدة 12:30</div>
-          <div class="actions"><button class="iconbtn like" data-id="a1">👍 <span>0</span></button></div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="audio" data-title="موسيقى استريم">
-        <div class="card__media" style="aspect-ratio:16/5; padding:12px; display:flex;align-items:center">
-          <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
-        </div>
-        <div class="card__body">
-          <div class="card__title">موسيقى خلفية للبث</div>
-          <div class="meta">#لا حقوق</div>
-          <div class="actions"><button class="iconbtn like" data-id="a2">👍 <span>0</span></button></div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ====== LIVE ====== -->
-  <section id="live" class="section container">
-    <div class="section__head"><h2>📡 البثوث المباشرة</h2></div>
-    <div class="section__grid">
-      <article class="card media-item" data-type="live" data-title="Live YouTube">
-        <div class="card__media" style="aspect-ratio:16/9">
-          <!-- استبدل VIDEO_ID ببثك المباشر -->
-          <iframe src="https://www.youtube.com/embed/0pbSWm4FZ3Y?start=3359" title="YouTube Live" allowfullscreen></iframe>
-        </div>
-        <div class="card__body">
-          <div class="card__title"> PUBG Battlegrounds - PC </div>
-          <div class="meta">قيد البث الآن</div>
-          <div class="actions"><button class="iconbtn like" data-id="l1">👍 <span>0</span></button></div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="live" data-title="Twitch Embed">
-        <div class="card__media" style="aspect-ratio:16/9">
-          <!-- يمكنك لاحقًا استبداله بــ Twitch Embed الرسمي -->
-          <iframe src="https://player.twitch.tv/?channel=monstercat&parent=example.com" title="Twitch" allowfullscreen></iframe>
-        </div>
-        <div class="card__body">
-          <div class="card__title">ستريم تجريبي Twitch</div>
-          <div class="meta">مثال توضيحي</div>
-          <div class="actions"><button class="iconbtn like" data-id="l2">👍 <span>0</span></button></div>
-        </div>
-      </article>
-      <article class="card media-item" data-type="live" data-title="Live Demo">
-        <div class="card__media" style="aspect-ratio:16/9;display:grid;place-items:center;color:var(--muted);font-size:14px;padding:10px;text-align:center">
-          🚧 قيد الإنشاء 🚧<br/>يمكنك تضمين أي بث مباشر من منصات مثل YouTube، Twitch، أو Facebook Live.
-        </div>
-        <div class="card__body">
-          <div class="card__title">أضف بثك المباشر هنا</div>
-          <div class="meta">مثال توضيحي</div>
-          <div class="actions"><button class="iconbtn like" data-id="l3">👍 <span>0</span></button></div>
-        </div>
-      </article>
-    </div>
-    <small style="color:var(--muted)">ملاحظة: قد تحتاج  لمشاهدة بثوث ممتعة  <b>هنا </b>   حسب الدومين الخاص بك.</small>
-  </section>
-
-  <!-- ====== GAMES ====== -->
-  <section id="gameCarousel" class="section container">
-  <div class="section__head">
-    <h2>🎮 ألعاب مقترحة</h2>
-    <div style="margin-inline-start:auto;display:flex;gap:8px">
-      <button class="iconbtn" onclick="scrollGames(-1)">⬅️</button>
-      <button class="iconbtn" onclick="scrollGames(1)">➡️</button>
-    </div>
-  </div>
-
-  <div class="carousel-wrapper">
-    <div class="carousel-track" id="gameTrack">
-
-      <!-- لعبة 1 -->
-      <article class="card game">
-        <div class="card__media">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyOmU7UkYUBKS3vcrWq-A9k8UeBRD9CmYXwplLMtCaaY75Ty12mahaCF6FKunfit3aUHQ&usqp=CAU" alt="PUBG">
-        </div>
-        <div class="card__body">
-          <div class="card__title">PUBG Online</div>
-          <div class="meta">نوع: أكشن</div>
-          <div class="actions"><a href="https://poki.com/ar/g/pubg" target="_blank" class="iconbtn">▶️ العب</a></div>
-        </div>
-      </article>
-
-      <!-- لعبة 2 -->
-      <article class="card game">
-        <div class="card__media">
-          <img src="https://img.tapimg.net/market/images/a712c50716564cfcb889a5467a68be99.jpg" alt="FIFA">
-        </div>
-        <div class="card__body">
-          <div class="card__title">FIFA Online</div>
-          <div class="meta">نوع: رياضة</div>
-          <div class="actions"><a href="https://poki.com/ar/g/fifa" target="_blank" class="iconbtn">▶️ العب</a></div>
-        </div>
-      </article>
-
-      <!-- لعبة 3 -->
-      <article class="card game">
-        <div class="card__media">
-          <img src="https://image.api.playstation.com/cdn/EP0700/CUSA06291_00/7wGBDrgVjegXCJDdrNZQdYfPWC26MnHs.png" alt="Naruto">
-        </div>
-        <div class="card__body">
-          <div class="card__title">Naruto RPG</div>
-          <div class="meta">نوع: RPG</div>
-          <div class="actions"><a href="https://poki.com/ar/g/naruto" target="_blank" class="iconbtn">▶️ العب</a></div>
-        </div>
-      </article>
-
-      <!-- لعبة 4 -->
-      <article class="card game">
-        <div class="card__media">
-          <img src="https://play-lh.googleusercontent.com/FVWs-cooG28tz3GuKSaBKW_Rp91wLJxGxlmB9et_r-chKrjWpvXGxtRJWQi0QKithdM" alt="Subway">
-        </div>
-        <div class="card__body">
-          <div class="card__title">Subway Surfers</div>
-          <div class="meta">نوع: أركيد</div>
-          <div class="actions"><a href="https://poki.com/ar/g/subway-surfers" target="_blank" class="iconbtn">▶️ العب</a></div>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<style>
-/* ====== GAME CAROUSEL ====== */
-.carousel-wrapper {
-  overflow: hidden;
-  position: relative;
-}
-.carousel-track {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 10px;
-}
-.carousel-track::-webkit-scrollbar {
-  height: 8px;
-}
-.carousel-track::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,.2);
-  border-radius: 10px;
-}
-#gameCarousel .card {
-  flex: 0 0 260px;
-}
-</style>
-
-<script>
-function scrollGames(dir){
-  const track=document.getElementById("gameTrack");
-  track.scrollBy({left: dir*280, behavior:"smooth"});
-}
-</script>
-
-  <!-- ====== LIGHTBOX (Images) ====== -->
-  <div class="lightbox" id="lightbox">
-    <img class="lightbox__content" id="lightboxImg" alt="preview"/>
-  </div>
-
-  <!-- ====== FOOTER ====== -->
-  <footer>
-    <div class="container" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <div>© <span id="year"></span> تيمودي • Timodi</div>
-      <div> مرحبا بك في بلدية تيمودي  </div>
-    </div>
-  </footer>
-
-  <script>
-    // ===== Year =====
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ===== Likes with localStorage =====
-    const likeButtons = document.querySelectorAll('.like');
-    const likes = JSON.parse(localStorage.getItem('timodi_likes')||'{}');
-    likeButtons.forEach(btn=>{
-      const id = btn.dataset.id; const span = btn.querySelector('span');
-      span.textContent = likes[id]||0;
-      btn.addEventListener('click',()=>{ likes[id]=(likes[id]||0)+1; span.textContent=likes[id]; localStorage.setItem('timodi_likes', JSON.stringify(likes)); });
-    });
-
-    // ===== Comments (simple demo) =====
-    const commentsDB = JSON.parse(localStorage.getItem('timodi_comments')||'{}');
-    function openComments(key){
-      const box = document.getElementById('c-'+key); const opened = box.style.display==='block';
-      box.style.display = opened ? 'none' : 'block';
-      if(!opened){ renderComments(key); }
-    }
-    function renderComments(key){
-      const box = document.getElementById('c-'+key);
-      const items = commentsDB[key] || [];
-      box.innerHTML = `
-        <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
-          <input id="u-${key}" placeholder="اسمك" style="flex:1;min-width:120px;padding:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);border-radius:10px"/>
-          <input id="t-${key}" placeholder="أضف تعليقًا..." style="flex:2;min-width:200px;padding:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);border-radius:10px"/>
-          <button class="iconbtn" onclick="addComment('${key}')">➕ إضافة</button>
-        </div>
-      ` + items.map(c=>`<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:10px;border-radius:10px;margin:6px 0"><b>${c.user||'مجهول'}</b> — <small style="opacity:.7">${c.time}</small><div style="opacity:.9;margin-top:6px">${c.text}</div></div>`).join('');
-    }
-    function addComment(key){
-      const u = document.getElementById('u-'+key).value.trim()||'مجهول';
-      const t = document.getElementById('t-'+key).value.trim();
-      if(!t) return;
-      (commentsDB[key]=commentsDB[key]||[]).unshift({user:u,text:t,time:new Date().toLocaleString('ar-EG')});
-      localStorage.setItem('timodi_comments', JSON.stringify(commentsDB));
-      renderComments(key);
-    }
-
-    // ===== Lightbox for images =====
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lightboxImg');
-    document.querySelectorAll('[data-img]').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const img = btn.closest('.card').querySelector('img');
-        lbImg.src = img.src; lb.classList.add('open');
-      })
-    });
-    lb.addEventListener('click',()=> lb.classList.remove('open'));
-
-    // ===== Filter (chips + search) =====
-    const chips = document.querySelectorAll('.chip');
-    const items = document.querySelectorAll('.media-item');
-    const searchInput = document.getElementById('searchInput');
-    function applyFilter(){
-      const active = document.querySelector('.chip.active')?.dataset.filter || 'all';
-      const q = (searchInput.value||'').toLowerCase();
-      items.forEach(el=>{
-        const type = el.dataset.type, title = (el.dataset.title||'').toLowerCase();
-        const okType = active==='all' || type===active;
-        const okText = !q || title.includes(q);
-        el.style.display = (okType && okText) ? '' : 'none';
+// comments
+function renderComments(key){
+  const box = document.getElementById('c-'+key);
+  if(!box) return;
+  const list = box.querySelector('.comment-list');
+  if(!list) return;
+  list.innerHTML = '';
+  const items = commentsDB[key] || [];
+  // show first 3 by default, add toggle if more
+  const toShow = items.length>3 ? items.slice(0,3) : items;
+  toShow.forEach(c=>{
+    const el = document.createElement('div'); el.className='comment';
+    el.innerHTML = `<strong>${escapeHtml(c.user)}</strong><div>${escapeHtml(c.text)}</div><time>${c.time}</time>`;
+    list.appendChild(el);
+  });
+  // toggle button
+  let toggle = box.querySelector('.toggle-comments');
+  if(items.length>3){
+    if(!toggle){
+      toggle = document.createElement('button'); toggle.className='small-btn toggle-comments'; toggle.style.marginTop='6px';
+      toggle.addEventListener('click', ()=>{
+        if(toggle.dataset.open==='1'){
+          // collapse
+          renderComments(key);
+        } else {
+          // expand
+          list.innerHTML = '';
+          items.forEach(c=>{
+            const el = document.createElement('div'); el.className='comment';
+            el.innerHTML = `<strong>${escapeHtml(c.user)}</strong><div>${escapeHtml(c.text)}</div><time>${c.time}</time>`;
+            list.appendChild(el);
+          });
+          toggle.textContent='إخفاء التعليقات';
+          toggle.dataset.open='1';
+        }
       });
+      box.appendChild(toggle);
     }
-    chips.forEach(c=> c.addEventListener('click',()=>{ chips.forEach(x=>x.classList.remove('active')); c.classList.add('active'); applyFilter(); }));
-    searchInput.addEventListener('input', applyFilter);
+    toggle.textContent = 'عرض المزيد من التعليقات';
+    toggle.dataset.open='0';
+  } else {
+    if(toggle) toggle.remove();
+  }
+}
 
-    // ===== Dummy upload (preview only) =====
-    document.getElementById('uploadPhoto').addEventListener('click',()=>{
-      const input = Object.assign(document.createElement('input'),{type:'file',accept:'image/*'});
-      input.onchange = e=>{
-        const file = e.target.files[0]; if(!file) return;
-        const url = URL.createObjectURL(file);
-        const grid = document.getElementById('grid-photos');
-        const id = 'p'+(Math.random()*1e6|0);
-        grid.insertAdjacentHTML('afterbegin', `
-          <article class="card media-item" data-type="photos" data-title="مرفوع جديد">
-            <div class="card__media"><img src="${url}" alt="new"/></div>
-            <div class="card__body">
-              <div class="card__title">صورة مرفوعة للتجربة</div>
-              <div class="meta">الآن</div>
-              <div class="actions">
-                <button class="iconbtn like" data-id="${id}">👍 <span>0</span></button>
-                <button class="iconbtn view" data-img>🔍 تكبير</button>
-              </div>
-            </div>
-          </article>`);
-        // rebind like + lightbox
-        const newBtn = grid.querySelector(`[data-id='${id}']`);
-        const span = newBtn.querySelector('span'); span.textContent = 0; newBtn.addEventListener('click',()=>{ likes[id]=(likes[id]||0)+1; span.textContent=likes[id]; localStorage.setItem('timodi_likes', JSON.stringify(likes)); });
-        grid.querySelector('.card [data-img]').addEventListener('click', (ev)=>{
-          const img = ev.target.closest('.card').querySelector('img'); lbImg.src = img.src; lb.classList.add('open');
-        });
-      };
-      input.click();
-    });
+function addComment(key){
+  if(!user){ alert('سجّل الدخول أولاً'); openProfileModal(); return; }
+  const input = document.getElementById('t-'+key);
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return alert('اكتب تعليقاً');
+  const newC = {user:user.name, text, time:new Date().toLocaleString()};
+  commentsDB[key] = commentsDB[key]||[];
+  commentsDB[key].push(newC);
+  localStorage.setItem('site_comments', JSON.stringify(commentsDB));
+  input.value='';
+  renderComments(key);
+}
 
-    document.getElementById('uploadVideo').addEventListener('click',()=>{
-      const url = prompt('ألصق رابط فيديو YouTube (مثال: https://www.youtube.com/watch?v=lxXCW5eFeOE أو https://youtu.be/lxXCW5eFeOE)');
-      if(!url) return;
-      const id = (url.match(/[?&]v=([^&]+)/)||[])[1] || url.split('/').pop();
-      if(!id) return alert('تعذّر استخراج معرف الفيديو');
-      const card = `
-        <article class="card media-item" data-type="videos" data-title="فيديو جديد">
-          <div class="card__media" style="aspect-ratio:16/9"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div>
-          <div class="card__body">
-            <div class="card__title">فيديو مضاف</div>
-            <div class="meta">YouTube</div>
-            <div class="actions"><button class="iconbtn like" data-id="v${Date.now()}">👍 <span>0</span></button></div>
-          </div>
-        </article>`;
-      document.querySelector('#videos .section__grid').insertAdjacentHTML('afterbegin', card);
-    });
+// lightbox & video modal
+function openLightbox(src){ $('#lightboxImg').src = src; $('#lightbox').classList.add('open'); }
+$('#lightbox').addEventListener('click', ()=> $('#lightbox').classList.remove('open'));
 
-    document.getElementById('uploadAudio').addEventListener('click',()=>{
-      const input = Object.assign(document.createElement('input'),{type:'file',accept:'audio/*'});
-      input.onchange = e=>{
-        const file = e.target.files[0]; if(!file) return; const url = URL.createObjectURL(file);
-        const card = `
-          <article class="card media-item" data-type="audio" data-title="صوت جديد">
-            <div class="card__media" style="aspect-ratio:16/5; padding:12px; display:flex;align-items:center">
-              <audio controls src="${url}"></audio>
-            </div>
-            <div class="card__body">
-              <div class="card__title">مقطع صوتي</div>
-              <div class="meta">محلي</div>
-              <div class="actions"><button class="iconbtn like" data-id="a${Date.now()}">👍 <span>0</span></button></div>
-            </div>
-          </article>`;
-        document.querySelector('#audio .section__grid').insertAdjacentHTML('afterbegin', card);
-      };
-      input.click();
-    });
+function openVideoModal(src){
+  $('#videoFrame').src = src + (src.includes('?') ? '&autoplay=1' : '?autoplay=1');
+  $('#videoModal').classList.add('open');
+}
+$('#closeVideo').addEventListener('click', ()=> { $('#videoModal').classList.remove('open'); $('#videoFrame').src=''; });
 
-    document.getElementById('uploadNews').addEventListener('click',()=>{
-      const title = prompt('عنوان الخبر/المقال'); const text = prompt('المحتوى المختصر');
-      if(!title) return;
-      const key = 'n'+(Math.random()*1e6|0);
-      const card = `
-        <article class="card media-item" data-type="news" data-title="${title}">
-          <div class="card__media" style="aspect-ratio:16/9"><img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop"/></div>
-          <div class="card__body">
-            <div class="card__title">${title}</div>
-            <div class="meta">بقلمك الآن</div>
-            <p style="opacity:.9;margin:.2rem 0 0">${text||''}</p>
-            <div class="actions">
-              <button class="iconbtn like" data-id="${key}">👍 <span>0</span></button>
-              <button class="iconbtn" onclick="openComments('${key}')">💬 تعليقات</button>
-            </div>
-            <div class="comments" id="c-${key}" style="display:none;margin-top:10px"></div>
-          </div>
-        </article>`;
-      document.querySelector('#news .section__grid').insertAdjacentHTML('afterbegin', card);
-    });
-  </script>
+// settings & profile
+$('#settingsBtn').addEventListener('click', ()=> { $('#settingsModal').classList.add('open'); $('#langSelect').value = settings.lang; $('#privacyToggle').checked = settings.privacy; $('#layoutMode').value = settings.layout; });
+$('#closeSettings').addEventListener('click', ()=> $('#settingsModal').classList.remove('open'));
+$('#saveSettings').addEventListener('click', ()=> { settings.lang = $('#langSelect').value; settings.privacy = $('#privacyToggle').checked; settings.layout = $('#layoutMode').value; applySettings(); $('#settingsModal').classList.remove('open'); });
+
+function openProfileModal(){ $('#profileModal').classList.add('open'); if(user){ $('#pName').value = user.name; $('#pEmail').value = user.email; } }
+$('#profileBtn').addEventListener('click', openProfileModal);
+$('#closeProfile').addEventListener('click', ()=> $('#profileModal').classList.remove('open'));
+$('#saveProfile').addEventListener('click', ()=> { const name = $('#pName').value.trim(); const email = $('#pEmail').value.trim(); if(!name||!email) return alert('املأ الحقول'); user = {name,email}; localStorage.setItem('site_user', JSON.stringify(user)); alert('تم الحفظ'); $('#profileModal').classList.remove('open'); renderAll(); });
+
+// theme toggle
+$('#themeToggle').addEventListener('click', ()=> {
+  settings.theme = settings.theme==='dark' ? 'light' : 'dark';
+  if(settings.theme==='light'){
+    document.documentElement.style.setProperty('--bg','#f4f7fb'); document.documentElement.style.setProperty('--bg-2','#ffffff');
+    document.documentElement.style.setProperty('--card','#ffffff'); document.documentElement.style.setProperty('--text','#0b1220'); document.documentElement.style.setProperty('--muted','#556171');
+  } else {
+    document.documentElement.style.setProperty('--bg','#0b1220'); document.documentElement.style.setProperty('--bg-2','#0f1a2b');
+    document.documentElement.style.setProperty('--card','#0f1724'); document.documentElement.style.setProperty('--text','#e9eef8'); document.documentElement.style.setProperty('--muted','#9aa7bf');
+  }
+  localStorage.setItem('site_settings', JSON.stringify(settings));
+  applySettings();
+});
+
+// initialization
+function renderAll(){
+  renderTopGallery(); renderVideos(); renderAudios(); renderStore(); renderGames(); renderNews();
+}
+applySettings();
+renderAll();
+// البحث العام
+document.getElementById('search').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  document.querySelectorAll('main section').forEach(sec=>{
+    if(sec.textContent.toLowerCase().includes(q)){
+      sec.style.display='block';
+    } else {
+      sec.style.display='none';
+    }
+  });
+});
+</script>
 </body>
 </html>
