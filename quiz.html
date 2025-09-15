@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>لعبة صح أم خطأ</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1220; --card:#0f1724; --muted:#9aa7bf; --accent:#7c5cff;
+    --correct:#16a34a; --wrong:#ef4444;
+    --text:#e9eef8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;font-family:'Tajawal',sans-serif;background:
+    linear-gradient(180deg,var(--bg),#071127);color:var(--text);display:flex;align-items:center;justify-content:center;padding:20px}
+  .wrap{width:100%;max-width:820px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  h1{font-size:20px;margin:0}
+  .top-info{color:var(--muted);font-size:14px}
+
+  .card{background:#0f1724;padding:18px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+  .qbox{padding:18px;border-radius:10px;background:rgba(0,0,0,0.25);margin-bottom:12px;font-size:18px;min-height:86px;display:flex;align-items:center}
+  .buttons{display:flex;gap:10px}
+  .btn{flex:1;padding:12px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+  .btn.true{background:linear-gradient(90deg,var(--correct),#34d399);color:#042016}
+  .btn.false{background:linear-gradient(90deg,var(--wrong),#fb7185);color:#2b0202}
+  .feedback{margin-top:8px;height:26px;font-weight:700}
+  .feedback.correct{color:var(--correct)}
+  .feedback.wrong{color:var(--wrong)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>لعبة: صح أم خطأ</h1>
+        <div class="top-info">اختبر معرفتك</div>
+      </div>
+      <div class="top-info" id="bestNow">أعلى نتيجة محفوظة: 0</div>
+    </header>
+
+    <div class="card">
+      <div class="qbox" id="qbox">جارِ التحميل...</div>
+      <div class="buttons">
+        <button class="btn true" id="btnTrue">✔️ صح</button>
+        <button class="btn false" id="btnFalse">✖️ خطأ</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div style="margin-top:12px">
+        <span id="score">0</span> نقطة
+      </div>
+    </div>
+  </div>
+
+  <!-- أصوات -->
+  <audio id="soundCorrect" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
+  <audio id="soundWrong" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
+  <audio id="soundTimeout" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+  <audio id="soundEnd" src="https://actions.google.com/sounds/v1/cartoon/clang.ogg" preload="auto"></audio>
+
+<script>
+(function(){
+  const questions = [
+    { q: 'الشمس هي نجم', a: true },
+    { q: 'القمر يضيء بضوئه الخاص', a: false },
+    { q: 'الماء يغلي عند 100° مئوية', a: true },
+    { q: 'الزرافة أقصر من القطة', a: false },
+  ];
+
+  let index=0, score=0;
+  const qbox=document.getElementById('qbox');
+  const feedback=document.getElementById('feedback');
+  const scoreEl=document.getElementById('score');
+  const bestNow=document.getElementById('bestNow');
+
+  const sndCorrect=document.getElementById('soundCorrect');
+  const sndWrong=document.getElementById('soundWrong');
+  const sndTimeout=document.getElementById('soundTimeout');
+  const sndEnd=document.getElementById('soundEnd');
+
+  function updateBest(){
+    const best=Number(localStorage.getItem('bestScore')||0);
+    if(score>best) localStorage.setItem('bestScore',score);
+    bestNow.textContent='أعلى نتيجة محفوظة: '+(localStorage.getItem('bestScore')||0);
+  }
+
+  function showQuestion(){
+    if(index>=questions.length){
+      qbox.textContent='انتهى الاختبار! نتيجتك: '+score;
+      feedback.textContent='';
+      sndEnd.play();
+      updateBest();
+      return;
+    }
+    qbox.textContent=questions[index].q;
+    feedback.textContent='';
+  }
+
+  function answer(val){
+    if(index>=questions.length) return;
+    const correct=questions[index].a;
+    if(val===correct){
+      feedback.textContent='✔️ صحيح!';
+      feedback.className='feedback correct';
+      score+=10;
+      sndCorrect.play();
+    }else{
+      feedback.textContent='❌ خطأ!';
+      feedback.className='feedback wrong';
+      score=Math.max(0,score-5);
+      sndWrong.play();
+    }
+    scoreEl.textContent=score;
+    index++;
+    setTimeout(showQuestion,800);
+  }
+
+  document.getElementById('btnTrue').addEventListener('click',()=>answer(true));
+  document.getElementById('btnFalse').addEventListener('click',()=>answer(false));
+
+  updateBest();
+  showQuestion();
+})();
+</script>
+</body>
+</html>

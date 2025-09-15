@@ -47,7 +47,6 @@ a{color:inherit;text-decoration:none}
 .vcard{display:flex;gap:10px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
 .vthumb{width:110px;height:70px;flex-shrink:0;border-radius:8px;overflow:hidden}
 .vthumb img{width:100%;height:100%;object-fit:cover}
-
 /* audios */
 .audios{display:flex;flex-direction:column;gap:10px}
 .audio-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px}
@@ -56,6 +55,37 @@ a{color:inherit;text-decoration:none}
 .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
 .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 
+
+/* game card */
+.games-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:14px;
+  }
+  .game-card{
+    background:#111;
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:.2s;
+  }
+  .game-card:hover{transform:translateY(-4px)}
+  .game-card img{width:100%;height:160px;object-fit:cover}
+  .game-info{padding:12px;display:flex;flex-direction:column;gap:8px}
+  .game-info h4{margin:0;font-size:16px}
+  .btn.download{
+    padding:8px 10px;
+    background:#7c5cff;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    text-align:center;
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:none;
+  }
+  .btn.download:hover{background:#5a44cc}
 /* news */
 .news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .news-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);padding:12px;display:flex;flex-direction:column}
@@ -90,13 +120,14 @@ a{color:inherit;text-decoration:none}
 @media (max-width:600px){ .inner{flex-wrap:wrap} .controls{margin-inline-start:0;width:100%;justify-content:space-between} .logo{width:44px;height:44px} .site-title{font-size:1rem} .vmodal iframe{height:260px} }
 
 /* socials official colors */
-.socials a{font-size:18px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff}
+.socials a{font-size:18px;width:35px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff}
 .socials a.fb{color:#1877F2}.socials a.yt{color:#FF0000}.socials a.dc{color:#5865F2}.socials a.tt{color:#000}
 .nav-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
 .nav-links a{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px}
 .search-bar{text-align:center;margin:10px}
 .search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;
   border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></head>
 <body>
@@ -113,10 +144,13 @@ a{color:inherit;text-decoration:none}
     </div>
     
     <div class="socials">
-      <a href="https://facebook.com" target="_blank" class="fb"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://youtube.com" target="_blank" class="yt"><i class="fab fa-youtube"></i></a>
-      <a href="https://discord.com" target="_blank" class="dc"><i class="fab fa-discord"></i></a>
-      <a href="https://tiktok.com" target="_blank" class="tt"><i class="fab fa-tiktok"></i></a>
+      <a href="https://facebook.com/HAKO-ONLIN-103900968867795" target="_blank" class="fb"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://youtube.com/@abdelhakkerroumi" target="_blank" class="yt"><i class="fab fa-youtube"></i></a>
+      <a href="https://discord.gg/g5BWtQ6zTy" target="_blank" class="dc"><i class="fab fa-discord"></i></a>
+      <a href="https://tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc" target="_blank" class="tt"><i class="fab fa-tiktok"></i></a>
+      <a href="https://twitch.com/hako_onlin" target="_blank" class="tt"><i class="fab fa-twitch"></i></a>
+      <a href="https://x.com/kerroumi41" target="_blank" class="tt"><i class="fab fa-twitter"></i></a>
+      <a href="https://abdelhakpsg.blogspot.com/?zx=2992eb6a766dbccc" target="_blank" class="tt"><i class="fa fa-blog"></i></a>
     </div>
 
     <div class="nav-links">
@@ -142,7 +176,7 @@ a{color:inherit;text-decoration:none}
 
 
 <header class="topbar"></header>
-ا<!-- Welcome Marquee -->
+<!-- Welcome Marquee -->
 <div class="container" style="padding:40px 20px">
     <div style="overflow:hidden;white-space:nowrap;">
       <h1 class="rainbow-marquee">
@@ -173,6 +207,25 @@ a{color:inherit;text-decoration:none}
     100% { transform: translateX(-100%);}
   }
   </style>
+
+<!-- 🕹️ قسم الدكاء -->
+
+  <section> 
+  <a href="quiz.html">🎮 جرّب لعبة صح أم خطأ</a>
+  <style>
+    a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #7c5cff, #00d4ff);
+      color: #071024;
+      font-weight: 700;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    </style>
+    
+</section>
 
 
   <!-- gallery strip -->
@@ -206,10 +259,43 @@ a{color:inherit;text-decoration:none}
     <div class="store-grid" id="storeGrid"></div>
   </section>
 
-  <section class="frame" id="gamesFrame">
-    <h3>الألعاب</h3>
-    <div class="games-grid" id="gamesGrid"></div>
-  </section>
+  <!-- 🕹️ قسم الألعاب -->
+<section id="games-download" class="frame">
+  <h3>🎮 تحميل الألعاب</h3>
+  <div class="games-grid">
+
+    <!-- لعبة 1 -->
+    <div class="game-card">
+      <img src="https://picsum.photos/400/200?game1" alt="لعبة 1">
+      <div class="game-info">
+        <h4>لعبة الأكشن 1</h4>
+        <p>حجم الملف: 500MB</p>
+        <a href="https://example.com/game1.zip" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+
+    <!-- لعبة 2 -->
+    <div class="game-card">
+      <img src="https://picsum.photos/400/200?game2" alt="لعبة 2">
+      <div class="game-info">
+        <h4>لعبة السباق 2</h4>
+        <p>حجم الملف: 1.2GB</p>
+        <a href="https://example.com/game2.zip" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+
+    <!-- لعبة 3 -->
+    <div class="game-card">
+      <img src="https://picsum.photos/400/200?game3" alt="لعبة 3">
+      <div class="game-info">
+        <h4>لعبة الألغاز 3</h4>
+        <p>حجم الملف: 250MB</p>
+        <a href="https://example.com/game3.zip" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+
+  </div>
+</section>
   
   <section class="frame" id="liveFrame">
   <h3>📡 البث المباشر</h3>
@@ -300,9 +386,9 @@ const photo = [
 
 const videos = [
   {id:'v1',title:'مونتاج ببجي',thumb:'https://i.ytimg.com/vi/Md4_36hnAMo/hqdefault.jpg',embed:'https://www.youtube.com/embed/Md4_36hnAMo'},
-  {id:'v1',title:' مدينة تيمودي ليلا',thumb:'https://i9.ytimg.com/vi_webp/lxXCW5eFeOE/mq1.webp?sqp=CMiAnMYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShGMA8=&rs=AOn4CLCME5jvWWsqKLmg6U5zHSAZ_TWD7g',embed:'https://www.youtube.com/embed/lxXCW5eFeOE?start=70'},
-  {id:'v1',title:'ارخس كيبورد ميكانيكي في الجزائر / HAVIT kb435L dz ',thumb:'https://i9.ytimg.com/vi_webp/eRBwEuzC4Kk/mqdefault.webp?v=66f602f3&sqp=CPSCnMYG&rs=AOn4CLCYOWQs4ISm5X2KcS9CpuAzVKY1Yw',embed:'https://www.youtube.com/embed/eRBwEuzC4Kk'},
-  {id:'v1',title:'كال اوف دوتي وارزون موسم 3',thumb:'https://i9.ytimg.com/vi_webp/Hs8cfoTaDl4/mq2.webp?sqp=CMyHnMYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgXChJMA8=&rs=AOn4CLD_lXasckapUzoLK4rw-X3JEwJe3A',embed:'https://www.youtube.com/embed/Hs8cfoTaDl4'},
+  {id:'v1',title:' مدينة تيمودي ليلا',thumb:'https://i9.ytimg.com/vi_webp/lxXCW5eFeOE/mq1.webp?sqp=CPSlocYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShGMA8=&rs=AOn4CLD3YlsG-7PBaquoXC1xloMOajv5GA',embed:'https://www.youtube.com/embed/lxXCW5eFeOE?start=70'},
+  {id:'v1',title:'ارخس كيبورد ميكانيكي في الجزائر / HAVIT kb435L dz ',thumb:'https://i9.ytimg.com/vi_webp/eRBwEuzC4Kk/mqdefault.webp?v=66f602f3&sqp=CMijocYG&rs=AOn4CLDpcY4158qOc9Q9S_U9cFGMf2n0Hg',embed:'https://www.youtube.com/embed/eRBwEuzC4Kk'},
+  {id:'v1',title:'كال اوف دوتي وارزون موسم 3',thumb:'https://i9.ytimg.com/vi_webp/Hs8cfoTaDl4/mq1.webp?sqp=CPSlocYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgXihLMA8=&rs=AOn4CLDc3d1qkJBZTMLP572wqGov4Qdt-Q',embed:'https://www.youtube.com/embed/Hs8cfoTaDl4'},
   {id:'v1',title:'محمد الأمين كيحل: ممثل ولاية بني عباس بالمجلس الأعلى للشباب',thumb:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKl_Bt-OQTE5-pdpK82mQxxWhIzFxzgIY-2_m2wkMpGfV0-HI7t_7t4XJhEtAITDeinj8&usqp=CAU',embed:'https://www.youtube.com/embed/IGSuGA0MeXI'},
   {id:'v1',title:'لقاء مع المصور" يحي طالبي"مشارك في الصالون الوطني للصورة الفوتوغرافية قصر الثقافة الجزائر ',thumb:'https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg',embed:'https://www.youtube.com/embed/m7fK5zMqdKs'},
   {id:'v1',title:'البطل "يحيى طالبي" يفوز بمسابقة القمة العالمية في التصوير الفوتوغرافي بأمريكا ',thumb:'https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg',embed:'https://www.youtube.com/embed/hoy0vvjGGyI'},
@@ -324,6 +410,18 @@ const store = [
 const games = [
   {id:'g1',title:'PUBG',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyOmU7UkYUBKS3vcrWq-A9k8UeBRD9CmYXwplLMtCaaY75Ty12mahaCF6FKunfit3aUHQ&usqp=CAU'}
 ];
+
+// socials 
+const socials = {
+  facebook:'https://facebook.com/HAKO-ONLIN-103900968867795',
+  youtube:'https://youtube.com/@abdelhakkerroumi',
+  discord:'https://discord.gg/g5BWtQ6zTy',
+  tiktok:'https://tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc',
+  twitch:'https://twitch.com/hako_onlin',
+  x:'https://x.com/kerroumi41',
+  blog:'https://abdelhakpsg.blogspot.com/?zx=2992eb6a766dbccc',
+};
+
 
 // storage
 let settings = JSON.parse(localStorage.getItem('site_settings')||'{"theme":"dark","lang":"ar","privacy":false,"layout":"grid"}');
