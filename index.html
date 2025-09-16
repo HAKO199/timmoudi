@@ -10,11 +10,19 @@
   --bg:#0b1220; --bg-2:#0f1a2b; --card:#0f1724; --muted:#9aa7bf;
   --accent:#7c5cff; --accent-2:#00d4ff; --glass: rgba(255,255,255,0.03);
   --text:#e9eef8;
+  --text-invert:#071024;
+  --text-highlight:#fff;
+  --shadow: rgba(2,6,23,0.4);
+  --shadow-strong: rgba(2,6,23,0.6);
+  --shadow-glow: rgba(124,92,255,0.4);
+  --shadow-glow-strong: rgba(124,92,255,0.6);
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:
   radial-gradient(900px 400px at 10% -10%, #16213b 0%, transparent 40%), linear-gradient(180deg,var(--bg),var(--bg-2));
   color:var(--text); -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5,h6{margin:0;font-weight:800;color:var(--text)}
+p{margin:0 0 12px;line-height:1.5;color:var(--muted)}
 a{color:inherit;text-decoration:none}
 .container{max-width:1200px;margin:0 auto;padding:18px}
 
@@ -47,9 +55,13 @@ a{color:inherit;text-decoration:none}
 .vcard{display:flex;gap:10px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
 .vthumb{width:110px;height:70px;flex-shrink:0;border-radius:8px;overflow:hidden}
 .vthumb img{width:100%;height:100%;object-fit:cover}
+.vinfo{flex:1;font-size:14px;font-weight:600;color:var(--text)}
 /* audios */
 .audios{display:flex;flex-direction:column;gap:10px}
 .audio-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px}
+.audio-item:hover{background:var(--glass)}
+.audio-item audio{flex:1}
+
 
 /* store/games */
 .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
@@ -93,6 +105,7 @@ a{color:inherit;text-decoration:none}
 .news-card .title{font-weight:800;margin-top:8px}
 .news-card .excerpt{color:var(--muted);font-size:14px;max-height:72px;overflow:hidden;transition:max-height .3s ease}
 .news-card.expanded .excerpt{max-height:none}
+.news-card .read-more{margin-top:auto;color:var(--accent);font-size:14px;cursor:pointer}
 
 /* comments */
 .comments{margin-top:10px}
@@ -100,6 +113,10 @@ a{color:inherit;text-decoration:none}
 .comment{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin-bottom:8px}
 .comment strong{color:var(--accent)}
 .comment time{display:block;font-size:12px;color:var(--muted)}
+.add-comment{display:flex;gap:8px;margin-top:8px}
+.add-comment input{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.add-comment button{padding:8px 12px;border-radius:8px;background:var(--accent);border:none;color:#071024;cursor:pointer;font-weight:700}
+
 
 /* lightbox & modals */
 .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:200}
@@ -114,6 +131,8 @@ a{color:inherit;text-decoration:none}
 .modal-box{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01));padding:18px;border-radius:12px;width:420px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
 .form-row{display:flex;align-items:center;gap:8px;margin:8px 0}
 .label{min-width:120px;color:var(--muted)}
+input[type="text"],input[type="email"],select{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.close{position:absolute;top:12px;right:12px;font-size:18px;color:var(--muted);cursor:pointer}
 
 /* responsive */
 @media (max-width:900px){ .vthumb{width:90px;height:60px} .card img{height:120px} .vmodal iframe{height:320px} }
@@ -125,8 +144,7 @@ a{color:inherit;text-decoration:none}
 .nav-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
 .nav-links a{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px}
 .search-bar{text-align:center;margin:10px}
-.search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;
-  border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
+.search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></head>
@@ -242,12 +260,29 @@ a{color:inherit;text-decoration:none}
     <h3>فيديوهات (YouTube / Facebook / TikTok)</h3>
     <div class="vgrid" id="videosGrid"></div>
   </section>
-
-  <section class="frame" id="newsFrame">
-    <h3>📰 المقالات الإخبارية</h3>
-    <div class="news-grid" id="newsGrid"></div>
-  </section>
 </main>
+
+<section id="news" class="frame">
+  <h3>📰 المقالات الإخبارية</h3>
+  <div class="news-grid" id="newsGrid"></div>
+</section>
+
+<!-- نافذة المودال -->
+<div id="newsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">✖</span>
+    <h2 id="modalTitle"></h2>
+    <p id="modalBody"></p>
+    <div class="comments">
+      <h4>💬 التعليقات</h4>
+      <div id="commentList"></div>
+      <div class="add-comment">
+        <input id="commentInput" placeholder="أضف تعليقك...">
+        <button onclick="addComment()">➕ أضف</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <section class="frame" id="audioFrame">
     <h3>الصوتيات</h3>
@@ -259,6 +294,7 @@ a{color:inherit;text-decoration:none}
     <div class="store-grid" id="storeGrid"></div>
   </section>
 
+  
   <!-- 🕹️ قسم الألعاب -->
 <section id="games-download" class="frame">
   <h3>🎮 تحميل الألعاب</h3>
@@ -361,14 +397,11 @@ a{color:inherit;text-decoration:none}
     100% { transform: translateX(-100%);}
   }
   </style>
-
-
 <script>
 // helpers
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-
 // demo data
 const photos = [
   {id:'p1',title:'غروب في ملعب الجديد تيمودي',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoHVk_cXCt_sHsaTRz8pGbTwS0Tgd3p66_vRy_1OU3VCxhlCx3sO6udiWGumzSQaLeIi7oqqvg8QtzKQ5xMK0NURzLQ28DALUv1WFIf9EWjls9bp193n4S7mcVI2eeA1xSr_9gVh7yDzOZbm0CGi2lKm27w46EWpgh0Bef7ba3CMp6BGYNfG7pK93CNOQ/s320-rw/IMG_20250516_193502.jpg'},
@@ -379,37 +412,114 @@ const photos = [
   {id:'p6',title:'محمد الأمين كيحل ممثل ولاية بني عباس بالمجلس الأعلى للشباب تيمودي ',img:'https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/481958304_618352377607412_4440888128410987425_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFaoLHxZufO_KByLzx0IRrMdLMDIy4rrKt0swMjLiusq0xuPsfuOQSxgtSLsNNv0DxWs3xZLtmuD92geoA-ab-a&_nc_ohc=hlrSmkqs1TQQ7kNvwGLhNz4&_nc_oc=AdkChJn8lf5LWFQywV1YrwPPaj1Rt_6rkhfvRgkNywDSmLslAruZNbVrusx0kIpJvUw&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=2icK_iIGuq-RXzFAQtMqTw&oh=00_AfbtSX2IE2ZB0fGOhS8f5tEW_4VZIhEsdMO_bKtpYQpzrQ&oe=68C8D1AC'}, 
   {id:'p7',title:' المصور" يحي طالبي" تيمودي',img:'https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg'},
   {id:'p7',title:' صورتان جزائريتان ضمن أحسن 10 صور فوتوغرافية في مسابقة صور القمة العالمية لمجتمع المعلومات 2024 ',img:'https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg'},
-];
-const photo = [
-{id:'p2',title:'مسجد الإمام مسلم قصر الكبير تيمودي ',img:'https://web.facebook.com/photo/?fbid=737532254259016&set=pcb.737532527592322'},
+  
 ];
 
 const videos = [
   {id:'v1',title:'مونتاج ببجي',thumb:'https://i.ytimg.com/vi/Md4_36hnAMo/hqdefault.jpg',embed:'https://www.youtube.com/embed/Md4_36hnAMo'},
-  {id:'v1',title:' مدينة تيمودي ليلا',thumb:'https://i9.ytimg.com/vi_webp/lxXCW5eFeOE/mq1.webp?sqp=CPSlocYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShGMA8=&rs=AOn4CLD3YlsG-7PBaquoXC1xloMOajv5GA',embed:'https://www.youtube.com/embed/lxXCW5eFeOE?start=70'},
-  {id:'v1',title:'ارخس كيبورد ميكانيكي في الجزائر / HAVIT kb435L dz ',thumb:'https://i9.ytimg.com/vi_webp/eRBwEuzC4Kk/mqdefault.webp?v=66f602f3&sqp=CMijocYG&rs=AOn4CLDpcY4158qOc9Q9S_U9cFGMf2n0Hg',embed:'https://www.youtube.com/embed/eRBwEuzC4Kk'},
-  {id:'v1',title:'كال اوف دوتي وارزون موسم 3',thumb:'https://i9.ytimg.com/vi_webp/Hs8cfoTaDl4/mq1.webp?sqp=CPSlocYG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgXihLMA8=&rs=AOn4CLDc3d1qkJBZTMLP572wqGov4Qdt-Q',embed:'https://www.youtube.com/embed/Hs8cfoTaDl4'},
+  {id:'v1',title:' مدينة تيمودي ليلا',thumb:'https://i9.ytimg.com/vi_webp/lxXCW5eFeOE/mq1.webp?sqp=CNitp8YG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShGMA8=&rs=AOn4CLCKgGQfut0LKY2VECkcPVWkUiT5Mw',embed:'https://www.youtube.com/embed/eRBwEuzC4Kk'},
+  {id:'v1',title:'كال اوف دوتي وارزون موسم 3',thumb:'https://i9.ytimg.com/vi_webp/Hs8cfoTaDl4/mq1.webp?sqp=CNitp8YG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgXihLMA8=&rs=AOn4CLDWaEMCLAmmhnzeIez6I3VvKNYqVA',embed:'https://www.youtube.com/embed/Hs8cfoTaDl4'},
   {id:'v1',title:'محمد الأمين كيحل: ممثل ولاية بني عباس بالمجلس الأعلى للشباب',thumb:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKl_Bt-OQTE5-pdpK82mQxxWhIzFxzgIY-2_m2wkMpGfV0-HI7t_7t4XJhEtAITDeinj8&usqp=CAU',embed:'https://www.youtube.com/embed/IGSuGA0MeXI'},
   {id:'v1',title:'لقاء مع المصور" يحي طالبي"مشارك في الصالون الوطني للصورة الفوتوغرافية قصر الثقافة الجزائر ',thumb:'https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg',embed:'https://www.youtube.com/embed/m7fK5zMqdKs'},
   {id:'v1',title:'البطل "يحيى طالبي" يفوز بمسابقة القمة العالمية في التصوير الفوتوغرافي بأمريكا ',thumb:'https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg',embed:'https://www.youtube.com/embed/hoy0vvjGGyI'},
   {id:'v2',title:'تيك توك مثال',thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg',embed:'https://www.tiktok.com/embed//7490353107705007365?is_from_webapp=1'},
   {id:'v3',title:'فيديو فيسبوك',thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg',embed:'https://www.facebook.com/HakoOnlin/videos/4953952824698468'},
-  
-  
-  
 ];
 const news = [
-  {id:'n1',title:'حدث هام اليوم',img:'https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375',excerpt:'.🏅 بلدية تيمودي تستقبل أوّل وزير منذ عام 1962! .',full:'أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962. وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي. وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن. " المزيد'}
+  {id:'n1',title:'حدث هام اليوم',img:'https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375',excerpt:'.🏅 بلدية تيمودي تستقبل أوّل وزير منذ عام 1962! .',full:'أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962. وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي. وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن. " المزيد'},
 ];
 const audios = [
-  {id:'a1',title:'موسيقى خلفية',src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'}
+  {id:'a1',title:'أعمارنا أعمالنا ',src:'https://ia800906.us.archive.org/31/items/Maher_Zean_www.suratmp3.com/maher-zean_a3malona-a3marona.mp3'},
+  {id:'a2',title:'السلام عليك يا رسول الله ',src:'https://dn721903.ca.archive.org/0/items/Maher_Zean_www.suratmp3.com/Assalamu_Alaika_ar.mp3'},
+  {id:'a3',title:' إلا صلاتي ',src:'https://ia800202.us.archive.org/29/items/hnein/Hni4.mp3'},
+  {id:'a4',title:' أمي ',src:'https://dn721609.ca.archive.org/0/items/Islamic_Tape-760_uP_bY_mUSLEm/040-.mp3'},
+  {id:'a5',title:'أنا العبد ',src:'https://ia600209.us.archive.org/26/items/afassy_qalby_sghir/ana_l3abd.mp3'},
+  {id:'a6',title:'طويل الشوق ',src:'https://ia600202.us.archive.org/25/items/bukhater_qods_bir7.com/Al-Shawqi.mp3'},
 ];
 const store = [
   {id:'s1',title:'تيشيرت تيمودي',img:'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop',price:'00ج'},
 ];
 const games = [
-  {id:'g1',title:'PUBG',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyOmU7UkYUBKS3vcrWq-A9k8UeBRD9CmYXwplLMtCaaY75Ty12mahaCF6FKunfit3aUHQ&usqp=CAU'}
+  {id:'g1',title:'PUBG',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyOmU7UkYUBKS3vcrWq-A9k8UeBRD9CmYXwplLMtCaaY75Ty12mahaCF6FKunfit3aUHQ&usqp=CAU'},
 ];
+
+const articles = [
+  {
+    title: "بلدية تيمودي تستقبل أوّل وزير منذ عام 1962!",
+    image: "https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375",
+    summary: "أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.",
+    content: `أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.
+    وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي.
+    وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة        الجنوب الغربي للوطن.
+    " المزيد
+    `,
+  },
+  {
+    title: "محمد الأمين كيحل ممثل ولاية بني عباس بالمجلس الأعلى للشباب",
+    image: "https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/481958304_618352377607412_4440888128410987425_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFaoLHxZufO_KByLzx0IRrMdLMDIy4rrKt0swMjLiusq0xuPsfuOQSxgtSLsNNv0DxWs3xZLtmuD92geoA-ab-a&_nc_ohc=hlrSmkqs1TQQ7kNvwGLhNz4&_nc_oc=AdkChJn8lf5LWFQywV1YrwPPaj1Rt_6rkhfvRgkNywDSmLslAruZNbVrusx0kIpJvUw&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=2icK_iIGuq-RXzFAQtMqTw&oh=00_AfbtSX2IE2ZB0fGOhS8f5tEW_4VZIhEsdMO_bKtpYQpzrQ&oe=68C8D1AC",
+    summary: "محمد الأمين كيحل، شاب طموح من بني عباس، تم انتخابه مؤخراً كممثل لولاية بشار في المجلس الأعلى للشباب.",
+    content: `محمد الأمين كيحل، شاب طموح من بني عباس، تم انتخابه مؤخراً كممثل لولاية بشار في المجلس الأعلى للشباب.
+    في هذا الدور الجديد، يهدف محمد الأمين إلى تعزيز مشاركة الشباب في التنمية المحلية وتمكينهم من خلال مبادرات مبتكرة.
+    " المزيد
+    `,
+  },
+  {
+    title: "لقاء مع المصور يحيى طالبي مشارك في الصالون الوطني للصورة الفوتوغرافية قصر الثقافة الجزائر",
+    image: "https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg",
+    summary: "يحيى طالبي، مصور فوتوغرافي موهوب من بني عباس، شارك مؤخراً في الصالون الوطني للصورة الفوتوغرافية الذي أقيم في قصر الثقافة بالجزائر.",
+    content: `يحيى طالبي، مصور فوتوغرافي موهوب من بني عباس، شارك مؤخراً في الصالون الوطني للصورة الفوتوغرافية الذي أقيم في قصر الثقافة بالجزائر.
+    خلال اللقاء، تحدث يحيى عن شغفه بالتصوير وكيفية تطوير مهاراته الفنية، بالإضافة إلى التحديات التي واجهها في مسيرته المهنية.
+    " المزيد
+    `, 
+  },
+  {
+    title: "البطل يحيى طالبي يفوز بمسابقة القمة العالمية في التصوير الفوتوغرافي بأمريكا",
+    image: "https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg",
+    summary: "يحيى طالبي، المصور الفوتوغرافي من بني عباس، حقق إنجازاً كبيراً بفوزه في مسابقة القمة العالمية لمجتمع المعلومات 2024 في الولايات المتحدة الأمريكية.",
+    content: `يحيى طالبي، المصور الفوتوغرافي من بني عباس، حقق إنجازاً كبيراً بفوزه في مسابقة القمة العالمية لمجتمع المعلومات 2024 في الولايات المتحدة الأمريكية.
+    في هذه المسابقة المرموقة، تم تكريم يحيى على إبداعه وتميزه في مجال التصوير الفوتوغرافي، مما يعكس موهبته والتزامه بالفن.
+    " المزيد
+    `,
+  },  
+  {
+    title: "صورتان جزائريتان ضمن أحسن 10 صور فوتوغرافية في مسابقة صور القمة العالمية لمجتمع المعلومات 2024",
+    image: "https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg",
+    summary: "صورتان من الجزائر، إحداهما من تصوير يحيى طالبي من بني عباس، تم اختيارهما ضمن أفضل 10 صور في مسابقة القمة العالمية لمجتمع المعلومات 2024.",
+    content: `صورتان من الجزائر، إحداهما من تصوير يحيى طالبي من بني عباس، تم اختيارهما ضمن أفضل 10 صور في مسابقة القمة العالمية لمجتمع المعلومات 2024.
+    هذا الإنجاز يعكس جودة وابتكار المصورين الجزائريين على الساحة الدولية ويعزز مكانة الجزائر في مجال التصوير الفوتوغرافي.
+    " المزيد
+    `,
+    },
+];
+
+  // توليد البطاقات
+  const grid = document.getElementById('newsGrid');
+  articles.forEach((article, idx)=>{
+    const card=document.createElement('div');
+    card.className="news-card";
+    card.innerHTML=`
+      <img src="${article.image}" alt="${article.title}">
+      <div class="news-info">
+        <h4>${article.title}</h4>
+        <p>${article.summary}</p>
+        <button class="btn" onclick="openModal(${idx})">📖 اقرأ المزيد</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // فتح المودال
+  function openModal(idx){
+    document.getElementById('modalTitle').innerText=articles[idx].title;
+    document.getElementById('modalBody').innerText=articles[idx].content;
+    document.getElementById('newsModal').style.display='flex';
+  }
+  function closeModal(){
+    document.getElementById('newsModal').style.display='none';
+  }
+  window.onclick=function(e){
+    if(e.target==document.getElementById('newsModal')) closeModal();
+  }
 
 // socials 
 const socials = {
@@ -421,8 +531,6 @@ const socials = {
   x:'https://x.com/kerroumi41',
   blog:'https://abdelhakpsg.blogspot.com/?zx=2992eb6a766dbccc',
 };
-
-
 // storage
 let settings = JSON.parse(localStorage.getItem('site_settings')||'{"theme":"dark","lang":"ar","privacy":false,"layout":"grid"}');
 let user = JSON.parse(localStorage.getItem('site_user')||'null');
@@ -447,7 +555,6 @@ function applySettings(){
   }
   localStorage.setItem('site_settings', JSON.stringify(settings));
 }
-
 // renderers
 function renderTopGallery(){
   const g = $('#topGallery'); g.innerHTML='';
@@ -458,7 +565,6 @@ function renderTopGallery(){
     g.appendChild(c);
   });
 }
-
 function renderVideos(){
   const g = $('#videosGrid'); g.innerHTML='';
   videos.forEach(v=>{
@@ -468,7 +574,6 @@ function renderVideos(){
     g.appendChild(el);
   });
 }
-
 function renderAudios(){
   const g = $('#audiosList'); g.innerHTML='';
   audios.forEach(a=>{
@@ -477,7 +582,6 @@ function renderAudios(){
     g.appendChild(d);
   });
 }
-
 function renderStore(){
   const g = $('#storeGrid'); g.innerHTML='';
   store.forEach(s=>{
@@ -491,7 +595,6 @@ function renderStore(){
     renderComments(s.id);
   });
 }
-
 function renderGames(){
   const g = $('#gamesGrid'); g.innerHTML='';
   games.forEach(item=>{
@@ -504,7 +607,6 @@ function renderGames(){
     renderComments(item.id);
   });
 }
-
 function renderNews(){
   const g = $('#newsGrid'); g.innerHTML='';
   news.forEach(n=>{
@@ -538,7 +640,6 @@ function renderNews(){
     renderComments(n.id);
   });
 }
-
 // comments
 function renderComments(key){
   const box = document.getElementById('c-'+key);
@@ -583,7 +684,6 @@ function renderComments(key){
     if(toggle) toggle.remove();
   }
 }
-
 function addComment(key){
   if(!user){ alert('سجّل الدخول أولاً'); openProfileModal(); return; }
   const input = document.getElementById('t-'+key);
@@ -698,30 +798,3 @@ document.getElementById('search').addEventListener('input',function(){
     });
   });
 </script>
-
-<!-- مرجع خادم Node.js + Express + Socket.IO
-// server.js
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const bodyParser = require('body-parser');
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-app.use(bodyParser.json());
-
-app.post('/webhook/youtube',(req,res)=>{
-  const payload=req.body;
-  const embedUrl=payload.embedUrl;
-  if(embedUrl){
-    const live={id:'yt-'+Date.now(),embedUrl,title:'YouTube Live',platform:'YouTube'};
-    io.emit('new-live',live);
-  }
-  res.sendStatus(200);
-});
-// كرر لفيسبوك/تويتش/تيك توك
-
-server.listen(3000,()=>console.log('listening on 3000'));
-</body>
-</html>
