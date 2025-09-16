@@ -67,12 +67,12 @@ a{color:inherit;text-decoration:none}
 .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
 .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 
-
 /* game card */
 .games-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
     gap:14px;
+    margin-top:12px
   }
   .game-card{
     background:#111;
@@ -81,6 +81,9 @@ a{color:inherit;text-decoration:none}
     display:flex;
     flex-direction:column;
     transition:.2s;
+    box-shadow:0 6px 24px rgba(119, 25, 196, 0.616);
+    border:1px solid rgba( ,255,255,255,0.03);
+    cursor:pointer;
   }
   .game-card:hover{transform:translateY(-4px)}
   .game-card img{width:100%;height:160px;object-fit:cover}
@@ -96,6 +99,9 @@ a{color:inherit;text-decoration:none}
     font-weight:600;
     cursor:pointer;
     text-decoration:none;
+    display:inline-block;
+    transition:.2s;
+    margin-top:auto;
   }
   .btn.download:hover{background:#5a44cc}
 /* news */
@@ -175,10 +181,10 @@ input[type="text"],input[type="email"],select{flex:1;padding:8px;border-radius:8
       <a href="#topGallery">📷 الصور</a>
       <a href="#videosFrame">🎥 الفيديوهات</a>
       <a href="#audioFrame">🎵 الصوتيات</a>
-      <a href="#newsFrame">📰 المقالات</a>
       <a href="#liveFrame">📡 البث</a>
-      <a href="#gamesFrame">🎮 الألعاب</a>
       <a href="#storeFrame">🛒 المتجر</a>
+      <a href="#games-download">🎮 الألعاب</a>
+      <a href="#news">📰 الأخبار</a>
     </div>
 
     <div class="controls">
@@ -295,41 +301,158 @@ input[type="text"],input[type="email"],select{flex:1;padding:8px;border-radius:8
   </section>
 
   
-  <!-- 🕹️ قسم الألعاب -->
+  <!-- 🎮 تحميل الألعاب   -->
 <section id="games-download" class="frame">
   <h3>🎮 تحميل الألعاب</h3>
   <div class="games-grid">
 
     <!-- لعبة 1 -->
     <div class="game-card">
-      <img src="https://picsum.photos/400/200?game1" alt="لعبة 1">
+      <img src="https://www.wifi4games.com/img/pc_photos/750/SNWQhjnzaO302.jpg" alt="لعبة 1">
       <div class="game-info">
-        <h4>لعبة الأكشن 1</h4>
-        <p>حجم الملف: 500MB</p>
-        <a href="https://example.com/game1.zip" class="btn download" download>⬇️ تحميل مباشر</a>
+        <h4>  God of War Ragnarok</h4>
+        <p>حجم الملف: 70.8 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/God_of_War_Ragnarok.html" class="btn download" download>⬇️ تحميل مباشر</a>
       </div>
     </div>
 
     <!-- لعبة 2 -->
     <div class="game-card">
-      <img src="https://picsum.photos/400/200?game2" alt="لعبة 2">
+      <img src="https://www.wifi4games.com/img/pc_photos/750/k8vlFYkuCo604.jpg" alt="لعبة 2">
       <div class="game-info">
-        <h4>لعبة السباق 2</h4>
-        <p>حجم الملف: 1.2GB</p>
-        <a href="https://example.com/game2.zip" class="btn download" download>⬇️ تحميل مباشر</a>
+        <h4> UNCHARTED:Legacy of Thieves Collection </h4>
+        <p>حجم الماف : 95.6 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/UNCHARTED:Legacy_of_Thieves_Collection.html" class="btn download" download>⬇️ تحميل مباشر</a>
       </div>
     </div>
 
     <!-- لعبة 3 -->
     <div class="game-card">
-      <img src="https://picsum.photos/400/200?game3" alt="لعبة 3">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/ClFwMP6Bbi174.jpg" alt="لعبة 3">
       <div class="game-info">
-        <h4>لعبة الألغاز 3</h4>
-        <p>حجم الملف: 250MB</p>
-        <a href="https://example.com/game3.zip" class="btn download" download>⬇️ تحميل مباشر</a>
+        <h4> 2 Red Dead Redemption</h4>
+        <p>حجم الملف: 66.3 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/2_Red_Dead_Redemption.html" class="btn download" download>⬇️ تحميل مباشر</a>
       </div>
     </div>
+    <!-- لعبة '(4)' -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/aBdIrZIAQk434.jpg" alt="لعبة 4">
+      <div class="game-info">
+        <h4> 5 Grand Theft Auto V</h4>
+        <p>حجم الملف: 36.1 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Grand_Theft_Auto_V.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
 
+    </div>
+    <!-- لعبة 5 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/4wKv5p2A9u860.jpg" alt="لعبة 5">
+      <div class="game-info">
+        <h4>  Dragon Ball Xenoverse</h4>
+        <p>حجم الملف: 8.88 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Dragon_Ball_Xenoverse.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 6 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/yr5B7aw8mX688.jpg" alt="لعبة 6">
+      <div class="game-info">
+        <h4>  Beyond: Two Souls </h4>
+        <p>حجم الملف: 37.6 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Beyond_Two_Souls.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+      <!-- لعبة 7 -->
+    </div>
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/P1pKjAZQfD782.jpg" alt="لعبة 7">
+      <div class="game-info">
+        <h4> A Plague Tale Innocence</h4>
+        <p>حجم الملف: 33.8  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale_Innocence.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 8 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/t1QWXAcmgR115.jpg" alt="لعبة 8">
+      <div class="game-info">
+        <h4>  PES 2017 </h4>
+        <p>حجم الملف: 10  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/pes_2017.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 9 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/pCYMLuB6FQ113.jpg" alt="لعبة 9">
+      <div class="game-info">
+        <h4>  4 Naruto Shippuden Ultimate Ninja Storm </h4>
+        <p>حجم الملف: 31  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/4_Naruto_Shippuden_Ultimate_Ninja_Storm.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 10 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/iGXi8BVyA2530.jpg" alt="لعبة 10">
+      <div class="game-info">
+        <h4> batman arkham knight</h4>
+        <p>حجم الملف: 50 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/batman_arkham_knight.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 11 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/aPmH3Wnua9853.jpg" alt="لعبة 11">
+      <div class="game-info">
+        <h4> prison break</h4>
+        <p>حجم الملف: 1 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/prison_break.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 12 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/WgVcjSW9S0503.jpg" alt="لعبة 12">
+      <div class="game-info">
+        <h4> Sniper Elite 3</h4>
+        <p>حجم الملف:  14.5 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Sniper_Elite_III.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 13 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/BHyb5IBB7u214.jpg" alt="لعبة 13">
+      <div class="game-info">
+        <h4> Trials Fusion Welcome To The Abyss</h4>
+        <p>حجم الملف: 6 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Trials_Fusion_Welcome_To_The_Abyss.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 14 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/Sf8bQSvon144.jpg" alt="لعبة 14">
+      <div class="game-info">
+        <h4> WWE 2K20</h4>
+        <p>حجم الملف:  45.1 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/WWE_2K20.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 15 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/3h69jpzlvK148.jpg" alt="لعبة 15">
+      <div class="game-info">
+        <h4>  Maid of Sker</h4>
+        <p>حجم الملف: 6.92  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Maid_of_Sker.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+   <!-- لعبة 16 -->
+    <div class="game-card">
+      <img src="https:/www.wifi4games.com/img/pc_covers/260/K2nPJ0kFTN872.jpg" alt="لعبة 16">
+      <div class="game-info">
+        <h4> A Plague Tale: Requiem</h4>
+        <p>حجم الملف: 45.8 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale:_Requiem.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
   </div>
 </section>
   
