@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>موسوعة PDF</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background: #ffffff;
+      color: #222;
+    }
+    body.dark {
+      background: #0d1b2a;
+      color: #f0f0f0;
+    }
+    header {
+      background: #003566;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: .6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #0077b6, #00b4d8);
+      color: white;
+      font-weight: bold;
+      transition: transform 0.2s, opacity 0.3s;
+    }
+    .controls button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    .search-bar {
+      flex: 1 1 100%;
+      margin-top: .5rem;
+      text-align: center;
+    }
+    .search-bar input {
+      width: 80%;
+      max-width: 400px;
+      padding: .6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+      text-align: center;
+    }
+    body.light .card {
+      background: #f8f9fa;
+      color: #222;
+    }
+    .card:hover { transform: translateY(-6px); }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .card h3 {
+      margin: .5rem 0;
+      font-size: 1.1rem;
+    }
+    .card button {
+      margin: 1rem 0;
+      padding: .6rem 1.2rem;
+      background: linear-gradient(135deg, #0077b6, #00b4d8);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.3s;
+    }
+    .card button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 90%;
+      width: 800px;
+      height: 90%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    body.dark .modal-content {
+      background: #1b263b;
+      color: #eee;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .5rem 1rem;
+      background: #0077b6;
+      color: #fff;
+    }
+    .modal-header span {
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .modal iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="dark">
+  <header>
+    <h1>📚 موسوعة PDF</h1>
+    <div class="controls">
+      <button onclick="toggleTheme()">تبديل الوضع</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="🔍 ابحث عن ملف PDF..." onkeyup="searchPDFs()" />
+    </div>
+  </header>
+
+  <div class="cards" id="pdfContainer">
+    <!-- مثال بطاقة -->
+    <div class="card">
+      <img src="https://bilarabiya.net/wp-content/uploads/2023/10/الموسوعة-العربية-السورية-،-منصة-بالعربية.webp" alt="غلاف PDF">
+      <h3>ملف PDF الأول</h3>
+      <button onclick="openPDF('example1.pdf')">عرض PDF</button>
+    </div>
+    <div class="card">
+      <img src="https://via.placeholder.com/400x200" alt="غلاف PDF">
+      <h3>ملف PDF الثاني</h3>
+      <button onclick="openPDF('example2.pdf')">عرض PDF</button>
+    </div>
+  </div>
+
+  <div class="modal" id="pdfModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📄 عرض الملف</h3>
+        <span onclick="closePDF()">✖</span>
+      </div>
+      <iframe id="pdfViewer"></iframe>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme(){
+      document.body.classList.toggle('dark');
+      document.body.classList.toggle('light');
+    }
+    function openPDF(url){
+      document.getElementById('pdfViewer').src = url;
+      document.getElementById('pdfModal').style.display = 'flex';
+    }
+    function closePDF(){
+      document.getElementById('pdfViewer').src = '';
+      document.getElementById('pdfModal').style.display = 'none';
+    }
+    function searchPDFs(){
+      let input = document.getElementById('searchInput').value.toLowerCase();
+      let cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        let title = card.querySelector('h3').innerText.toLowerCase();
+        card.style.display = title.includes(input) ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

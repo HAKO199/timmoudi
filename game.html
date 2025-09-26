@@ -1,0 +1,334 @@
+<style>
+:root{
+  --bg:#0b1220; --bg-2:#0f1a2b; --card:#0f1724; --muted:#9aa7bf;
+  --accent:#7c5cff; --accent-2:#00d4ff; --glass: rgba(255,255,255,0.03);
+  --text:#e9eef8;
+  --text-invert:#071024;
+  --text-highlight:#fff;
+  --shadow: rgba(2,6,23,0.4);
+  --shadow-strong: rgba(2,6,23,0.6);
+  --shadow-glow: rgba(124,92,255,0.4);
+  --shadow-glow-strong: rgba(124,92,255,0.6);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:
+  radial-gradient(900px 400px at 10% -10%, #16213b 0%, transparent 40%), linear-gradient(180deg,var(--bg),var(--bg-2));
+  color:var(--text); -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5,h6{margin:0;font-weight:800;color:var(--text)}
+p{margin:0 0 12px;line-height:1.5;color:var(--muted)}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:18px}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:90;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.03)}
+.inner{display:flex;align-items:center;gap:12px;padding:12px 18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:48px;height:48px;border-radius:10px;background:conic-gradient(from 120deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:900;color:#031025}
+.site-title{font-weight:800;font-size:1.05rem}
+.socials{display:flex;gap:8px;margin-inline-start:12px}
+.icon{width:36px;height:36;border-radius:8px;display:grid;place-items:center;background:var(--glass);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+.controls{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
+
+/* small buttons */
+.btn{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071024;font-weight:700;cursor:pointer}
+.small-btn{padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
+.theme-toggle{font-size:18px;cursor:pointer}
+
+/* frames */
+.frame{margin-top:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.frame h3{margin:0 0 12px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
+.card img{width:100%;height:140px;object-fit:cover;display:block}
+.card .meta{padding:10px;font-size:14px;color:var(--muted)}
+
+/* videos */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.vcard{display:flex;gap:10px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
+.vthumb{width:110px;height:70px;flex-shrink:0;border-radius:8px;overflow:hidden}
+.vthumb img{width:100%;height:100%;object-fit:cover}
+.vinfo{flex:1;font-size:14px;font-weight:600;color:var(--text)}
+/* audios */
+.audios{display:flex;flex-direction:column;gap:10px}
+.audio-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px}
+.audio-item:hover{background:var(--glass)}
+.audio-item audio{flex:1}
+
+
+/* store/games */
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+
+/* game card */
+.games-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:14px;
+    margin-top:12px
+  }
+  .game-card{
+    background:#111;
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:.2s;
+    box-shadow:0 6px 24px rgba(119, 25, 196, 0.616);
+    border:1px solid rgba( ,255,255,255,0.03);
+    cursor:pointer;
+  }
+  .game-card:hover{transform:translateY(-4px)}
+  .game-card img{width:100%;height:160px;object-fit:cover}
+  .game-info{padding:12px;display:flex;flex-direction:column;gap:8px}
+  .game-info h4{margin:0;font-size:16px}
+  .btn.download{
+    padding:8px 10px;
+    background:#7c5cff;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    text-align:center;
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    transition:.2s;
+    margin-top:auto;
+  }
+  .btn.download:hover{background:#5a44cc}
+/* news */
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.news-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);padding:12px;display:flex;flex-direction:column}
+.news-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+.news-card .title{font-weight:800;margin-top:8px}
+.news-card .excerpt{color:var(--muted);font-size:14px;max-height:72px;overflow:hidden;transition:max-height .3s ease}
+.news-card.expanded .excerpt{max-height:none}
+.news-card .read-more{margin-top:auto;color:var(--accent);font-size:14px;cursor:pointer}
+
+/* comments */
+.comments{margin-top:10px}
+.comment-list{max-height:160px;overflow:auto;padding-right:6px}
+.comment{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin-bottom:8px}
+.comment strong{color:var(--accent)}
+.comment time{display:block;font-size:12px;color:var(--muted)}
+.add-comment{display:flex;gap:8px;margin-top:8px}
+.add-comment input{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.add-comment button{padding:8px 12px;border-radius:8px;background:var(--accent);border:none;color:#071024;cursor:pointer;font-weight:700}
+
+
+/* lightbox & modals */
+.lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:200}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:85vh;border-radius:8px}
+.vmodal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:210}
+.vmodal.open{display:flex}
+.vmodal-box{background:var(--card);padding:12px;border-radius:10px;max-width:900px;width:95%}
+.vmodal iframe{width:100%;height:500px;border:0;border-radius:8px}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:220}
+.modal.open{display:flex}
+.modal-box{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01));padding:18px;border-radius:12px;width:420px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
+.form-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+.label{min-width:120px;color:var(--muted)}
+input[type="text"],input[type="email"],select{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.close{position:absolute;top:12px;right:12px;font-size:18px;color:var(--muted);cursor:pointer}
+
+/* responsive */
+@media (max-width:900px){ .vthumb{width:90px;height:60px} .card img{height:120px} .vmodal iframe{height:320px} }
+@media (max-width:600px){ .inner{flex-wrap:wrap} .controls{margin-inline-start:0;width:100%;justify-content:space-between} .logo{width:44px;height:44px} .site-title{font-size:1rem} .vmodal iframe{height:260px} }
+
+/* socials official colors */
+.socials a{font-size:18px;width:35px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff}
+.socials a.fb{color:#1877F2}.socials a.yt{color:#FF0000}.socials a.dc{color:#5865F2}.socials a.tt{color:#000}
+.nav-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.nav-links a{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px}
+.search-bar{text-align:center;margin:10px}
+.search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
+
+</style>
+
+<!-- search bar -->
+  <div class="search-bar"><input type="text" id="search" placeholder="ابحث هنا..."></div>
+
+
+<!-- 🎮 تحميل الألعاب   -->
+<section id="games-download" class="frame">
+  <h1>🎮 تحميل الألعاب</h1>
+  <div class="games-grid">
+
+    <!-- لعبة 1 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_photos/750/SNWQhjnzaO302.jpg" alt="لعبة 1">
+      <div class="game-info">
+        <h4>  God of War Ragnarok</h4>
+        <p>حجم الملف: 70.8 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/God_of_War_Ragnarok.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+
+    <!-- لعبة 2 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_photos/750/k8vlFYkuCo604.jpg" alt="لعبة 2">
+      <div class="game-info">
+        <h4> UNCHARTED:Legacy of Thieves Collection </h4>
+        <p>حجم الماف : 95.6 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/UNCHARTED:Legacy_of_Thieves_Collection.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+
+    <!-- لعبة 3 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/ClFwMP6Bbi174.jpg" alt="لعبة 3">
+      <div class="game-info">
+        <h4> 2 Red Dead Redemption</h4>
+        <p>حجم الملف: 66.3 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/2_Red_Dead_Redemption.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة '(4)' -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/aBdIrZIAQk434.jpg" alt="لعبة 4">
+      <div class="game-info">
+        <h4> 5 Grand Theft Auto V</h4>
+        <p>حجم الملف: 36.1 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Grand_Theft_Auto_V.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+
+    </div>
+    <!-- لعبة 5 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/4wKv5p2A9u860.jpg" alt="لعبة 5">
+      <div class="game-info">
+        <h4>  Dragon Ball Xenoverse</h4>
+        <p>حجم الملف: 8.88 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Dragon_Ball_Xenoverse.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 6 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/yr5B7aw8mX688.jpg" alt="لعبة 6">
+      <div class="game-info">
+        <h4>  Beyond: Two Souls </h4>
+        <p>حجم الملف: 37.6 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Beyond_Two_Souls.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+      <!-- لعبة 7 -->
+    </div>
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/P1pKjAZQfD782.jpg" alt="لعبة 7">
+      <div class="game-info">
+        <h4> A Plague Tale Innocence</h4>
+        <p>حجم الملف: 33.8  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale_Innocence.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 8 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/t1QWXAcmgR115.jpg" alt="لعبة 8">
+      <div class="game-info">
+        <h4>  PES 2017 </h4>
+        <p>حجم الملف: 10  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/pes_2017.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 9 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/pCYMLuB6FQ113.jpg" alt="لعبة 9">
+      <div class="game-info">
+        <h4>  4 Naruto Shippuden Ultimate Ninja Storm </h4>
+        <p>حجم الملف: 31  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/4_Naruto_Shippuden_Ultimate_Ninja_Storm.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 10 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/iGXi8BVyA2530.jpg" alt="لعبة 10">
+      <div class="game-info">
+        <h4> batman arkham knight</h4>
+        <p>حجم الملف: 50 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/batman_arkham_knight.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 11 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/aPmH3Wnua9853.jpg" alt="لعبة 11">
+      <div class="game-info">
+        <h4> prison break</h4>
+        <p>حجم الملف: 1 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/prison_break.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 12 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/WgVcjSW9S0503.jpg" alt="لعبة 12">
+      <div class="game-info">
+        <h4> Sniper Elite 3</h4>
+        <p>حجم الملف:  14.5 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Sniper_Elite_III.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  <!-- لعبة 13 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/BHyb5IBB7u214.jpg" alt="لعبة 13">
+      <div class="game-info">
+        <h4> Trials Fusion Welcome To The Abyss</h4>
+        <p>حجم الملف: 6 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Trials_Fusion_Welcome_To_The_Abyss.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 14 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/Sf8bQSvon144.jpg" alt="لعبة 14">
+      <div class="game-info">
+        <h4> WWE 2K20</h4>
+        <p>حجم الملف:  45.1 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/WWE_2K20.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+    <!-- لعبة 15 -->
+    <div class="game-card">
+      <img src="https://www.wifi4games.com/img/pc_covers/260/3h69jpzlvK148.jpg" alt="لعبة 15">
+      <div class="game-info">
+        <h4>  Maid of Sker</h4>
+        <p>حجم الملف: 6.92  GB</p>
+        <a href="https://www.wifi4games.com/pc_games/Maid_of_Sker.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+   <!-- لعبة 16 -->
+    <div class="game-card">
+      <img src="https:/www.wifi4games.com/img/pc_covers/260/K2nPJ0kFTN872.jpg" alt="لعبة 16">
+      <div class="game-info">
+        <h4> A Plague Tale: Requiem</h4>
+        <p>حجم الملف: 45.8 GB</p>
+        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale:_Requiem.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+// بحث في الألعاب
+document.getElementById('search').addEventListener('input', function() {
+  const query = this.value.toLowerCase();
+  const games = document.querySelectorAll('.game-card');
+  games.forEach(game => {
+    const title = game.querySelector('h4').innerText.toLowerCase();
+    if (title.includes(query)) {
+      game.style.display = '';
+    } else {
+      game.style.display = 'none';
+    }
+  });
+});
+// تحميل اللعبة
+const downloadButtons = document.querySelectorAll('.btn.download');
+downloadButtons.forEach(button => {
+  button.addEventListener('click', (e) => {
+    e.preventDefault();
+    const link = document.createElement('a');
+    link.href = button.href;
+    link.download = ''; 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>

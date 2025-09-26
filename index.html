@@ -1,923 +1,800 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>تيمودي - مشروع مدموج</title>
-<link href="https://                   " rel="stylesheet">
-<style>
-:root{
-  --bg:#0b1220; --bg-2:#0f1a2b; --card:#0f1724; --muted:#9aa7bf;
-  --accent:#7c5cff; --accent-2:#00d4ff; --glass: rgba(255,255,255,0.03);
-  --text:#e9eef8;
-  --text-invert:#071024;
-  --text-highlight:#fff;
-  --shadow: rgba(2,6,23,0.4);
-  --shadow-strong: rgba(2,6,23,0.6);
-  --shadow-glow: rgba(124,92,255,0.4);
-  --shadow-glow-strong: rgba(124,92,255,0.6);
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:
-  radial-gradient(900px 400px at 10% -10%, #16213b 0%, transparent 40%), linear-gradient(180deg,var(--bg),var(--bg-2));
-  color:var(--text); -webkit-font-smoothing:antialiased}
-h1,h2,h3,h4,h5,h6{margin:0;font-weight:800;color:var(--text)}
-p{margin:0 0 12px;line-height:1.5;color:var(--muted)}
-a{color:inherit;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:18px}
-
-/* topbar */
-.topbar{position:sticky;top:0;z-index:90;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.03)}
-.inner{display:flex;align-items:center;gap:12px;padding:12px 18px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:48px;height:48px;border-radius:10px;background:conic-gradient(from 120deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:900;color:#031025}
-.site-title{font-weight:800;font-size:1.05rem}
-.socials{display:flex;gap:8px;margin-inline-start:12px}
-.icon{width:36px;height:36;border-radius:8px;display:grid;place-items:center;background:var(--glass);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
-.controls{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
-
-/* small buttons */
-.btn{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071024;font-weight:700;cursor:pointer}
-.small-btn{padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
-.theme-toggle{font-size:18px;cursor:pointer}
-
-/* frames */
-.frame{margin-top:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.frame h3{margin:0 0 12px}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:transform .15s,box-shadow .15s}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
-.card img{width:100%;height:140px;object-fit:cover;display:block}
-.card .meta{padding:10px;font-size:14px;color:var(--muted)}
-
-/* videos */
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.vcard{display:flex;gap:10px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
-.vthumb{width:110px;height:70px;flex-shrink:0;border-radius:8px;overflow:hidden}
-.vthumb img{width:100%;height:100%;object-fit:cover}
-.vinfo{flex:1;font-size:14px;font-weight:600;color:var(--text)}
-/* audios */
-.audios{display:flex;flex-direction:column;gap:10px}
-.audio-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px}
-.audio-item:hover{background:var(--glass)}
-.audio-item audio{flex:1}
-
-
-/* store/games */
-.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-
-/* game card */
-.games-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-    gap:14px;
-    margin-top:12px
-  }
-  .game-card{
-    background:#111;
-    border-radius:10px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    transition:.2s;
-    box-shadow:0 6px 24px rgba(119, 25, 196, 0.616);
-    border:1px solid rgba( ,255,255,255,0.03);
-    cursor:pointer;
-  }
-  .game-card:hover{transform:translateY(-4px)}
-  .game-card img{width:100%;height:160px;object-fit:cover}
-  .game-info{padding:12px;display:flex;flex-direction:column;gap:8px}
-  .game-info h4{margin:0;font-size:16px}
-  .btn.download{
-    padding:8px 10px;
-    background:#7c5cff;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    text-align:center;
-    font-weight:600;
-    cursor:pointer;
-    text-decoration:none;
-    display:inline-block;
-    transition:.2s;
-    margin-top:auto;
-  }
-  .btn.download:hover{background:#5a44cc}
-/* news */
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.news-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);padding:12px;display:flex;flex-direction:column}
-.news-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-.news-card .title{font-weight:800;margin-top:8px}
-.news-card .excerpt{color:var(--muted);font-size:14px;max-height:72px;overflow:hidden;transition:max-height .3s ease}
-.news-card.expanded .excerpt{max-height:none}
-.news-card .read-more{margin-top:auto;color:var(--accent);font-size:14px;cursor:pointer}
-
-/* comments */
-.comments{margin-top:10px}
-.comment-list{max-height:160px;overflow:auto;padding-right:6px}
-.comment{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin-bottom:8px}
-.comment strong{color:var(--accent)}
-.comment time{display:block;font-size:12px;color:var(--muted)}
-.add-comment{display:flex;gap:8px;margin-top:8px}
-.add-comment input{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
-.add-comment button{padding:8px 12px;border-radius:8px;background:var(--accent);border:none;color:#071024;cursor:pointer;font-weight:700}
-
-
-/* lightbox & modals */
-.lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:200}
-.lightbox.open{display:flex}
-.lightbox img{max-width:90vw;max-height:85vh;border-radius:8px}
-.vmodal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:210}
-.vmodal.open{display:flex}
-.vmodal-box{background:var(--card);padding:12px;border-radius:10px;max-width:900px;width:95%}
-.vmodal iframe{width:100%;height:500px;border:0;border-radius:8px}
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:220}
-.modal.open{display:flex}
-.modal-box{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01));padding:18px;border-radius:12px;width:420px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
-.form-row{display:flex;align-items:center;gap:8px;margin:8px 0}
-.label{min-width:120px;color:var(--muted)}
-input[type="text"],input[type="email"],select{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
-.close{position:absolute;top:12px;right:12px;font-size:18px;color:var(--muted);cursor:pointer}
-
-/* responsive */
-@media (max-width:900px){ .vthumb{width:90px;height:60px} .card img{height:120px} .vmodal iframe{height:320px} }
-@media (max-width:600px){ .inner{flex-wrap:wrap} .controls{margin-inline-start:0;width:100%;justify-content:space-between} .logo{width:44px;height:44px} .site-title{font-size:1rem} .vmodal iframe{height:260px} }
-
-/* socials official colors */
-.socials a{font-size:18px;width:35px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff}
-.socials a.fb{color:#1877F2}.socials a.yt{color:#FF0000}.socials a.dc{color:#5865F2}.socials a.tt{color:#000}
-.nav-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
-.nav-links a{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px}
-.search-bar{text-align:center;margin:10px}
-.search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
-
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></head>
-<body>
-
-<!-- TOPBAR -->
-<header class="topbar">
-  <div class="inner container">
-      <div class="logo">
-      <img src= "https://yt3.ggpht.com/7dfnAeeOR4Olx-PVWzbY2_EE889DLhgqaNiBynzk13VeRIZMomGuUgzRQcQjjw_ElpLrFm_EyQKzlvw=s640-c-fcrop64=1,00000000ffffffff-rw-nd-v1" alt="Timodi Logo" style="width:48px;height:48px;border-radius:10px;object-fit:cover">
-      <div>
-        <div class="site-title">تيمودي</div>
-        <div style="font-size:12px;color:var(--muted)">تيمودي</div>
-      </div>
-    </div>
-    
-    <div class="socials">
-      <a href="https://facebook.com/HAKO-ONLIN-103900968867795" target="_blank" class="fb"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://youtube.com/@abdelhakkerroumi" target="_blank" class="yt"><i class="fab fa-youtube"></i></a>
-      <a href="https://discord.gg/g5BWtQ6zTy" target="_blank" class="dc"><i class="fab fa-discord"></i></a>
-      <a href="https://tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc" target="_blank" class="tt"><i class="fab fa-tiktok"></i></a>
-      <a href="https://twitch.com/hako_onlin" target="_blank" class="tt"><i class="fab fa-twitch"></i></a>
-      <a href="https://x.com/kerroumi41" target="_blank" class="tt"><i class="fab fa-twitter"></i></a>
-      <a href="https://abdelhakpsg.blogspot.com/?zx=2992eb6a766dbccc" target="_blank" class="tt"><i class="fa fa-blog"></i></a>
-    </div>
-
-    <div class="nav-links">
-      <a href="#topGallery">📷 الصور</a>
-      <a href="#videosFrame">🎥 الفيديوهات</a>
-      <a href="#audioFrame">🎵 الصوتيات</a>
-      <a href="#liveFrame">📡 البث</a>
-      <a href="#storeFrame">🛒 المتجر</a>
-      <a href="#games-download">🎮 الألعاب</a>
-      <a href="#news">📰 الأخبار</a>
-    </div>
-
-    <div class="controls">
-      <div id="themeToggle" class="theme-toggle" title="وضع الليل/النهار">🌙</div>
-      <button id="settingsBtn" class="small-btn" title="الإعدادات">⚙️</button>
-      <button id="profileBtn" class="small-btn" title="تسجيل/الملف">👤</button>
-    </div>
-  </div>
-
-
-  <!-- search bar -->
-  <div class="search-bar"><input type="text" id="search" placeholder="ابحث هنا..."></div>
-
-
-<header class="topbar"></header>
-<!-- Welcome Marquee -->
-<div class="container" style="padding:40px 20px">
-    <div style="overflow:hidden;white-space:nowrap;">
-      <h1 class="rainbow-marquee">
-        مرحبا بك في <b>تيمودي</b>
-      </h1>
-    </div>
-  </div>
-  <style>
-  .rainbow-marquee {
-    display: inline-block;
-    font-size: 2.2rem;
-    font-weight: 900;
-    padding: 0.2em 1.5em;
-    background: linear-gradient(90deg, #ff005a, #ffae00, #00ffb2, #00c3ff, #7c5cff, #ff005a 60%);
-    background-size: 200% auto;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: rainbow-move 3.5s linear infinite, marquee-move 12s linear infinite;
-    white-space: nowrap;
-  }
-  @keyframes rainbow-move {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-  }
-  @keyframes marquee-move {
-    0% { transform: translateX(100%);}
-    100% { transform: translateX(-100%);}
-  }
-  </style>
-
-<!-- 🕹️ قسم الدكاء -->
-
-  <section> 
-  <a href="quiz.html">🎮 جرّب لعبة صح أم خطأ</a>
-  <style>
-    a {
-      display: inline-block;
-      padding: 10px 20px;
-      background: linear-gradient(90deg, #7c5cff, #00d4ff);
-      color: #071024;
-      font-weight: 700;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
-    </style>
-    
-</section>
-
-
-  <!-- gallery strip -->
-  <div class="container" style="padding-bottom:12px;padding-top:8px">
-    <div class="frame">
-      <h3>معرض صور سريع</h3>
-      <div class="gallery" id="topGallery"></div>
-    </div>
-  </div>
-</header>
-
-<main class="container" style="padding-top:16px">
-  <section class="frame" id="videosFrame">
-    <h3>فيديوهات (YouTube / Facebook / TikTok)</h3>
-    <div class="vgrid" id="videosGrid"></div>
-  </section>
-</main>
-
-<section id="news" class="frame">
-  <h3>📰 المقالات الإخبارية</h3>
-  <div class="news-grid" id="newsGrid"></div>
-</section>
-
-<!-- نافذة المودال -->
-<div id="newsModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">✖</span>
-    <h2 id="modalTitle"></h2>
-    <p id="modalBody"></p>
-    <div class="comments">
-      <h4>💬 التعليقات</h4>
-      <div id="commentList"></div>
-      <div class="add-comment">
-        <input id="commentInput" placeholder="أضف تعليقك...">
-        <button onclick="addComment()">➕ أضف</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <section class="frame" id="audioFrame">
-    <h3>الصوتيات</h3>
-    <div class="audios" id="audiosList"></div>
-  </section>
-
-  <section class="frame" id="storeFrame">
-    <h3>المتجر</h3>
-    <div class="store-grid" id="storeGrid"></div>
-  </section>
-
-  
-  <!-- 🎮 تحميل الألعاب   -->
-<section id="games-download" class="frame">
-  <h3>🎮 تحميل الألعاب</h3>
-  <div class="games-grid">
-
-    <!-- لعبة 1 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_photos/750/SNWQhjnzaO302.jpg" alt="لعبة 1">
-      <div class="game-info">
-        <h4>  God of War Ragnarok</h4>
-        <p>حجم الملف: 70.8 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/God_of_War_Ragnarok.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-
-    <!-- لعبة 2 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_photos/750/k8vlFYkuCo604.jpg" alt="لعبة 2">
-      <div class="game-info">
-        <h4> UNCHARTED:Legacy of Thieves Collection </h4>
-        <p>حجم الماف : 95.6 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/UNCHARTED:Legacy_of_Thieves_Collection.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-
-    <!-- لعبة 3 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/ClFwMP6Bbi174.jpg" alt="لعبة 3">
-      <div class="game-info">
-        <h4> 2 Red Dead Redemption</h4>
-        <p>حجم الملف: 66.3 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/2_Red_Dead_Redemption.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة '(4)' -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/aBdIrZIAQk434.jpg" alt="لعبة 4">
-      <div class="game-info">
-        <h4> 5 Grand Theft Auto V</h4>
-        <p>حجم الملف: 36.1 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Grand_Theft_Auto_V.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-
-    </div>
-    <!-- لعبة 5 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/4wKv5p2A9u860.jpg" alt="لعبة 5">
-      <div class="game-info">
-        <h4>  Dragon Ball Xenoverse</h4>
-        <p>حجم الملف: 8.88 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Dragon_Ball_Xenoverse.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 6 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/yr5B7aw8mX688.jpg" alt="لعبة 6">
-      <div class="game-info">
-        <h4>  Beyond: Two Souls </h4>
-        <p>حجم الملف: 37.6 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Beyond_Two_Souls.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-      <!-- لعبة 7 -->
-    </div>
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/P1pKjAZQfD782.jpg" alt="لعبة 7">
-      <div class="game-info">
-        <h4> A Plague Tale Innocence</h4>
-        <p>حجم الملف: 33.8  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale_Innocence.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 8 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/t1QWXAcmgR115.jpg" alt="لعبة 8">
-      <div class="game-info">
-        <h4>  PES 2017 </h4>
-        <p>حجم الملف: 10  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/pes_2017.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 9 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/pCYMLuB6FQ113.jpg" alt="لعبة 9">
-      <div class="game-info">
-        <h4>  4 Naruto Shippuden Ultimate Ninja Storm </h4>
-        <p>حجم الملف: 31  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/4_Naruto_Shippuden_Ultimate_Ninja_Storm.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 10 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/iGXi8BVyA2530.jpg" alt="لعبة 10">
-      <div class="game-info">
-        <h4> batman arkham knight</h4>
-        <p>حجم الملف: 50 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/batman_arkham_knight.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 11 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/aPmH3Wnua9853.jpg" alt="لعبة 11">
-      <div class="game-info">
-        <h4> prison break</h4>
-        <p>حجم الملف: 1 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/prison_break.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 12 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/WgVcjSW9S0503.jpg" alt="لعبة 12">
-      <div class="game-info">
-        <h4> Sniper Elite 3</h4>
-        <p>حجم الملف:  14.5 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Sniper_Elite_III.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 13 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/BHyb5IBB7u214.jpg" alt="لعبة 13">
-      <div class="game-info">
-        <h4> Trials Fusion Welcome To The Abyss</h4>
-        <p>حجم الملف: 6 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Trials_Fusion_Welcome_To_The_Abyss.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 14 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/Sf8bQSvon144.jpg" alt="لعبة 14">
-      <div class="game-info">
-        <h4> WWE 2K20</h4>
-        <p>حجم الملف:  45.1 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/WWE_2K20.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 15 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/3h69jpzlvK148.jpg" alt="لعبة 15">
-      <div class="game-info">
-        <h4>  Maid of Sker</h4>
-        <p>حجم الملف: 6.92  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Maid_of_Sker.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-   <!-- لعبة 16 -->
-    <div class="game-card">
-      <img src="https:/www.wifi4games.com/img/pc_photos/750/IahNaALQec581.jpg" alt="لعبة 16">
-      <div class="game-info">
-        <h4> A Plague Tale: Requiem</h4>
-        <p>حجم الملف: 45.8 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale:_Requiem.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  </div>
-</section>
-  
-  <section class="frame" id="liveFrame">
-  <h3>📡 البث المباشر</h3>
-    <div id="liveControls" style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-      <input id="manualEmbed" placeholder="أدخل رابط التضمين (embed URL)" style="flex:1;padding:8px;border-radius:6px">
-      <button id="addManual" class="btn">➕ إضافة بث يدوي</button>
-    </div>
-    <div id="liveGrid" class="vgrid"></div>
-  </section>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox"><img id="lightboxImg" alt="preview"/></div>
-
-<!-- Video Modal -->
-<div class="vmodal" id="videoModal"><div class="vmodal-box"><iframe id="videoFrame" allowfullscreen></iframe><div style="text-align:right;margin-top:8px"><button id="closeVideo" class="small-btn">إغلاق</button></div></div></div>
-
-
-<!-- Settings Modal -->
-<div class="modal" id="settingsModal"><div class="modal-box"><h4>الإعدادات</h4>
-  <div class="form-row"><div class="label">اللغة</div><select id="langSelect"><option value="ar">العربية</option><option value="en">English</option></select></div>
-  <div class="form-row"><div class="label">حماية الصفحة</div><input type="checkbox" id="privacyToggle" /></div>
-  <div class="form-row"><div class="label">عرض الوسائط</div><select id="layoutMode"><option value="grid">شبكة</option><option value="list">قائمة</option></select></div>
-  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button id="saveSettings" class="btn">حفظ</button><button id="closeSettings" class="small-btn">إغلاق</button></div>
-</div></div>
-
-<!-- Profile / Login Modal -->
-<div class="modal" id="profileModal"><div class="modal-box">
-  <h4>الملف الشخصي / تسجيل</h4>
-  <div class="form-row"><div class="label">الاسم</div><input id="pName" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"></div>
-  <div class="form-row"><div class="label">البريد</div><input id="pEmail" type="email" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"></div>
-  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button id="saveProfile" class="btn">حفظ</button><button id="closeProfile" class="small-btn">إغلاق</button></div>
-</div></div>
-</style></a>
-<!-- Welcome Marquee -->
-
-  <div class="container" style="padding:40px 20px">
-    <div style="overflow:hidden;white-space:nowrap;">
-      <h1 class="rainbow-marquee">
-        مرحبا بك في <b>تيمودي</b>
-      </h1>
-    </div>
-  </div>
-  <style>
-  .rainbow-marquee {
-    display: inline-block;
-    font-size: 2.2rem;
-    font-weight: 900;
-    padding: 0.2em 1.5em;
-    background: linear-gradient(90deg, #ff005a, #ffae00, #00ffb2, #00c3ff, #7c5cff, #ff005a 60%);
-    background-size: 200% auto;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: rainbow-move 3.5s linear infinite, marquee-move 12s linear infinite;
-    white-space: nowrap;
-  }
-  @keyframes rainbow-move {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-  }
-  @keyframes marquee-move {
-    0% { transform: translateX(100%);}
-    100% { transform: translateX(-100%);}
-  }
-  </style>
-<script>
-// helpers
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-// demo data
-const photos = [
-  {id:'p1',title:'غروب في ملعب الجديد تيمودي',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoHVk_cXCt_sHsaTRz8pGbTwS0Tgd3p66_vRy_1OU3VCxhlCx3sO6udiWGumzSQaLeIi7oqqvg8QtzKQ5xMK0NURzLQ28DALUv1WFIf9EWjls9bp193n4S7mcVI2eeA1xSr_9gVh7yDzOZbm0CGi2lKm27w46EWpgh0Bef7ba3CMp6BGYNfG7pK93CNOQ/s320-rw/IMG_20250516_193502.jpg'},
-  {id:'p2',title:'قصر الكبير تيمودي 🔥 ',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgCHkG0hyQ3FsmYuqowmwcVB9B-LgwAYiLuw-eJcg6K-RbBRSwrPuE-QoEP9-DBvIsRJ54aBUtfR1YHZ-ITr7t1B1Kn2ugOnOBQ_MEndJLgcp8PewVnnXN8GS2y0i9mhKNtW_KgLch0_Ws/s320/FB_IMG_1433399393728.jpg'},
-  {id:'p3',title:'تلاحم الغيوم فوق الرمال دهبية  ',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTVaREUkhmMa57VBzdmFX-1UeiXr1-0lkhkr54b5F3rWOgTGhxq4MJbKoGD2JUva_ZD21hAmLHBjZ1Mv6iYS2Vx0pHGxIFfoXzXlyGQTAxjjB6reDXfR4HF91Iq8h-68u1Mig2FyjDlak9C6wigOQkCegqlVZsQ174b__VzaPM7ViP9WHxphv_K2se7HE/s320-rw/20241016_123522.heic'},
-  {id:'p4',title:'ملهى الأطفال  ',img:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjp8pwdOst-zgEo_OGGidSqOYhS97Lp9DUHiOQnm5rlceNtlKMtcw6ZQOARc1e97eq7KHh6M44k8NCf2dOA1e3PEtIar1hi-_Edx9rtc13Zfto7BMBVYtdTiAFN2us4F0ntX4KdLrnC7qk/s320/FB_IMG_1433399429854.jpg'},
-  {id:'p5',title:'المولد النبوي الشريف بني عباس 2025 ',img:'https://cdn.elitihadcom.dz/wp-content/uploads/2018/11/mawlid-bechar.jpg'},
-  {id:'p6',title:'محمد الأمين كيحل ممثل ولاية بني عباس بالمجلس الأعلى للشباب تيمودي ',img:'https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/481958304_618352377607412_4440888128410987425_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFaoLHxZufO_KByLzx0IRrMdLMDIy4rrKt0swMjLiusq0xuPsfuOQSxgtSLsNNv0DxWs3xZLtmuD92geoA-ab-a&_nc_ohc=hlrSmkqs1TQQ7kNvwGLhNz4&_nc_oc=AdkChJn8lf5LWFQywV1YrwPPaj1Rt_6rkhfvRgkNywDSmLslAruZNbVrusx0kIpJvUw&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=2icK_iIGuq-RXzFAQtMqTw&oh=00_AfbtSX2IE2ZB0fGOhS8f5tEW_4VZIhEsdMO_bKtpYQpzrQ&oe=68C8D1AC'}, 
-  {id:'p7',title:' المصور" يحي طالبي" تيمودي',img:'https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg'},
-  {id:'p7',title:' صورتان جزائريتان ضمن أحسن 10 صور فوتوغرافية في مسابقة صور القمة العالمية لمجتمع المعلومات 2024 ',img:'https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg'},
-  
-];
-
-const videos = [
-  {id:'v1',title:'مونتاج ببجي',thumb:'https://i.ytimg.com/vi/Md4_36hnAMo/hqdefault.jpg',embed:'https://www.youtube.com/embed/Md4_36hnAMo'},
-  {id:'v1',title:' مدينة تيمودي ليلا',thumb:'https://i9.ytimg.com/vi_webp/lxXCW5eFeOE/mq1.webp?sqp=CNitp8YG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShGMA8=&rs=AOn4CLCKgGQfut0LKY2VECkcPVWkUiT5Mw',embed:'https://www.youtube.com/embed/eRBwEuzC4Kk'},
-  {id:'v1',title:'كال اوف دوتي وارزون موسم 3',thumb:'https://i9.ytimg.com/vi_webp/Hs8cfoTaDl4/mq1.webp?sqp=CNitp8YG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgXihLMA8=&rs=AOn4CLDWaEMCLAmmhnzeIez6I3VvKNYqVA',embed:'https://www.youtube.com/embed/Hs8cfoTaDl4'},
-  {id:'v1',title:'محمد الأمين كيحل: ممثل ولاية بني عباس بالمجلس الأعلى للشباب',thumb:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKl_Bt-OQTE5-pdpK82mQxxWhIzFxzgIY-2_m2wkMpGfV0-HI7t_7t4XJhEtAITDeinj8&usqp=CAU',embed:'https://www.youtube.com/embed/IGSuGA0MeXI'},
-  {id:'v1',title:'لقاء مع المصور" يحي طالبي"مشارك في الصالون الوطني للصورة الفوتوغرافية قصر الثقافة الجزائر ',thumb:'https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg',embed:'https://www.youtube.com/embed/m7fK5zMqdKs'},
-  {id:'v1',title:'البطل "يحيى طالبي" يفوز بمسابقة القمة العالمية في التصوير الفوتوغرافي بأمريكا ',thumb:'https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg',embed:'https://www.youtube.com/embed/hoy0vvjGGyI'},
-  {id:'v2',title:'تيك توك مثال',thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg',embed:'https://www.tiktok.com/embed//7490353107705007365?is_from_webapp=1'},
-  {id:'v3',title:'فيديو فيسبوك',thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg',embed:'https://www.facebook.com/HakoOnlin/videos/4953952824698468'},
-];
-const news = [
-  {id:'n1',title:'حدث هام اليوم',img:'https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375',excerpt:'.🏅 بلدية تيمودي تستقبل أوّل وزير منذ عام 1962! .',full:'أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962. وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي. وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة الجنوب الغربي للوطن. " المزيد'},
-];
-const audios = [
-  {id:'a1',title:'أعمارنا أعمالنا ',src:'https://ia800906.us.archive.org/31/items/Maher_Zean_www.suratmp3.com/maher-zean_a3malona-a3marona.mp3'},
-  {id:'a2',title:'السلام عليك يا رسول الله ',src:'https://dn721903.ca.archive.org/0/items/Maher_Zean_www.suratmp3.com/Assalamu_Alaika_ar.mp3'},
-  {id:'a3',title:' إلا صلاتي ',src:'https://ia800202.us.archive.org/29/items/hnein/Hni4.mp3'},
-  {id:'a4',title:' أمي ',src:'https://dn721609.ca.archive.org/0/items/Islamic_Tape-760_uP_bY_mUSLEm/040-.mp3'},
-  {id:'a5',title:'أنا العبد ',src:'https://ia600209.us.archive.org/26/items/afassy_qalby_sghir/ana_l3abd.mp3'},
-  {id:'a6',title:'طويل الشوق ',src:'https://ia600202.us.archive.org/25/items/bukhater_qods_bir7.com/Al-Shawqi.mp3'},
-];
-const store = [
-  {id:'s1',title:'تيشيرت تيمودي',img:'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop',price:'00ج'},
-];
-const games = [
-  {id:'g1',title:'PUBG',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyOmU7UkYUBKS3vcrWq-A9k8UeBRD9CmYXwplLMtCaaY75Ty12mahaCF6FKunfit3aUHQ&usqp=CAU'},
-];
-
-const articles = [
-  {
-    title: "بلدية تيمودي تستقبل أوّل وزير منذ عام 1962!",
-    image: "https://i.dzs.cloud/www.echoroukonline.com/wp-content/uploads/2021/03/n-15.jpg?resize=790,444.375",
-    summary: "أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.",
-    content: `أبدى الوزير الجديد للشباب والرياضة سيد علي خالدي فخره، بِكونه أوّل مسؤول حكومي يزور بلدية تيمودي التي تقع في الجنوب الشرقي لِولاية بشار، منذ استعادة بلادنا سيادتها واستقلالها من المُستعمِر الفرنسي البغيض عام 1962.
-    وكان وزير الشباب والرياضة سيد علي خالدي قد انتقل إلى ولاية بشار، في زيارة عمل وتفقّد، الإثنين الماضي.
-    وقال سيد علي خالدي إنه أنصت إلى انشغالات الشباب بِبلدية تيمودي، وولاية بشار عموما. ودشّن عددا من المرافق الرياضية والإجتماعية بِعاصمة        الجنوب الغربي للوطن.
-    " المزيد
-    `,
-  },
-  {
-    title: "محمد الأمين كيحل ممثل ولاية بني عباس بالمجلس الأعلى للشباب",
-    image: "https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/481958304_618352377607412_4440888128410987425_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFaoLHxZufO_KByLzx0IRrMdLMDIy4rrKt0swMjLiusq0xuPsfuOQSxgtSLsNNv0DxWs3xZLtmuD92geoA-ab-a&_nc_ohc=hlrSmkqs1TQQ7kNvwGLhNz4&_nc_oc=AdkChJn8lf5LWFQywV1YrwPPaj1Rt_6rkhfvRgkNywDSmLslAruZNbVrusx0kIpJvUw&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=2icK_iIGuq-RXzFAQtMqTw&oh=00_AfbtSX2IE2ZB0fGOhS8f5tEW_4VZIhEsdMO_bKtpYQpzrQ&oe=68C8D1AC",
-    summary: "محمد الأمين كيحل، شاب طموح من بني عباس، تم انتخابه مؤخراً كممثل لولاية بشار في المجلس الأعلى للشباب.",
-    content: `محمد الأمين كيحل، شاب طموح من بني عباس، تم انتخابه مؤخراً كممثل لولاية بشار في المجلس الأعلى للشباب.
-    في هذا الدور الجديد، يهدف محمد الأمين إلى تعزيز مشاركة الشباب في التنمية المحلية وتمكينهم من خلال مبادرات مبتكرة.
-    " المزيد
-    `,
-  },
-  {
-    title: "لقاء مع المصور يحيى طالبي مشارك في الصالون الوطني للصورة الفوتوغرافية قصر الثقافة الجزائر",
-    image: "https://cdn.assayahi.dz/ar/wp-content/uploads/2024/06/IMG_20240608_131157-780x470.jpg",
-    summary: "يحيى طالبي، مصور فوتوغرافي موهوب من بني عباس، شارك مؤخراً في الصالون الوطني للصورة الفوتوغرافية الذي أقيم في قصر الثقافة بالجزائر.",
-    content: `يحيى طالبي، مصور فوتوغرافي موهوب من بني عباس، شارك مؤخراً في الصالون الوطني للصورة الفوتوغرافية الذي أقيم في قصر الثقافة بالجزائر.
-    خلال اللقاء، تحدث يحيى عن شغفه بالتصوير وكيفية تطوير مهاراته الفنية، بالإضافة إلى التحديات التي واجهها في مسيرته المهنية.
-    " المزيد
-    `, 
-  },
-  {
-    title: "البطل يحيى طالبي يفوز بمسابقة القمة العالمية في التصوير الفوتوغرافي بأمريكا",
-    image: "https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg",
-    summary: "يحيى طالبي، المصور الفوتوغرافي من بني عباس، حقق إنجازاً كبيراً بفوزه في مسابقة القمة العالمية لمجتمع المعلومات 2024 في الولايات المتحدة الأمريكية.",
-    content: `يحيى طالبي، المصور الفوتوغرافي من بني عباس، حقق إنجازاً كبيراً بفوزه في مسابقة القمة العالمية لمجتمع المعلومات 2024 في الولايات المتحدة الأمريكية.
-    في هذه المسابقة المرموقة، تم تكريم يحيى على إبداعه وتميزه في مجال التصوير الفوتوغرافي، مما يعكس موهبته والتزامه بالفن.
-    " المزيد
-    `,
-  },  
-  {
-    title: "صورتان جزائريتان ضمن أحسن 10 صور فوتوغرافية في مسابقة صور القمة العالمية لمجتمع المعلومات 2024",
-    image: "https://news.radioalgerie.dz/sites/default/data/2024-05/yahia-talbi-wsis-2024.jpg",
-    summary: "صورتان من الجزائر، إحداهما من تصوير يحيى طالبي من بني عباس، تم اختيارهما ضمن أفضل 10 صور في مسابقة القمة العالمية لمجتمع المعلومات 2024.",
-    content: `صورتان من الجزائر، إحداهما من تصوير يحيى طالبي من بني عباس، تم اختيارهما ضمن أفضل 10 صور في مسابقة القمة العالمية لمجتمع المعلومات 2024.
-    هذا الإنجاز يعكس جودة وابتكار المصورين الجزائريين على الساحة الدولية ويعزز مكانة الجزائر في مجال التصوير الفوتوغرافي.
-    " المزيد
-    `,
-    },
-];
-
-  // توليد البطاقات
-  const grid = document.getElementById('newsGrid');
-  articles.forEach((article, idx)=>{
-    const card=document.createElement('div');
-    card.className="news-card";
-    card.innerHTML=`
-      <img src="${article.image}" alt="${article.title}">
-      <div class="news-info">
-        <h4>${article.title}</h4>
-        <p>${article.summary}</p>
-        <button class="btn" onclick="openModal(${idx})">📖 اقرأ المزيد</button>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-
-  // فتح المودال
-  function openModal(idx){
-    document.getElementById('modalTitle').innerText=articles[idx].title;
-    document.getElementById('modalBody').innerText=articles[idx].content;
-    document.getElementById('newsModal').style.display='flex';
-  }
-  function closeModal(){
-    document.getElementById('newsModal').style.display='none';
-  }
-  window.onclick=function(e){
-    if(e.target==document.getElementById('newsModal')) closeModal();
-  }
-
-// socials 
-const socials = {
-  facebook:'https://facebook.com/HAKO-ONLIN-103900968867795',
-  youtube:'https://youtube.com/@abdelhakkerroumi',
-  discord:'https://discord.gg/g5BWtQ6zTy',
-  tiktok:'https://tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc',
-  twitch:'https://twitch.com/hako_onlin',
-  x:'https://x.com/kerroumi41',
-  blog:'https://abdelhakpsg.blogspot.com/?zx=2992eb6a766dbccc',
-};
-// storage
-let settings = JSON.parse(localStorage.getItem('site_settings')||'{"theme":"dark","lang":"ar","privacy":false,"layout":"grid"}');
-let user = JSON.parse(localStorage.getItem('site_user')||'null');
-let commentsDB = JSON.parse(localStorage.getItem('site_comments')||'{}');
-
-// apply settings
-function applySettings(){
-  $('#themeToggle').textContent = settings.theme==='dark' ? '🌙' : '☀️';
-  if(settings.layout==='list'){
-    $$('.gallery, .vgrid, .store-grid, .games-grid, .news-grid').forEach(el=>el.style.gridTemplateColumns='1fr');
-  } else {
-    $$('.gallery').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(200px,1fr))');
-    $$('.vgrid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(220px,1fr))');
-    $$('.store-grid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(160px,1fr))');
-    $$('.games-grid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(200px,1fr))');
-    $$('.news-grid').forEach(el=>el.style.gridTemplateColumns='repeat(auto-fill,minmax(280px,1fr))');
-  }
-  if(settings.privacy){
-    document.querySelectorAll('main, .frame, .gallery').forEach(el=> el.style.filter='blur(6px)');
-  } else {
-    document.querySelectorAll('main, .frame, .gallery').forEach(el=> el.style.filter='none');
-  }
-  localStorage.setItem('site_settings', JSON.stringify(settings));
-}
-// renderers
-function renderTopGallery(){
-  const g = $('#topGallery'); g.innerHTML='';
-  photos.forEach(p=>{
-    const c = document.createElement('div'); c.className='card'; c.dataset.id=p.id;
-    c.innerHTML = `<img src="${p.img}" alt="${escapeHtml(p.title)}"><div class="meta"><strong>${escapeHtml(p.title)}</strong></div>`;
-    c.addEventListener('click', ()=> openLightbox(p.img));
-    g.appendChild(c);
-  });
-}
-function renderVideos(){
-  const g = $('#videosGrid'); g.innerHTML='';
-  videos.forEach(v=>{
-    const el = document.createElement('div'); el.className='vcard';
-    el.innerHTML = `<div class="vthumb"><img src="${v.thumb}" alt="${escapeHtml(v.title)}"></div><div style="flex:1"><div style="font-weight:700">${escapeHtml(v.title)}</div><div style="color:var(--muted);font-size:13px">${v.embed.includes('youtube')?'YouTube':v.embed.includes('tiktok')?'TikTok':'Other'}</div></div>`;
-    el.addEventListener('click', ()=> openVideoModal(v.embed));
-    g.appendChild(el);
-  });
-}
-function renderAudios(){
-  const g = $('#audiosList'); g.innerHTML='';
-  audios.forEach(a=>{
-    const d = document.createElement('div'); d.className='audio-item';
-    d.innerHTML = `<div style="flex:1;font-weight:700">${escapeHtml(a.title)}</div><audio controls src="${a.src}"></audio>`;
-    g.appendChild(d);
-  });
-}
-function renderStore(){
-  const g = $('#storeGrid'); g.innerHTML='';
-  store.forEach(s=>{
-    const d = document.createElement('div'); d.className='store-item';
-    d.innerHTML = `<img src="${s.img}" style="width:100%;height:120px;object-fit:cover;border-radius:8px"><div style="font-weight:700;margin-top:8px">${escapeHtml(s.title)}</div><div style="color:var(--muted);margin:8px 0">${escapeHtml(s.price)}</div>`;
-    // comments container
-    const comments = document.createElement('div'); comments.className='comments'; comments.id='c-'+s.id;
-    comments.innerHTML = `<div class="comment-list"></div>`;
-    d.appendChild(comments);
-    g.appendChild(d);
-    renderComments(s.id);
-  });
-}
-function renderGames(){
-  const g = $('#gamesGrid'); g.innerHTML='';
-  games.forEach(item=>{
-    const d = document.createElement('div'); d.className='card';
-    d.innerHTML = `<img src="${item.img}" style="height:140px;object-fit:cover"><div class="meta" style="padding:10px;font-weight:700">${escapeHtml(item.title)}</div>`;
-    const comments = document.createElement('div'); comments.className='comments'; comments.id='c-'+item.id;
-    comments.innerHTML = `<div class="comment-list"></div>`;
-    d.appendChild(comments);
-    g.appendChild(d);
-    renderComments(item.id);
-  });
-}
-function renderNews(){
-  const g = $('#newsGrid'); g.innerHTML='';
-  news.forEach(n=>{
-    const d = document.createElement('div'); d.className='news-card'; d.dataset.id=n.id;
-    d.innerHTML = `<img src="${n.img}" alt="${escapeHtml(n.title)}"><div class="title">${escapeHtml(n.title)}</div><div class="excerpt">${escapeHtml(n.excerpt)}</div>`;
-    const btn = document.createElement('button'); btn.className='small-btn'; btn.textContent='اقرأ المزيد';
-    btn.addEventListener('click', ()=>{
-      if(!d.classList.contains('expanded')){
-        d.querySelector('.excerpt').textContent = n.full;
-        d.classList.add('expanded');
-        btn.textContent='إخفاء';
-      } else {
-        d.querySelector('.excerpt').textContent = n.excerpt;
-        d.classList.remove('expanded');
-        btn.textContent='اقرأ المزيد';
-      }
-    });
-    d.appendChild(btn);
-    // comments area
-    const comments = document.createElement('div'); comments.className='comments'; comments.id='c-'+n.id;
-    comments.innerHTML = `<div class="comment-list"></div>`;
-    // comment form
-    const form = document.createElement('div'); form.className='comment-form'; form.style.display='flex'; form.style.gap='8px'; form.style.marginTop='8px';
-    const input = document.createElement('input'); input.placeholder='أضف تعليقاً...'; input.id='t-'+n.id; input.style.flex='1'; input.style.padding='8px'; input.style.borderRadius='8px'; input.style.background='rgba(255,255,255,0.02)'; input.style.border='1px solid rgba(255,255,255,0.03)';
-    const send = document.createElement('button'); send.className='btn'; send.textContent='إرسال'; send.type='button';
-    send.addEventListener('click', ()=> addComment(n.id));
-    form.appendChild(input); form.appendChild(send);
-    comments.appendChild(form);
-    d.appendChild(comments);
-    g.appendChild(d);
-    renderComments(n.id);
-  });
-}
-// comments
-function renderComments(key){
-  const box = document.getElementById('c-'+key);
-  if(!box) return;
-  const list = box.querySelector('.comment-list');
-  if(!list) return;
-  list.innerHTML = '';
-  const items = commentsDB[key] || [];
-  // show first 3 by default, add toggle if more
-  const toShow = items.length>3 ? items.slice(0,3) : items;
-  toShow.forEach(c=>{
-    const el = document.createElement('div'); el.className='comment';
-    el.innerHTML = `<strong>${escapeHtml(c.user)}</strong><div>${escapeHtml(c.text)}</div><time>${c.time}</time>`;
-    list.appendChild(el);
-  });
-  // toggle button
-  let toggle = box.querySelector('.toggle-comments');
-  if(items.length>3){
-    if(!toggle){
-      toggle = document.createElement('button'); toggle.className='small-btn toggle-comments'; toggle.style.marginTop='6px';
-      toggle.addEventListener('click', ()=>{
-        if(toggle.dataset.open==='1'){
-          // collapse
-          renderComments(key);
-        } else {
-          // expand
-          list.innerHTML = '';
-          items.forEach(c=>{
-            const el = document.createElement('div'); el.className='comment';
-            el.innerHTML = `<strong>${escapeHtml(c.user)}</strong><div>${escapeHtml(c.text)}</div><time>${c.time}</time>`;
-            list.appendChild(el);
-          });
-          toggle.textContent='إخفاء التعليقات';
-          toggle.dataset.open='1';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعنا المتميز - الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* أنماط عامة */
+        :root {
+            --primary-dark: #0a192f;
+            --primary-medium: #112240;
+            --primary-light: #233554;
+            --accent-color: #64ffda;
+            --text-light: #ccd6f6;
+            --text-lighter: #a8b2d1;
+            --text-dark: #8892b0;
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
-      });
-      box.appendChild(toggle);
-    }
-    toggle.textContent = 'عرض المزيد من التعليقات';
-    toggle.dataset.open='0';
-  } else {
-    if(toggle) toggle.remove();
-  }
-}
-function addComment(key){
-  if(!user){ alert('سجّل الدخول أولاً'); openProfileModal(); return; }
-  const input = document.getElementById('t-'+key);
-  if(!input) return;
-  const text = input.value.trim();
-  if(!text) return alert('اكتب تعليقاً');
-  const newC = {user:user.name, text, time:new Date().toLocaleString()};
-  commentsDB[key] = commentsDB[key]||[];
-  commentsDB[key].push(newC);
-  localStorage.setItem('site_comments', JSON.stringify(commentsDB));
-  input.value='';
-  renderComments(key);
-}
 
-// lightbox & video modal
-function openLightbox(src){ $('#lightboxImg').src = src; $('#lightbox').classList.add('open'); }
-$('#lightbox').addEventListener('click', ()=> $('#lightbox').classList.remove('open'));
+        .light-mode {
+            --primary-dark: #f0f4f8;
+            --primary-medium: #d9e2ec;
+            --primary-light: #bcccdc;
+            --accent-color: #3d5a80;
+            --text-light: #102a43;
+            --text-lighter: #243b53;
+            --text-dark: #334e68;
+        }
 
-function openVideoModal(src){
-  $('#videoFrame').src = src + (src.includes('?') ? '&autoplay=1' : '?autoplay=1');
-  $('#videoModal').classList.add('open');
-}
-$('#closeVideo').addEventListener('click', ()=> { $('#videoModal').classList.remove('open'); $('#videoFrame').src=''; });
-
-// settings & profile
-$('#settingsBtn').addEventListener('click', ()=> { $('#settingsModal').classList.add('open'); $('#langSelect').value = settings.lang; $('#privacyToggle').checked = settings.privacy; $('#layoutMode').value = settings.layout; });
-$('#closeSettings').addEventListener('click', ()=> $('#settingsModal').classList.remove('open'));
-$('#saveSettings').addEventListener('click', ()=> { settings.lang = $('#langSelect').value; settings.privacy = $('#privacyToggle').checked; settings.layout = $('#layoutMode').value; applySettings(); $('#settingsModal').classList.remove('open'); });
-
-function openProfileModal(){ $('#profileModal').classList.add('open'); if(user){ $('#pName').value = user.name; $('#pEmail').value = user.email; } }
-$('#profileBtn').addEventListener('click', openProfileModal);
-$('#closeProfile').addEventListener('click', ()=> $('#profileModal').classList.remove('open'));
-$('#saveProfile').addEventListener('click', ()=> { const name = $('#pName').value.trim(); const email = $('#pEmail').value.trim(); if(!name||!email) return alert('املأ الحقول'); user = {name,email}; localStorage.setItem('site_user', JSON.stringify(user)); alert('تم الحفظ'); $('#profileModal').classList.remove('open'); renderAll(); });
-
-// theme toggle
-$('#themeToggle').addEventListener('click', ()=> {
-  settings.theme = settings.theme==='dark' ? 'light' : 'dark';
-  if(settings.theme==='light'){
-    document.documentElement.style.setProperty('--bg','#f4f7fb'); document.documentElement.style.setProperty('--bg-2','#ffffff');
-    document.documentElement.style.setProperty('--card','#ffffff'); document.documentElement.style.setProperty('--text','#0b1220'); document.documentElement.style.setProperty('--muted','#556171');
-  } else {
-    document.documentElement.style.setProperty('--bg','#0b1220'); document.documentElement.style.setProperty('--bg-2','#0f1a2b');
-    document.documentElement.style.setProperty('--card','#0f1724'); document.documentElement.style.setProperty('--text','#e9eef8'); document.documentElement.style.setProperty('--muted','#9aa7bf');
-  }
-  localStorage.setItem('site_settings', JSON.stringify(settings));
-  applySettings();
-});
-
-// initialization
-function renderAll(){
-  renderTopGallery(); renderVideos(); renderAudios(); renderStore(); renderGames(); renderNews();
-}
-applySettings();
-renderAll();
-// البحث العام
-document.getElementById('search').addEventListener('input',function(){
-  const q=this.value.toLowerCase();
-  document.querySelectorAll('main section').forEach(sec=>{
-    if(sec.textContent.toLowerCase().includes(q)){
-      sec.style.display='block';
-    } else {
-      sec.style.display='none';
-    }
-  });
-});
-
-  function addLiveCard({ id, embedUrl, title, platform }) {
-    const grid = document.getElementById('liveGrid');
-    const card = document.createElement('div');
-    card.className = 'vcard';
-    card.dataset.liveId = id || ('live-' + Date.now());
-    card.innerHTML = `
-      <div class="vthumb"><img src="https://via.placeholder.com/320x180?text=Live" alt=""></div>
-      <div style="flex:1">
-        <div style="font-weight:700">${title||'بث مباشر'}</div>
-        <div style="color:#9aa7bf;font-size:13px">${platform||'مصدر'}</div>
-        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn" onclick="openLiveModal('${embedUrl}')">▶️ شاهد</button>
-          <button class="btn" style="background:#c0392b" onclick="this.closest('.vcard').remove()">🗑️ حذف</button>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* شريط التنقل العلوي */
+        .top-bar {
+            background-color: var(--primary-medium);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .logo i {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+        
+        .nav-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-left: 20px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-light);
+            color: var(--text-light);
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin: 0 15px;
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            color: var(--accent-color);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, var(--accent-color), #4ecdc4);
+            color: var(--primary-dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        /* قسم الهيدر */
+        .header-section {
+            padding: 60px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header-image {
+            flex: 1;
+            min-width: 300px;
+            margin-left: 30px;
+        }
+        
+        .header-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .header-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .header-text {
+            color: var(--text-lighter);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        
+        .header-features {
+            list-style: none;
+        }
+        
+        .header-features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-features i {
+            color: var(--accent-color);
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* قسم البطاقات */
+        .cards-section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--accent-color);
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .card {
+            background-color: var(--primary-medium);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .card:hover .card-image img {
+            transform: scale(1.1);
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+        
+        .card-text {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+        
+        .card-button {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: var(--primary-light);
+            color: var(--text-light);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .card-button:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-dark);
+        }
+        
+        /* قسم التقييمات */
+        .reviews-section {
+            padding: 60px 0;
+        }
+        
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .review-card {
+            background-color: var(--primary-medium);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .review-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .review-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+            border: 3px solid var(--accent-color);
+        }
+        
+        .review-info h3 {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .review-stars {
+            color: #ffc107;
+        }
+        
+        .review-text {
+            color: var(--text-dark);
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        /* قسم الاتصال */
+        .contact-section {
+            padding: 60px 0;
+            background-color: var(--primary-medium);
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--primary-light);
+            border: 1px solid var(--primary-light);
+            border-radius: 5px;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent-color), #4ecdc4);
+            color: var(--primary-dark);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        /* الفوتر */
+        .footer {
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--primary-light);
+            margin-top: 60px;
+        }
+        
+        .footer-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .footer-logo i {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+        }
+        
+        .footer-text {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .logo-section {
+                margin-bottom: 15px;
+            }
+            
+            .nav-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .header-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل العلوي -->
+    <div class="top-bar">
+        <div class="container nav-container">
+            <div class="logo-section">
+              <img src="https://yt3.ggpht.com/QoSaW3TMIQw2x6Dh3Edd8qaHKevLmvcxVxIVJAn3m-byBzXn2ji5dhfsoEMbpzxNTH4cHWRo=s48-c-k-c0x00ffffff-no-rj" alt="صورة الموقع"> 
+                <span class="logo-text">موقع الترفيه و التعليمي تيمودي</span>
+            </div>
+            <div class="nav-controls">
+                <div class="social-links">
+                    <a href="https://web.facebook.com/HakoOnlin/" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.youtube.com/@abdelhakkerroumi" class="social-link"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.twitch.tv/hakoonlin" class="social-link"><i class="fab fa-twitch"></i></a>
+                    <a href="https://discord.com/invite/g5BWtQ6zTy" class="social-link"><i class="fab fa-discord"></i></a>
+                    <a href="https://tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://x.com/kerroumi41" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="login-btn">تسجيل الدخول</button>
+            </div>
         </div>
-      </div>`;
-    grid.prepend(card);
-  }
-
-  function openLiveModal(url){
-    const modal = document.createElement('div');
-    modal.style.position='fixed'; modal.style.inset=0; modal.style.display='flex'; modal.style.alignItems='center'; modal.style.justifyContent='center';
-    modal.style.background='rgba(0,0,0,0.8)'; modal.style.zIndex=9999;
-    modal.innerHTML = `<div style="width:90%;max-width:900px;background:#000;border-radius:8px;padding:10px">
-      <div style="text-align:left"><button onclick="this.closest('div').parentNode.remove()" class="btn">✖ إغلاق</button></div>
-      <iframe src="${url}" style="width:100%;height:60vh;border:0;border-radius:6px" allowfullscreen></iframe>
-    </div>`;
-    document.body.appendChild(modal);
-  }
-
-  document.getElementById('addManual').addEventListener('click', ()=>{
-    const val=document.getElementById('manualEmbed').value.trim();
-    if(!val) return alert('أدخل رابط!');
-    addLiveCard({ id:'manual-'+Date.now(), embedUrl:val, title:'بث يدوي', platform:'Manual' });
-    document.getElementById('manualEmbed').value='';
-  });
-
-  if(window.io){
-    const socket=io();
-    socket.on('new-live',(payload)=> addLiveCard(payload));
-  }
-
-  document.getElementById('search').addEventListener('input',function(){
-    const q=this.value.toLowerCase();
-    document.querySelectorAll('main section').forEach(sec=>{
-      sec.style.display = sec.textContent.toLowerCase().includes(q)?'block':'none';
-    });
-  });
-</script>
+    </div>
+    </section>
+    
+    <!-- قسم البطاقات -->
+    <section class="cards-section">
+        <div class="container">
+            <h2 class="section-title">          </h2>
+            <div class="cards-container">
+                <!-- بطاقة 1 -->
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/554677406_830228566229161_4587710125277210686_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHHw3UGDtcuz_tRFY-7dFtyaFX3cLV9QShoVfdwtX1BKJPXw_ZeKsr35R9D5WAiO3plb2Tggiwtgb67W-TKAFWM&_nc_ohc=dCrX1TzpeLQQ7kNvwHxqSCt&_nc_oc=AdmV1ivOWKi3MeEY8ftEBGmD3gYgnCTh7lqAI0ASxzAAfOdQjrb9A33TK4b0zSQncgA&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=LbqV1uLKyGnpQOsWFyPBfA&oh=00_AfYN1K9KUzwz2Npn_jqrMhEUWE4ISRVbCgJ-lMau2sIQMA&oe=68DA5B28" alt="خدمة 1">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">timoudi_تيمودي </h3>
+                        <p class="card-text"> منصة شاملة لإدارة المهام بفعالية وسهولة
+                        </p>
+                        <a href="timoudi.html" class="card-button">استكشاف الأن</a>
+                    </div>
+                </div>
+                
+                <!-- بطاقة 2 -->
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://i.ytimg.com/vi/LZFh3uFM04M/maxresdefault.jpg" alt="خدمة 2">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">صح أم خطأ </h3>
+                        <p class="card-text">  اختبر معلوماتك مع لعبة صح أم خطأ الممتعة والتفاعلية!</p>
+                        <a href="quiz.html" class="card-button"> العب الأن</a>
+                    </div>
+                </div>
+                
+                <!-- بطاقة 3 -->
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDun4d4HXQQACHnfrfohvca6r_a8lwwu_Mh3v_ewgKk9DNXTXpscGoMWwn3BxJxjx5TZV5mBliFAcbDC6jT9rFmr5p1v5IxWtopF86uyFn3Zro9M5YiL2JI5UsWRKQdz0l7P8W0y0PEh9ByPQLzdKp3rZOOvnKtBg0DTDV2kFRAnaLpzsuKZZBPQ/s1600-rw-e364/DownloadPcGamesFree.jpg" alt="خدمة 3">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">تحميل الالعاب للكمبيوتر </h3>
+                        <p class="card-text"> استمتع بأحدث وأفضل الألعاب المجانية للكمبيوتر بنقرة واحدة!</p>
+                        <a href="game.html" class="card-button">حمل العابك الأن </a>
+                    </div>
+                </div>
+                <!-- البطاقة 4 -->
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://s3.maatloob.com/profile/services/img-68c42d3b4faa26-38194622.jpg" alt="خدمة 4">
+                       </div>
+                    <div class="card-content">
+                        <h3 class="card-title">أنشيد إسلامية</h3>
+                        <p class="card-text">استمع إلى أجمل الأناشيد الإسلامية بجودة عالية ومجانية تماماً!</p>
+                        <a href="mp3.html" class="card-button"> إستمع الأن  </a>         
+            </div>
+        </div>
+                <!-- البطاقة 5 -->
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://elshahbndr.com/wp-content/uploads/2020/11/أهم-عناصر-المتجر-الإلكتروني.jpg" alt="خدمة 5">
+                     </div>
+                    <div class="card-content">
+                        <h3 class="card-title">المتجر </h3>
+                        <p class="card-text">استمتع بأفضل العروض والخصومات الحصرية في متجرنا الإلكتروني!</p>
+                        <a href="shop.html" class="card-button"> إشتري  الأن  </a>         
+            </div>
+        </div>
+                <!-- البطاقة 6 -->
+                <div class="card">
+                    <div class="card-image">
+                        <img src="https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/385691643_811726327299087_4062906907783968671_n.png?_nc_cat=105&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeGXu_iwM8QbsZi2Or7I3ELaBAgoUP0I01oECChQ_QjTWuUMYd6ajgpElCX7tFJ_BDOHlgAm3kjlVyRsR28AMW58&_nc_ohc=GbWEuXubWg4Q7kNvwFma-ha&_nc_oc=AdkFCdHu151UZyo0dwuBQvHQmsfkT-1b_so33B13LwoaZsLG1a9rz2KDXae4XKz32EM&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=PX2dRTpZ-ekkLtUSwWyIRg&oh=00_AfYagDWuGM4KMxmdtpL-oYlo9A4IF8VA9ZXdt43ABaooAQ&oe=68DB7028" alt="خدمة 6">
+                     </div>
+                    <div class="card-content">
+                        <h3 class="card-title"> الموسوعة </h3>
+                        <p class="card-text">اكتشف عالماً من المعرفة مع موسوعتنا  الشاملة! </p>
+                        <a href="tkafa.html" class="card-button"> اكتشف الأن  </a >
+            </div>
+        </div>
+               <!-- البطاقة 7 -->
+               <div class="card">
+                    <div class="card-image">
+                        <img src="https://qudrateducationcenter.com/wp-content/uploads/2025/08/positive-student-with-classmates-background_11zon-1024x683.webp" alt="خدمة 7">
+                     </div>
+                    <div class="card-content">
+                        <h3 class="card-title"> التعليم الإبتدائي  </h3>
+                        <p class="card-text"> مساعدة الطلاب في المرحلة الابتدائية على التعلم بطريقة ممتعة وتفاعلية!</p>
+                        <a href="B.html" class="card-button"> تعلم الأن  </a>  
+            </div> 
+        </div>
+                <!-- البطاقة 8 -->
+                <div class="card">
+                      <div class="card-image">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPjkbJd9eBmhOpyJe2JSAeSt8fwlvnp3CINA&s" alt="خدمة 8">
+                         </div>
+                        <div class="card-content">
+                                <h3 class="card-title"> التعليم المتوسط  </h3>
+                                <p class="card-text"> طور مهاراتك الأكاديمية مع دروسنا التفاعلية والمجانية!</p>
+                                <a href="M.html" class="card-button"> تعلم الأن  </a>
+            </div>
+        </div>
+                <!-- البطاقة 9 -->
+                <div class="card">
+                      <div class="card-image">
+                            <img src="https://modo3.com/thumbs/fit630x300/149078/1484224695/مفهوم_التعليم_الثانوي.jpg" alt="خدمة 9">
+                         </div>
+                        <div class="card-content">
+                                <h3 class="card-title"> التعليم الثانوي   </h3>
+                                <p class="card-text"> استعد للنجاح في المرحلة الثانوية مع مواردنا التعليمية المجانية!</p>
+                                <a href="T.html" class="card-button"> تعلم الأن  </a>
+            </div>
+        </div>
+                <!-- البطاقة 10 -->
+                 <div class="card">
+                    <div class="card-image">
+                        <img src="https://cdn.salla.sa/YEKlm/10OnTkQsfeElg9pNRP1pd7Gw5paSh098XFAp1n6A.jpg "alt="خدمة 10">
+                 </div>
+                 <div class="card-content">
+                                <h3 class="card-title">  من سيربح المليون  </h3>
+                                <p class="card-text">إختبر نفسك و نشط عقلك </p>
+                                <a href="ijaba.html" class="card-button"> إبدأ الأن  </a>
+            </div>
+        </div>
+                <!-- البطاقة 11 -->
+                 <div class="card">
+                    <div class="card-image">
+                        <img src="https://i.ytimg.com/vi/0a8UqAoJR8g/maxresdefault.jpg" alt="خدمة 11">
+                 </div>
+                    <div class="card-content">
+                                    <h3 class="card-title">تركيب الكلمات الي جملة</h3>
+                                    <p class="card-text">لعبة تعليمية ممتعة تساعد الأطفال على تعلم تركيب الجمل بطريقة تفاعلية ومسلية.</p>
+                                    <a href="studio_100_.html" class="card-button"> إبدأ الأن  </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- قسم التقييمات -->
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">آراء عملائنا</h2>
+            <div class="reviews-container">
+                <!-- تقييم 1 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-1/236956552_871874190432146_8079335764955542606_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeFlBEHO7oIpCa1XE2YVcYeByXIA75fNxCTJcgDvl83EJM5-5XavZfGglOGWoKVFAS-JFy4WfTtaZ9BpeMMUOHx-&_nc_ohc=hP4l99EeCmoQ7kNvwGP8PEk&_nc_oc=Adle9G6YhiMMA4eusyWRAkIsUQQ1DA96h24_4aTLpBDtiHMBuo-_fPFqDuIo5GxP6p0&_nc_zt=24&_nc_ht=scontent.forn1-2.fna&_nc_gid=hTkLTock7wiMVH3HhSHDuw&oh=00_Afbzx2MwPYJ2hEYzzqMrzmK-V5o9YRyNxRLsLv70FeL7bQ&oe=68DCE805" alt="عميل" class="review-avatar">
+                        <div class="review-info">
+                            <h3>Belkacem Mohammedi</h3>
+                            <div class="review-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">خدمة رائعة وتصميم مبدع! فريق العمل محترف جداً ويقدم الدعم الكامل. أنصح بالتعامل معهم بشدة.</p>
+                </div>
+                
+                <!-- تقييم 2 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-1/329591845_3254816781435667_3358680366151232783_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeE9z8lP0bhmGLXcKlf-8sfUgvL5h-8dNFOC8vmH7x00UytJdZkswQn90veKRECiqK6RDB4m4lDoevuy9ViR72Xz&_nc_ohc=7wP-mc9fLboQ7kNvwG_5Bek&_nc_oc=AdnmPKACHuikAsd5zrT06zGdXK-c_seuT5ZVGPeJ_ID8sPt4rb5Khb_Bb6jK71qPqYc&_nc_zt=24&_nc_ht=scontent.forn1-2.fna&_nc_gid=YvTrcdAHk4ffFVWW2XUmLQ&oh=00_AfZA7VXU0MvW7iiAjKAhuqpDjHo6p3UyZxOcoCDzkmd7pQ&oe=68DCDE4E" alt="عميل" class="review-avatar">
+                        <div class="review-info">
+                            <h3>Abdou Bechar </h3>
+                            <div class="review-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">تجربة ممتازة! الموقع الذي طوروه لشركتنا ساهم في زيادة المبيعات بنسبة 40%. شكراً لكم.</p>
+                </div>
+                
+                <!-- تقييم 3 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://scontent.forn1-2.fna.fbcdn.net/v/t39.30808-6/337703221_150417180992707_8692697454978840024_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHeNkqDrKyr4s7SLgjZ8EZLFBx4uo1JIbwUHHi6jUkhvEX3FtKjEFZZaA5iU4EkQTknYCaFthLtihidjLXKUPyS&_nc_ohc=DEsAGAXxo_MQ7kNvwHcv1V2&_nc_oc=Adk4G9W79ebTnwRb6wT4HkHyTI7qAlw77phMnTnkaAS819bHcmlv1M5eQpGrD6Aez1o&_nc_zt=23&_nc_ht=scontent.forn1-2.fna&_nc_gid=7HYjTQu5pqDCeVEfstXGVQ&oh=00_AfbV6KGyx0wAPY2n-46sccrkDvKtQlMFoA9D3qovP4DNtw&oe=68DCD6D3" alt="عميل" class="review-avatar">
+                        <div class="review-info">
+                            <h3>Häkõ Twĩtčh  </h3>
+                            <div class="review-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">أعجبتني السرعة في الإنجاز وجودة العمل. فريق محترف ويستمع لملاحظات العميل بعناية.</p>
+                </div>
+            </div>
+            
+            <!-- نموذج الاتصال -->
+            <div class="contact-section">
+                <h2 class="section-title">اتصل بنا</h2>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label class="form-label" for="name">الاسم الكامل</label>
+                        <input type="text" id="name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">البريد الإلكتروني</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">رسالتك</label>
+                        <textarea id="message" class="form-textarea" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">إرسال الاستفسار</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="container">
+            <img src="https://yt3.ggpht.com/QoSaW3TMIQw2x6Dh3Edd8qaHKevLmvcxVxIVJAn3m-byBzXn2ji5dhfsoEMbpzxNTH4cHWRo=s48-c-k-c0x00ffffff-no-rj" alt="صورة الموقع">
+            </div>
+            <p class="footer-text">جميع الحقوق محفوظة &copy; 2023 موقع الترفيه و تعليمي تيمودي </p>
+        </div>
+    </footer>
+    
+    <script>
+        // تبديل الوضع الداكن/الفاتح
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+        
+        // تأثيرات التمرير
+        window.addEventListener('scroll', () => {
+            const topBar = document.querySelector('.top-bar');
+            if (window.scrollY > 50) {
+                topBar.style.padding = '10px 0';
+                topBar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+            } else {
+                topBar.style.padding = '15px 0';
+                topBar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
+            }
+        });
+        // معالجة نموذج الاتصال
+        const contactForm = document.querySelector('.contact-form');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('شكراً لتواصلك معنا! سنرد عليك قريباً.');
+            contactForm.reset();
+        });
+        // إضافة تأثيرات على الأزرار
+        const buttons = document.querySelectorAll('.login-btn, .card-button, .submit-btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseover', () => {
+                button.style.transform = 'translateY(-3px)';
+                button.style.boxShadow = '0 5px 15px rgba(100, 255, 218, 0.4)';
+            });
+            button.addEventListener('mouseout', () => {
+                button.style.transform = 'translateY(0)';
+                button.style.boxShadow = 'none';
+            });
+        });
+        // تحسين تجربة المستخدم على الأجهزة الصغيرة
+        const navControls = document.querySelector('.nav-controls');
+        const socialLinks = document.querySelector('.social-links');
+        if (window.innerWidth < 768) {
+            navControls.insertBefore(socialLinks, navControls.firstChild);
+        }
+        // إعادة ترتيب عناصر التنقل عند تغيير حجم النافذة
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 768) {
+                navControls.insertBefore(socialLinks, navControls.firstChild);
+            } else {
+                navControls.appendChild(socialLinks);
+            }
+        });
+        // إضافة تأثيرات على صور البطاقات
+        const cardImages = document.querySelectorAll('.card-image img');
+        cardImages.forEach(img => {
+            img.addEventListener('mouseover', () => {
+                img.style.transform = 'scale(1.1)';
+            });
+            img.addEventListener('mouseout', () => {
+                img.style.transform = 'scale(1)';
+            });
+        });
+        // تسجيل الدحول (محاكاة)
+        const loginBtn = document.querySelector('.login-btn');
+        loginBtn.addEventListener('click', () => {
+            alert('تم تسجيل الدخول بنجاح!');
+        });
+        // تحسين الوصولية
+        const allLinks = document.querySelectorAll('a, button');  
+        allLinks.forEach(link => {
+            link.setAttribute('tabindex', '0');
+        });
+        // إضافة تأثيرات على التقييمات>
+        const reviewCards = document.querySelectorAll('.review-card');
+        reviewCards.forEach(card => {
+            card.addEventListener('mouseover', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseout', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+        </script>
+</body>
+</html>
