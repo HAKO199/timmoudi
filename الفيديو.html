@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض الفيديوهات - تيمودي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-left: 10px;
+            object-fit: cover;
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px 0 0 25px;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-button:hover {
+            background: var(--secondary);
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .video-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .video-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .video-item:hover .video-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .play-button i {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-right: -3px;
+        }
+
+        .video-item:hover .play-button {
+            background: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-item:hover .play-button i {
+            color: white;
+        }
+
+        .video-info {
+            padding: 15px;
+            background: white;
+        }
+
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .video-category {
+            background: var(--light);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            overflow: auto;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 2% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* نسبة 16:9 */
+            margin-bottom: 20px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            border: none;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .modal-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .video-details {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light);
+            padding-top: 15px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .close-button:hover {
+            background: #d1146a;
+            transform: rotate(90deg);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            margin-top: 50px;
+        }
+
+        .footer-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            object-fit: cover;
+        }
+
+        .footer-text {
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .categories {
+                gap: 10px;
+            }
+
+            .category-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-input {
+                border-radius: 25px;
+                margin-bottom: 10px;
+            }
+
+            .search-button {
+                border-radius: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://yt3.ggpht.com/QoSaW3TMIQw2x6Dh3Edd8qaHKevLmvcxVxIVJAn3m-byBzXn2ji5dhfsoEMbpzxNTH4cHWRo=s48-c-k-c0x00ffffff-no-rj" alt="تيمودي">
+                    <span>معرض الفيديوهات - تيمودي</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="ابحث في الفيديوهات...">
+            <button class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <!-- Categories -->
+        <div class="categories">
+            <button class="category-btn active" data-category="all">الكل</button>
+            <button class="category-btn" data-category="education">التعليم</button>
+            <button class="category-btn" data-category="entertainment">الترفيه</button>
+            <button class="category-btn" data-category="sports">الرياضة</button>
+            <button class="category-btn" data-category="technology">التكنولوجيا</button>
+            <button class="category-btn" data-category="music">الموسيقى</button>
+            <button class="category-btn" data-category="game">الألعاب</button> 
+        </div>
+
+        <!-- Video Grid -->
+        <div class="video-grid" id="videoContainer">
+            <!-- سيتم إضافة الفيديوهات ديناميكياً -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <button class="close-button" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="video-container" id="modalVideoContainer">
+                <!-- سيتم إضافة الفيديو هنا -->
+            </div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-description" id="modalDescription"></p>
+            <div class="video-details">
+                <span id="modalDuration"></span>
+                <span id="modalViews"></span>
+                <span class="video-category" id="modalCategory"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <img src="https://yt3.ggpht.com/QoSaW3TMIQw2x6Dh3Edd8qaHKevLmvcxVxIVJAn3m-byBzXn2ji5dhfsoEMbpzxNTH4cHWRo=s48-c-k-c0x00ffffff-no-rj" alt="تيمودي" class="footer-logo">
+            <p class="footer-text">جميع الحقوق محفوظة &copy; 2023 معرض الفيديوهات - تيمودي</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الفيديوهات
+        const videos = [
+            {
+                id: 1,
+                title: "تيمودي منظر جميل في ليل داكن  ",
+                category: "entertainment",
+                thumbnail: "mq1.webp",
+                videoUrl: "https://www.youtube.com/embed/lxXCW5eFeOE",
+                description: "مشاهد طبيعية خلابة في تيمودي",
+                duration: "2:54",
+                views: "125K",
+                uploadDate: "2023-10-15"
+            },
+            {
+                id: 2,
+                title: "  ارخس كيبورد ميكانيكي في الجزائر  /   HAVIT kb435L dz ",
+                category: "education",
+                thumbnail: "mqdefault.webp",
+                videoUrl: "https://www.youtube.com/embed/eRBwEuzC4Kk",
+                description: "أجمل الأهداف في تاريخ كرة القدم",
+                duration: "3:25",
+                views: "125K",
+                uploadDate: "2023-09-22"
+            },
+            {
+                id: 5,
+                title: "منطقة النشيحة",
+                category: "entertainment",
+                thumbnail: "images (1).jpg",
+                videoUrl: "منطقة النشيحة .mp4",
+                description: "    زيارة يحي طالبي  لمنطقة النشيحة المعروفة بسبخة الملح والواقعة بالقرب من المدخل الرئيسي لبلدية تيمودي عبر الطريق الوطني رقم 06  ",
+                duration: "00:53",
+                views: "1k",
+                uploadDate: "2025-11-12"
+            },
+            {
+                id: 6,
+                title: "ممثل ولاية بني عباس بالمجلس الأعلى للشباب  ",
+                category: "education",
+                thumbnail: "484143657_614738391324721_6400352404319670327_n.jpg",
+                videoUrl: "https://www.youtube.com/embed/IGSuGA0MeXI",
+                description: " محمد الأمين كيحل: ممثل ولاية بني عباس بالمجلس الأعلى للشباب ",
+                duration: "1:28",
+                views: "890K",
+                uploadDate: "2023-09-30"
+            },
+            {
+                id: 9,
+                title: " Highlights pubg fpp ",
+                category: "game",
+                thumbnail: "mqdefault (1).jpg",
+                videoUrl: "https://www.youtube.com/embed/Md4_36hnAMo",
+                description: "استكشاف أحدث تطورات الذكاء الاصطناعي",
+                duration: "2:25",
+                views: "420K",
+                uploadDate: "2023-11-01"
+            },
+            {
+                id: 11,
+                title: "يحيى طالبي من بني عباس يدخل العالمية بصورتين في الصحراء الجزائرية  ",
+                category: "education",
+                thumbnail: "IMG_20240608_131157-780x470.jpg",
+                videoUrl: "https://www.youtube.com/embed/hoy0vvjGGyI",
+                description: " يحيى طالبي من بني عباس يدخل العالمية بصورتين في الصحراء الجزائرية  ",
+                duration: "6:01",
+                views: "310K",
+                uploadDate: "2023-10-10"
+            },
+            {
+                id: 12,
+                title: "كال اوف دوتي وارزون موسم 3",
+                category: "game",
+                thumbnail: "ffffff.webp",
+                videoUrl: "https://www.youtube.com/embed/Hs8cfoTaDl4",
+                description: "النهائي التاريخي في بطولة التنس",
+                duration: "4:46",
+                views: "310K",
+                uploadDate: "2023-09-25"
+            }
+        ];
+
+        // عناصر DOM
+        const videoContainer = document.getElementById('videoContainer');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const searchInput = document.querySelector('.search-input');
+        const modal = document.getElementById('videoModal');
+        const modalVideoContainer = document.getElementById('modalVideoContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalDuration = document.getElementById('modalDuration');
+        const modalViews = document.getElementById('modalViews');
+        const modalCategory = document.getElementById('modalCategory');
+        const closeModal = document.getElementById('closeModal');
+
+        // عرض الفيديوهات في الشبكة
+        function renderVideos(filteredVideos = videos) {
+            videoContainer.innerHTML = '';
+            
+            filteredVideos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.setAttribute('data-category', video.category);
+                
+                videoItem.innerHTML = `
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-meta">
+                            <span>${video.duration}</span>
+                            <span>${video.views} مشاهدة</span>
+                            <span class="video-category">${getCategoryName(video.category)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoItem.addEventListener('click', () => openModal(video));
+                videoContainer.appendChild(videoItem);
+            });
+        }
+
+        // الحصول على اسم الفئة بالعربية
+        function getCategoryName(category) {
+            const categories = {
+                'education': 'التعليم',
+                'entertainment': 'الترفيه',
+                'sports': 'الرياضة',
+                'technology': 'التكنولوجيا',
+                'music': 'الموسيقى'
+            };
+            return categories[category] || category;
+        }
+
+        // فتح الفيديو في النافذة المنبثقة
+        function openModal(video) {
+            modalVideoContainer.innerHTML = `
+                <iframe src="${video.videoUrl}" 
+                        title="${video.title}" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            `;
+            
+            modalTitle.textContent = video.title;
+            modalDescription.textContent = video.description;
+            modalDuration.textContent = `المدة: ${video.duration}`;
+            modalViews.textContent = `المشاهدات: ${video.views}`;
+            modalCategory.textContent = getCategoryName(video.category);
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إغلاق النافذة المنبثقة
+        function closeModalFunc() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            // إيقاف الفيديو عند الإغلاق
+            const iframe = modalVideoContainer.querySelector('iframe');
+            if (iframe) {
+                iframe.src = iframe.src; // إعادة تعيين المصدر لإيقاف الفيديو
+            }
+        }
+
+        // تصفية الفيديوهات حسب الفئة
+        function filterByCategory(category) {
+            if (category === 'all') {
+                renderVideos();
+            } else {
+                const filteredVideos = videos.filter(video => video.category === category);
+                renderVideos(filteredVideos);
+            }
+        }
+
+        // البحث في الفيديوهات
+        function searchVideos(query) {
+            const filteredVideos = videos.filter(video => 
+                video.title.includes(query) || video.description.includes(query)
+            );
+            renderVideos(filteredVideos);
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVideos();
+            
+            // أحداث الفئات
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    filterByCategory(btn.dataset.category);
+                });
+            });
+            
+            // حدث البحث
+            searchInput.addEventListener('input', (e) => {
+                searchVideos(e.target.value);
+            });
+            
+            // أحداث النافذة المنبثقة
+            closeModal.addEventListener('click', closeModalFunc);
+            
+            // إغلاق النافذة المنبثقة بالنقر خارجها
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModalFunc();
+                }
+            });
+            
+            // إغلاق النافذة المنبثقة بمفتاح ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModalFunc();
+                }
+            });
+        });
+
+        // إضافة تأثيرات عند التمرير
+        window.addEventListener('scroll', () => {
+            const videoItems = document.querySelectorAll('.video-item');
+            
+            videoItems.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (itemTop < windowHeight - 100) {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // تهيئة العناصر للرسوم المتحركة
+        const videoItems = document.querySelectorAll('.video-item');
+        videoItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'opacity 0.5s, transform 0.5s';
+        });
+    </script>
+</body>
+</html>
