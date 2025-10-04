@@ -1,203 +1,246 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>موسوعة PDF</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>موسوعة - بطاقات شبكية مع عرض PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      transition: background 0.3s, color 0.3s;
+    :root{
+      --bg:#0f1724; /* dark navy */
+      --card:#0b1220;
+      --accent:#0ea5e9; /* sky blue */
+      --muted:#9ca3af;
+      --glass: rgba(255,255,255,0.03);
     }
-    body.light {
-      background: #ffffff;
-      color: #222;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: 'Cairo', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg),#071026 120%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:24px;
     }
-    body.dark {
-      background: #0d1b2a;
-      color: #f0f0f0;
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:14px}
+
+    /* grid */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+      gap:18px;
+      align-items:start;
     }
-    header {
-      background: #003566;
-      color: #fff;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      padding:12px;
+      border-radius:12px;
+      box-shadow: 0 6px 18px rgba(3,7,18,0.6);
+      transition:transform .18s ease,box-shadow .18s ease;
+      display:flex;flex-direction:column;gap:10px;
     }
-    .controls button {
-      padding: .6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #0077b6, #00b4d8);
-      color: white;
-      font-weight: bold;
-      transition: transform 0.2s, opacity 0.3s;
-    }
-    .controls button:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
-    .search-bar {
-      flex: 1 1 100%;
-      margin-top: .5rem;
-      text-align: center;
-    }
-    .search-bar input {
-      width: 80%;
-      max-width: 400px;
-      padding: .6rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
-    }
-    .card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: transform 0.2s;
-      text-align: center;
-    }
-    body.light .card {
-      background: #f8f9fa;
-      color: #222;
-    }
-    .card:hover { transform: translateY(-6px); }
-    .card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-    }
-    .card h3 {
-      margin: .5rem 0;
-      font-size: 1.1rem;
-    }
-    .card button {
-      margin: 1rem 0;
-      padding: .6rem 1.2rem;
-      background: linear-gradient(135deg, #0077b6, #00b4d8);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, opacity 0.3s;
-    }
-    .card button:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: #fff;
-      border-radius: 10px;
-      max-width: 90%;
-      width: 800px;
-      height: 90%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    body.dark .modal-content {
-      background: #1b263b;
-      color: #eee;
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: .5rem 1rem;
-      background: #0077b6;
-      color: #fff;
-    }
-    .modal-header span {
-      cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .modal iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
+    .card:hover{transform:translateY(-6px);box-shadow:0 14px 32px rgba(2,6,16,0.7)}
+    .thumb{height:150px;border-radius:10px;overflow:hidden;background:var(--glass);display:flex;align-items:center;justify-content:center}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .title{font-weight:600;font-size:15px}
+    .desc{color:var(--muted);font-size:13px;line-height:1.3}
+
+    /* buttons */
+    .row{display:flex;gap:8px;margin-top:auto}
+    .btn{border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn-pdf{background:linear-gradient(90deg,var(--accent),#0284c7);color:#022133}
+    .btn-view{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:1000;padding:20px}
+    .modal.open{display:flex}
+    .modal-content{width:100%;max-width:1000px;height:85vh;background:#021024;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .modal-title{font-weight:700}
+    .modal-body{flex:1;background:#091423}
+    .pdf-frame{width:100%;height:100%;border:0;display:block}
+    .modal-actions{padding:10px 14px;border-top:1px solid rgba(255,255,255,0.03);display:flex;gap:8px;justify-content:flex-start}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* responsive */
+    @media (max-width:520px){
+      .thumb{height:120px}
+      .modal-content{height:92vh}
     }
   </style>
 </head>
-<body class="dark">
+<body>
   <header>
-    <h1>📚 موسوعة PDF</h1>
-    <div class="controls">
-      <button onclick="toggleTheme()">تبديل الوضع</button>
+    <div>
+      <h1>موسوعة </h1>
+      <p class="lead">  - اضغط على زر (عرض PDF) لقراءة الملف داخل نافذة منبثقة</p>
     </div>
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="🔍 ابحث عن ملف PDF..." onkeyup="searchPDFs()" />
-    </div>
+    <div class="small">عدد المواضيع: <span id="count">0</span></div>
   </header>
 
-  <div class="cards" id="pdfContainer">
-    <!-- مثال بطاقة -->
-    <div class="card">
-      <img src="https://bilarabiya.net/wp-content/uploads/2023/10/الموسوعة-العربية-السورية-،-منصة-بالعربية.webp" alt="غلاف PDF">
-      <h3>ملف PDF الأول</h3>
-      <button onclick="openPDF('example1.pdf')">عرض PDF</button>
-    </div>
-    <div class="card">
-      <img src="https://via.placeholder.com/400x200" alt="غلاف PDF">
-      <h3>ملف PDF الثاني</h3>
-      <button onclick="openPDF('example2.pdf')">عرض PDF</button>
-    </div>
-  </div>
+  <main>
+    <div class="grid" id="grid"></div>
+  </main>
 
-  <div class="modal" id="pdfModal">
+  <!-- Modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>📄 عرض الملف</h3>
-        <span onclick="closePDF()">✖</span>
+        <div>
+          <div class="modal-title" id="modalTitle">عرض الـ PDF</div>
+          <div class="small" id="modalSub">تحميل / تكبير / إغلاق</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-view" id="openNew" title="افتح في نافذة جديدة">افتح في تاب جديد</button>
+          <button class="btn btn-view" id="downloadPdf" title="تحميل الملف">تحميل</button>
+          <button class="btn" id="closeModal" style="background:transparent;color:var(--muted)">✕</button>
+        </div>
       </div>
-      <iframe id="pdfViewer"></iframe>
+      <div class="modal-body">
+        <!-- use iframe to show pdf. Some browsers show native PDF viewer -->
+        <iframe id="pdfFrame" class="pdf-frame" src="" sandbox></iframe>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-pdf" id="zoomIn">تكبير</button>
+        <button class="btn btn-view" id="zoomOut">تصغير</button>
+      </div>
     </div>
   </div>
 
   <script>
-    function toggleTheme(){
-      document.body.classList.toggle('dark');
-      document.body.classList.toggle('light');
+    // بيانات العيّنات - غيّرها إلى روابط الصور والـPDF الخاصة بك
+    const items = [
+      {
+        id:1,
+        title: ' تاريخ الجزائر  ',
+        desc:  'مقال شامل عن تاريخ الجزائر.',
+        img: '1-21.png',
+        pdf: 'تاريخ الجزائر .pdf'
+      },
+      {
+        id:2,
+        title: 'اطباق متعددة  ',
+        desc: '  مجموعة من وصفات الطبخ المتنوعة.',
+        img: 'Tajinee-e1727700994239-560x315.jpg',
+        pdf: 'Noor-Book.com  موسوعة الطبخ الشاملة 3 .pdf'
+      },
+      {
+        id:3,
+        title: 'نصائح طبية  ',
+        desc: '  مجموعة من النصائح الطبية المفيدة.',
+        img: 'MyIC_Inline_79300.jpg',
+        pdf: 'Noor-Book.com  الموسوعة الطبية الشاملة 2 .pdf'
+      },
+    ];
+
+    const grid = document.getElementById('grid');
+    const count = document.getElementById('count');
+    const modal = document.getElementById('modal');
+    const pdfFrame = document.getElementById('pdfFrame');
+    const modalTitle = document.getElementById('modalTitle');
+    const openNew = document.getElementById('openNew');
+    const downloadPdf = document.getElementById('downloadPdf');
+    const closeModal = document.getElementById('closeModal');
+    const zoomIn = document.getElementById('zoomIn');
+    const zoomOut = document.getElementById('zoomOut');
+
+    let currentPdf = null;
+    let scale = 1;
+
+    function createCard(item){
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="thumb"><img alt="${escapeHtml(item.title)}" src="${item.img}" loading="lazy"></div>
+        <div>
+          <div class="meta"><div class="title">${escapeHtml(item.title)}</div></div>
+          <p class="desc">${escapeHtml(item.desc)}</p>
+        </div>
+        <div class="row">
+          <button class="btn btn-pdf" data-pdf="${item.pdf}" data-title="${escapeHtml(item.title)}">عرض PDF</button>
+          <button class="btn btn-view" onclick="location.href='#'">اقرأ المقال</button>
+        </div>
+      `;
+      return el;
     }
-    function openPDF(url){
-      document.getElementById('pdfViewer').src = url;
-      document.getElementById('pdfModal').style.display = 'flex';
-    }
-    function closePDF(){
-      document.getElementById('pdfViewer').src = '';
-      document.getElementById('pdfModal').style.display = 'none';
-    }
-    function searchPDFs(){
-      let input = document.getElementById('searchInput').value.toLowerCase();
-      let cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        let title = card.querySelector('h3').innerText.toLowerCase();
-        card.style.display = title.includes(input) ? 'block' : 'none';
+
+    // عرض جميع البطاقات
+    function render(){
+      grid.innerHTML = '';
+      items.forEach(i=>grid.appendChild(createCard(i)));
+      count.textContent = items.length;
+
+      // ربط أزرار PDF
+      document.querySelectorAll('.btn-pdf').forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          const pdf = btn.getAttribute('data-pdf');
+          const title = btn.getAttribute('data-title') || 'عرض PDF';
+          openPdf(pdf,title);
+        })
       });
     }
+
+    function openPdf(url,title){
+      currentPdf = url;
+      modalTitle.textContent = title;
+      pdfFrame.src = url;
+      pdfFrame.removeAttribute('style');
+      scale = 1;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    function close(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      // نظف src لمنع استمرار التنزيل أو الصوت
+      pdfFrame.src = '';
+      currentPdf = null;
+    }
+
+    // أحداث الأزرار
+    closeModal.addEventListener('click', close);
+    openNew.addEventListener('click', ()=>{ if(currentPdf) window.open(currentPdf,'_blank'); });
+    downloadPdf.addEventListener('click', ()=>{ if(currentPdf) window.open(currentPdf,'_blank'); });
+
+    zoomIn.addEventListener('click', ()=>{
+      // تلاعب بسيط: نغيّر ارتفاع iframe عبر CSS transform
+      scale = Math.min(scale + 0.1, 2.5);
+      pdfFrame.style.transform = `scale(${scale})`;
+      pdfFrame.style.transformOrigin = 'top right';
+    });
+    zoomOut.addEventListener('click', ()=>{
+      scale = Math.max(scale - 0.1, 0.6);
+      pdfFrame.style.transform = `scale(${scale})`;
+      pdfFrame.style.transformOrigin = 'top right';
+    });
+
+    // أغلق بالضغط على خلفية المودال
+    modal.addEventListener('click', (e)=>{
+      if(e.target === modal) close();
+    });
+
+    // هروب لإغلاق
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') close(); });
+
+    // مساعدة: فرّغ النص لإدراج آمن
+    function escapeHtml(unsafe) {
+      return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // تشغيل
+    render();
   </script>
 </body>
 </html>
