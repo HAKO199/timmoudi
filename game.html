@@ -1,334 +1,365 @@
-<style>
-:root{
-  --bg:#0b1220; --bg-2:#0f1a2b; --card:#0f1724; --muted:#9aa7bf;
-  --accent:#7c5cff; --accent-2:#00d4ff; --glass: rgba(255,255,255,0.03);
-  --text:#e9eef8;
-  --text-invert:#071024;
-  --text-highlight:#fff;
-  --shadow: rgba(2,6,23,0.4);
-  --shadow-strong: rgba(2,6,23,0.6);
-  --shadow-glow: rgba(124,92,255,0.4);
-  --shadow-glow-strong: rgba(124,92,255,0.6);
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:
-  radial-gradient(900px 400px at 10% -10%, #16213b 0%, transparent 40%), linear-gradient(180deg,var(--bg),var(--bg-2));
-  color:var(--text); -webkit-font-smoothing:antialiased}
-h1,h2,h3,h4,h5,h6{margin:0;font-weight:800;color:var(--text)}
-p{margin:0 0 12px;line-height:1.5;color:var(--muted)}
-a{color:inherit;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:18px}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>موقعي للألعاب — تحميل التطبيق</title>
+  <style>
+    :root{
+      --bg:#0b1220; --bg-2:#0f1a2b; --card:#0f1724; --muted:#9aa7bf;
+      --accent:#7c5cff; --accent-2:#00d4ff; --glass: rgba(255,255,255,0.03);
+      --text:#e9eef8; --text-invert:#071024;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:
+      radial-gradient(900px 400px at 10% -10%, #16213b 0%, transparent 40%),
+      linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--text);-webkit-font-smoothing:antialiased}
 
-/* topbar */
-.topbar{position:sticky;top:0;z-index:90;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.03)}
-.inner{display:flex;align-items:center;gap:12px;padding:12px 18px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:48px;height:48px;border-radius:10px;background:conic-gradient(from 120deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:900;color:#031025}
-.site-title{font-weight:800;font-size:1.05rem}
-.socials{display:flex;gap:8px;margin-inline-start:12px}
-.icon{width:36px;height:36;border-radius:8px;display:grid;place-items:center;background:var(--glass);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
-.controls{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1200px;margin:0 auto;padding:18px}
 
-/* small buttons */
-.btn{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071024;font-weight:700;cursor:pointer}
-.small-btn{padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
-.theme-toggle{font-size:18px;cursor:pointer}
+    /* topbar */
+    .topbar{position:sticky;top:0;z-index:120;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.03)}
+    .inner{display:flex;align-items:center;gap:12px;padding:12px 18px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:48px;height:48px;border-radius:10px;background:conic-gradient(from 120deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:900;color:#031025}
+    .site-title{font-weight:800;font-size:1.05rem}
+    .controls{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
 
-/* frames */
-.frame{margin-top:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.frame h3{margin:0 0 12px}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:transform .15s,box-shadow .15s}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
-.card img{width:100%;height:140px;object-fit:cover;display:block}
-.card .meta{padding:10px;font-size:14px;color:var(--muted)}
+    .btn-app-download{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--text-invert);padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700;transition:transform .15s}
+    .btn-app-download:hover{transform:scale(1.04)}
+    .btn-app-download svg{width:20px;height:20px;fill:var(--text-invert)}
 
-/* videos */
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.vcard{display:flex;gap:10px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
-.vthumb{width:110px;height:70px;flex-shrink:0;border-radius:8px;overflow:hidden}
-.vthumb img{width:100%;height:100%;object-fit:cover}
-.vinfo{flex:1;font-size:14px;font-weight:600;color:var(--text)}
-/* audios */
-.audios{display:flex;flex-direction:column;gap:10px}
-.audio-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px}
-.audio-item:hover{background:var(--glass)}
-.audio-item audio{flex:1}
+    /* slider */
+    .hero-wrap{max-width:1200px;margin:16px auto 8px;padding:0 18px}
+    .slider{position:relative;height:220px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .slide{position:absolute;inset:0;opacity:0;transform:scale(1.02);transition:opacity .6s ease,transform .6s ease;background-size:cover;background-position:center}
+    .slide.active{opacity:1;transform:scale(1)}
+    .slide::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 70%)}
+    .slide-content{position:absolute;inset:auto 12px 12px 12px;z-index:2;color:var(--text);display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+    .slide h3{margin:0;font-size:1.15rem;letter-spacing:.2px}
+    .slide p{margin:0;color:var(--muted);font-size:0.95rem}
 
+    .slider-indicators{position:absolute;left:12px;bottom:12px;display:flex;gap:8px;z-index:3}
+    .indicator{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,0.18);cursor:pointer;border:1px solid rgba(255,255,255,0.06)}
+    .indicator.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(124,92,255,0.18)}
 
-/* store/games */
-.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+    /* search */
+    .search-bar{padding:12px 18px;display:flex;justify-content:center}
+    .search-bar input{padding:12px 16px;border-radius:12px;width:100%;max-width:860px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);color:var(--text);outline:none;font-size:15px}
+    .search-bar input::placeholder{color:rgba(233,238,248,0.55)}
 
-/* game card */
-.games-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-    gap:14px;
-    margin-top:12px
-  }
-  .game-card{
-    background:#111;
-    border-radius:10px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    transition:.2s;
-    box-shadow:0 6px 24px rgba(119, 25, 196, 0.616);
-    border:1px solid rgba( ,255,255,255,0.03);
-    cursor:pointer;
-  }
-  .game-card:hover{transform:translateY(-4px)}
-  .game-card img{width:100%;height:160px;object-fit:cover}
-  .game-info{padding:12px;display:flex;flex-direction:column;gap:8px}
-  .game-info h4{margin:0;font-size:16px}
-  .btn.download{
-    padding:8px 10px;
-    background:#7c5cff;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    text-align:center;
-    font-weight:600;
-    cursor:pointer;
-    text-decoration:none;
-    display:inline-block;
-    transition:.2s;
-    margin-top:auto;
-  }
-  .btn.download:hover{background:#5a44cc}
-/* news */
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.news-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);padding:12px;display:flex;flex-direction:column}
-.news-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-.news-card .title{font-weight:800;margin-top:8px}
-.news-card .excerpt{color:var(--muted);font-size:14px;max-height:72px;overflow:hidden;transition:max-height .3s ease}
-.news-card.expanded .excerpt{max-height:none}
-.news-card .read-more{margin-top:auto;color:var(--accent);font-size:14px;cursor:pointer}
+    /* games grid */
+    .frame{margin-top:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:12px}
+    .game-card{background:#111;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s;box-shadow:0 6px 24px rgba(119, 25, 196, 0.18);border:1px solid rgba(255,255,255,0.03);cursor:default}
+    .game-card:hover{transform:translateY(-6px)}
+    .game-card img{width:100%;height:160px;object-fit:cover;display:block}
+    .game-info{padding:12px;display:flex;flex-direction:column;gap:8px}
+    .game-info h4{margin:0;font-size:16px}
+    .game-info p{margin:0;color:var(--muted);font-size:14px}
+    .btn.download{padding:8px 10px;background:#7c5cff;color:#fff;border:none;border-radius:8px;text-align:center;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .12s;margin-top:auto}
+    .btn.download:hover{transform:translateY(-3px);background:#5a44cc}
 
-/* comments */
-.comments{margin-top:10px}
-.comment-list{max-height:160px;overflow:auto;padding-right:6px}
-.comment{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;margin-bottom:8px}
-.comment strong{color:var(--accent)}
-.comment time{display:block;font-size:12px;color:var(--muted)}
-.add-comment{display:flex;gap:8px;margin-top:8px}
-.add-comment input{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
-.add-comment button{padding:8px 12px;border-radius:8px;background:var(--accent);border:none;color:#071024;cursor:pointer;font-weight:700}
-
-
-/* lightbox & modals */
-.lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:200}
-.lightbox.open{display:flex}
-.lightbox img{max-width:90vw;max-height:85vh;border-radius:8px}
-.vmodal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:210}
-.vmodal.open{display:flex}
-.vmodal-box{background:var(--card);padding:12px;border-radius:10px;max-width:900px;width:95%}
-.vmodal iframe{width:100%;height:500px;border:0;border-radius:8px}
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:220}
-.modal.open{display:flex}
-.modal-box{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01));padding:18px;border-radius:12px;width:420px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
-.form-row{display:flex;align-items:center;gap:8px;margin:8px 0}
-.label{min-width:120px;color:var(--muted)}
-input[type="text"],input[type="email"],select{flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
-.close{position:absolute;top:12px;right:12px;font-size:18px;color:var(--muted);cursor:pointer}
-
-/* responsive */
-@media (max-width:900px){ .vthumb{width:90px;height:60px} .card img{height:120px} .vmodal iframe{height:320px} }
-@media (max-width:600px){ .inner{flex-wrap:wrap} .controls{margin-inline-start:0;width:100%;justify-content:space-between} .logo{width:44px;height:44px} .site-title{font-size:1rem} .vmodal iframe{height:260px} }
-
-/* socials official colors */
-.socials a{font-size:18px;width:35px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff}
-.socials a.fb{color:#1877F2}.socials a.yt{color:#FF0000}.socials a.dc{color:#5865F2}.socials a.tt{color:#000}
-.nav-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
-.nav-links a{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px}
-.search-bar{text-align:center;margin:10px}
-.search-bar input{padding:10px 14px;border-radius:8px;width:80%;max-width:600px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text)}
-
-</style>
-
-<!-- search bar -->
-  <div class="search-bar"><input type="text" id="search" placeholder="ابحث هنا..."></div>
-
-
-<!-- 🎮 تحميل الألعاب   -->
-<section id="games-download" class="frame">
-  <h1>🎮 تحميل الألعاب</h1>
-  <div class="games-grid">
-
-    <!-- لعبة 1 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_photos/750/SNWQhjnzaO302.jpg" alt="لعبة 1">
-      <div class="game-info">
-        <h4>  God of War Ragnarok</h4>
-        <p>حجم الملف: 70.8 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/God_of_War_Ragnarok.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-
-    <!-- لعبة 2 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_photos/750/k8vlFYkuCo604.jpg" alt="لعبة 2">
-      <div class="game-info">
-        <h4> UNCHARTED:Legacy of Thieves Collection </h4>
-        <p>حجم الماف : 95.6 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/UNCHARTED:Legacy_of_Thieves_Collection.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-
-    <!-- لعبة 3 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/ClFwMP6Bbi174.jpg" alt="لعبة 3">
-      <div class="game-info">
-        <h4> 2 Red Dead Redemption</h4>
-        <p>حجم الملف: 66.3 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/2_Red_Dead_Redemption.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة '(4)' -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/aBdIrZIAQk434.jpg" alt="لعبة 4">
-      <div class="game-info">
-        <h4> 5 Grand Theft Auto V</h4>
-        <p>حجم الملف: 36.1 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Grand_Theft_Auto_V.html" class="btn download" download>⬇️ تحميل مباشر</a>
+    /* responsive */
+    @media (max-width:900px){ .slider{height:180px} .game-card img{height:140px} }
+    @media (max-width:600px){ .inner{flex-wrap:wrap}.site-title{font-size:0.98rem}.slider{height:140px} .game-card img{height:120px} .search-bar input{max-width:100%} .slide h3{font-size:1rem} }
+  </style>
+</head>
+<body>
+  <!-- topbar -->
+  <div class="topbar">
+    <div class="inner container">
+      <div class="brand">
+        <div class="logo">🕹️</div>
+        <div class="site-title">موقعي للألعاب</div>
       </div>
 
-    </div>
-    <!-- لعبة 5 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/4wKv5p2A9u860.jpg" alt="لعبة 5">
-      <div class="game-info">
-        <h4>  Dragon Ball Xenoverse</h4>
-        <p>حجم الملف: 8.88 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Dragon_Ball_Xenoverse.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 6 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/yr5B7aw8mX688.jpg" alt="لعبة 6">
-      <div class="game-info">
-        <h4>  Beyond: Two Souls </h4>
-        <p>حجم الملف: 37.6 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Beyond_Two_Souls.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-      <!-- لعبة 7 -->
-    </div>
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/P1pKjAZQfD782.jpg" alt="لعبة 7">
-      <div class="game-info">
-        <h4> A Plague Tale Innocence</h4>
-        <p>حجم الملف: 33.8  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale_Innocence.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 8 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/t1QWXAcmgR115.jpg" alt="لعبة 8">
-      <div class="game-info">
-        <h4>  PES 2017 </h4>
-        <p>حجم الملف: 10  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/pes_2017.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 9 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/pCYMLuB6FQ113.jpg" alt="لعبة 9">
-      <div class="game-info">
-        <h4>  4 Naruto Shippuden Ultimate Ninja Storm </h4>
-        <p>حجم الملف: 31  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/4_Naruto_Shippuden_Ultimate_Ninja_Storm.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 10 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/iGXi8BVyA2530.jpg" alt="لعبة 10">
-      <div class="game-info">
-        <h4> batman arkham knight</h4>
-        <p>حجم الملف: 50 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/batman_arkham_knight.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 11 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/aPmH3Wnua9853.jpg" alt="لعبة 11">
-      <div class="game-info">
-        <h4> prison break</h4>
-        <p>حجم الملف: 1 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/prison_break.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 12 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/WgVcjSW9S0503.jpg" alt="لعبة 12">
-      <div class="game-info">
-        <h4> Sniper Elite 3</h4>
-        <p>حجم الملف:  14.5 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Sniper_Elite_III.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-  <!-- لعبة 13 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/BHyb5IBB7u214.jpg" alt="لعبة 13">
-      <div class="game-info">
-        <h4> Trials Fusion Welcome To The Abyss</h4>
-        <p>حجم الملف: 6 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Trials_Fusion_Welcome_To_The_Abyss.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 14 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/Sf8bQSvon144.jpg" alt="لعبة 14">
-      <div class="game-info">
-        <h4> WWE 2K20</h4>
-        <p>حجم الملف:  45.1 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/WWE_2K20.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-    <!-- لعبة 15 -->
-    <div class="game-card">
-      <img src="https://www.wifi4games.com/img/pc_covers/260/3h69jpzlvK148.jpg" alt="لعبة 15">
-      <div class="game-info">
-        <h4>  Maid of Sker</h4>
-        <p>حجم الملف: 6.92  GB</p>
-        <a href="https://www.wifi4games.com/pc_games/Maid_of_Sker.html" class="btn download" download>⬇️ تحميل مباشر</a>
-      </div>
-    </div>
-   <!-- لعبة 16 -->
-    <div class="game-card">
-      <img src="https:/www.wifi4games.com/img/pc_covers/260/K2nPJ0kFTN872.jpg" alt="لعبة 16">
-      <div class="game-info">
-        <h4> A Plague Tale: Requiem</h4>
-        <p>حجم الملف: 45.8 GB</p>
-        <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale:_Requiem.html" class="btn download" download>⬇️ تحميل مباشر</a>
+      <div class="controls">
+        <button class="btn-app-download" id="appDownloadBtn" title="تحميل التطبيق">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6,9.48c0.04,-0.32 0.06,-0.65 0.06,-0.98 0,-3.87 -3.13,-7 -7,-7 -3.87,0 -7,3.13 -7,7 0,0.33 0.02,0.66 0.06,0.98L5,11v7c0,1.1 0.9,2 2,2h10c1.1,0 2,-0.9 2,-2v-7l-1.4,-1.52zM12,4c2.76,0 5,2.24 5,5 0,0.79 -0.2,1.53 -0.55,2.18L16,11.5V18H8v-6.5L7.55,11.18C7.2,10.53 7,9.79 7,9c0,-2.76 2.24,-5 5,-5z"/></svg>
+          تحميل التطبيق
+        </button>
       </div>
     </div>
   </div>
-</section>
-<script>
-// بحث في الألعاب
-document.getElementById('search').addEventListener('input', function() {
-  const query = this.value.toLowerCase();
-  const games = document.querySelectorAll('.game-card');
-  games.forEach(game => {
-    const title = game.querySelector('h4').innerText.toLowerCase();
-    if (title.includes(query)) {
-      game.style.display = '';
-    } else {
-      game.style.display = 'none';
-    }
-  });
-});
-// تحميل اللعبة
-const downloadButtons = document.querySelectorAll('.btn.download');
-downloadButtons.forEach(button => {
-  button.addEventListener('click', (e) => {
-    e.preventDefault();
-    const link = document.createElement('a');
-    link.href = button.href;
-    link.download = ''; 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
-</script>
+
+  <!-- slider -->
+  <div class="hero-wrap">
+    <div class="slider" id="slider">
+      <!-- Slides using images from الكود القديم (ألعابك الخاصة) -->
+      <div class="slide active" style="background-image:url('https://www.wifi4games.com/img/pc_photos/750/SNWQhjnzaO302.jpg')">
+        <div class="slide-content">
+          <h3>God of War Ragnarok</h3>
+          <p>أحد أكثر الألعاب طلباً — حملها الآن من الأسفل</p>
+        </div>
+      </div>
+
+      <div class="slide" style="background-image:url('https://www.wifi4games.com/img/pc_photos/750/k8vlFYkuCo604.jpg')">
+        <div class="slide-content">
+          <h3>UNCHARTED: Legacy of Thieves</h3>
+          <p>تجربة مغامرة سينمائية</p>
+        </div>
+      </div>
+
+      <div class="slide" style="background-image:url('https://www.wifi4games.com/img/pc_covers/260/ClFwMP6Bbi174.jpg')">
+        <div class="slide-content">
+          <h3>Red Dead Redemption 2</h3>
+          <p>عالم واسع وقصة قوية</p>
+        </div>
+      </div>
+
+      <div class="slide" style="background-image:url('https://www.wifi4games.com/img/pc_covers/260/aBdIrZIAQk434.jpg')">
+        <div class="slide-content">
+          <h3>GTA V</h3>
+          <p>الخيار الشائع لمحبي العالم المفتوح</p>
+        </div>
+      </div>
+
+      <div class="slide" style="background-image:url('https://www.wifi4games.com/img/pc_covers/260/4wKv5p2A9u860.jpg')">
+        <div class="slide-content">
+          <h3>Dragon Ball Xenoverse</h3>
+          <p>قتالات ممتعة بحجم صغير نسبيًا</p>
+        </div>
+      </div>
+
+      <!-- indicators -->
+      <div class="slider-indicators" id="indicators"></div>
+    </div>
+  </div>
+
+  <!-- search bar -->
+  <div class="search-bar container">
+    <input type="text" id="search" placeholder="ابحث هنا عن أي لعبة..." autocomplete="off" />
+  </div>
+
+  <!-- games (مصدرها كما هي) -->
+  <section id="games-download" class="frame container">
+    <h1>🎮 تحميل الألعاب</h1>
+    <div class="games-grid" id="gamesGrid">
+      <!-- ********* الألعاب كما هي تماماً من كودك ********* -->
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_photos/750/SNWQhjnzaO302.jpg" alt="God of War Ragnarok">
+        <div class="game-info">
+          <h4>God of War Ragnarok</h4>
+          <p>حجم الملف: 70.8 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/God_of_War_Ragnarok.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_photos/750/k8vlFYkuCo604.jpg" alt="UNCHARTED: Legacy of Thieves Collection">
+        <div class="game-info">
+          <h4>UNCHARTED: Legacy of Thieves Collection</h4>
+          <p>حجم الماف : 95.6 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/UNCHARTED:Legacy_of_Thieves_Collection.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/ClFwMP6Bbi174.jpg" alt="Red Dead Redemption 2">
+        <div class="game-info">
+          <h4>Red Dead Redemption 2</h4>
+          <p>حجم الملف: 66.3 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/2_Red_Dead_Redemption.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/aBdIrZIAQk434.jpg" alt="Grand Theft Auto V">
+        <div class="game-info">
+          <h4>Grand Theft Auto V</h4>
+          <p>حجم الملف: 36.1 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/Grand_Theft_Auto_V.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/4wKv5p2A9u860.jpg" alt="Dragon Ball Xenoverse">
+        <div class="game-info">
+          <h4>Dragon Ball Xenoverse</h4>
+          <p>حجم الملف: 8.88 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/Dragon_Ball_Xenoverse.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/yr5B7aw8mX688.jpg" alt="Beyond: Two Souls">
+        <div class="game-info">
+          <h4>Beyond: Two Souls</h4>
+          <p>حجم الملف: 37.6 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/Beyond_Two_Souls.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/P1pKjAZQfD782.jpg" alt="A Plague Tale Innocence">
+        <div class="game-info">
+          <h4>A Plague Tale Innocence</h4>
+          <p>حجم الملف: 33.8 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale_Innocence.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/t1QWXAcmgR115.jpg" alt="PES 2017">
+        <div class="game-info">
+          <h4>PES 2017</h4>
+          <p>حجم الملف: 10 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/pes_2017.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/pCYMLuB6FQ113.jpg" alt="Naruto Shippuden">
+        <div class="game-info">
+          <h4>Naruto Shippuden Ultimate Ninja Storm</h4>
+          <p>حجم الملف: 31 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/4_Naruto_Shippuden_Ultimate_Ninja_Storm.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/iGXi8BVyA2530.jpg" alt="Batman Arkham Knight">
+        <div class="game-info">
+          <h4>Batman Arkham Knight</h4>
+          <p>حجم الملف: 50 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/batman_arkham_knight.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/aPmH3Wnua9853.jpg" alt="Prison Break">
+        <div class="game-info">
+          <h4>Prison Break</h4>
+          <p>حجم الملف: 1 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/prison_break.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/WgVcjSW9S0503.jpg" alt="Sniper Elite 3">
+        <div class="game-info">
+          <h4>Sniper Elite 3</h4>
+          <p>حجم الملف: 14.5 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/Sniper_Elite_III.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/BHyb5IBB7u214.jpg" alt="Trials Fusion">
+        <div class="game-info">
+          <h4>Trials Fusion Welcome To The Abyss</h4>
+          <p>حجم الملف: 6 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/Trials_Fusion_Welcome_To_The_Abyss.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/Sf8bQSvon144.jpg" alt="WWE 2K20">
+        <div class="game-info">
+          <h4>WWE 2K20</h4>
+          <p>حجم الملف: 45.1 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/WWE_2K20.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/3h69jpzlvK148.jpg" alt="Maid of Sker">
+        <div class="game-info">
+          <h4>Maid of Sker</h4>
+          <p>حجم الملف: 6.92 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/Maid_of_Sker.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <img src="https://www.wifi4games.com/img/pc_covers/260/K2nPJ0kFTN872.jpg" alt="A Plague Tale: Requiem">
+        <div class="game-info">
+          <h4>A Plague Tale: Requiem</h4>
+          <p>حجم الملف: 45.8 GB</p>
+          <a href="https://www.wifi4games.com/pc_games/A_Plague_Tale:_Requiem.html" class="btn download">⬇️ تحميل مباشر</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // ====== البحث الحي ======
+    const searchInput = document.getElementById('search');
+    const gamesGrid = document.getElementById('gamesGrid');
+    searchInput.addEventListener('input', function(){
+      const q = this.value.trim().toLowerCase();
+      const cards = gamesGrid.querySelectorAll('.game-card');
+      cards.forEach(card=>{
+        const title = card.querySelector('h4').innerText.toLowerCase();
+        if(!q || title.includes(q)) card.style.display = '';
+        else card.style.display = 'none';
+      });
+    });
+
+    // ====== زر تحميل التطبيق ======
+    const apkUrl = 'https://top4top.io/downloadf-3564i8zj81-apk.html'; // الرابط الذي أعطيته
+    document.getElementById('appDownloadBtn').addEventListener('click', function(){
+      // نفتح الرابط في تبويب جديد — لأن الرابط قد لا يكون رابط مباشر لملف APK
+      window.open(apkUrl, '_blank');
+    });
+
+    // ====== التعامل مع أزرار التحميل داخل الكروت (فتح الرابط في تبويب جديد) ======
+    document.querySelectorAll('.btn.download').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        window.open(href, '_blank');
+      });
+    });
+
+    // ====== السلايدر التلقائي ======
+    (function(){
+      const slider = document.getElementById('slider');
+      const slides = Array.from(slider.querySelectorAll('.slide'));
+      const indicatorsWrap = document.getElementById('indicators');
+      let current = 0;
+      const intervalMs = 4200; // مدة العرض لكل صورة
+
+      // بناء المؤشرات
+      slides.forEach((s, idx) => {
+        const dot = document.createElement('div');
+        dot.className = 'indicator' + (idx===0 ? ' active' : '');
+        dot.dataset.index = idx;
+        dot.addEventListener('click', ()=> goTo(idx));
+        indicatorsWrap.appendChild(dot);
+      });
+
+      let timer = setInterval(next, intervalMs);
+
+      function setActive(idx){
+        slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+        indicatorsWrap.querySelectorAll('.indicator').forEach((d,i)=> d.classList.toggle('active', i===idx));
+        current = idx;
+      }
+
+      function next(){
+        const nxt = (current + 1) % slides.length;
+        setActive(nxt);
+      }
+      function goTo(index){
+        setActive(index);
+        resetTimer();
+      }
+      function resetTimer(){
+        clearInterval(timer);
+        timer = setInterval(next, intervalMs);
+      }
+
+      // إيقاف التمرير عند تحريك الماوس فوق السلايدر (مفيد للأجهزة المكتبية)
+      slider.addEventListener('mouseenter', ()=> clearInterval(timer));
+      slider.addEventListener('mouseleave', ()=> { clearInterval(timer); timer = setInterval(next, intervalMs); });
+
+      // بداية
+      setActive(0);
+    })();
+  </script>
+</body>
+</html>
