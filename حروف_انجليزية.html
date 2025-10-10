@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة تعلم الحروف العربية والإنجليزية</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 1000px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #edf2f7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .score-container, .level-container, .streak-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .score-label, .level-label, .streak-label {
+            font-weight: bold;
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .score-value, .level-value, .streak-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        
+        .streak-value {
+            color: #e53e3e;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .letter-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .letter-card {
+            width: 180px;
+            height: 180px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .arabic-letter {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .english-letter {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        .letter-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .letter-name {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-top: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .control-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .control-btn:hover {
+            background: #3182ce;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .control-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .pronounce-btn {
+            background: #805ad5;
+        }
+        
+        .pronounce-btn:hover {
+            background: #6b46c1;
+        }
+        
+        .quiz-container {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .quiz-question {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-option {
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            background: #3182ce;
+            transform: translateY(-3px);
+        }
+        
+        .quiz-option.correct {
+            background: #48bb78;
+        }
+        
+        .quiz-option.incorrect {
+            background: #f56565;
+        }
+        
+        .quiz-option:disabled {
+            cursor: not-allowed;
+        }
+        
+        .quiz-feedback {
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .quiz-feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .sound-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .sound-btn {
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .sound-btn.active {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .mode-btn {
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mode-btn.active {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        
+        .volume-slider {
+            width: 100px;
+        }
+        
+        .auto-next-indicator {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .letter-cards {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .letter-card {
+                width: 150px;
+                height: 150px;
+                font-size: 5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>لعبة تعلم الحروف العربية والإنجليزية</h1>
+        <p class="subtitle">تعلم الحروف العربية ومقابلها بالإنجليزية بطريقة تفاعلية</p>
+        
+        <div class="sound-controls">
+            <button class="sound-btn active" id="sound-btn">
+                <span>🔊</span> الصوت
+            </button>
+            <button class="sound-btn active" id="music-btn">
+                <span>🎵</span> الموسيقى
+            </button>
+        </div>
+        
+        <div class="volume-control">
+            <span>🔊</span>
+            <input type="range" min="0" max="100" value="50" class="volume-slider" id="volume-slider">
+            <span>🔈</span>
+        </div>
+        
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="mode-ar-en">عربي ← إنجليزي</button>
+            <button class="mode-btn" id="mode-en-ar">إنجليزي ← عربي</button>
+        </div>
+        
+        <div class="game-info">
+            <div class="score-container">
+                <div class="score-label">النتيجة</div>
+                <div class="score-value">0</div>
+            </div>
+            
+            <div class="level-container">
+                <div class="level-label">المستوى</div>
+                <div class="level-value">1</div>
+            </div>
+            
+            <div class="streak-container">
+                <div class="streak-label">الإجابات المتتالية</div>
+                <div class="streak-value">0</div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="letter-cards">
+                <div class="letter-card arabic-letter" id="arabic-letter">أ</div>
+                <div class="letter-card english-letter" id="english-letter">A</div>
+            </div>
+            
+            <div class="letter-name" id="letter-name">همزة - Alef</div>
+            
+            <div class="controls">
+                <button class="control-btn" id="prev-btn">
+                    <span>◀</span> السابق
+                </button>
+                <button class="control-btn pronounce-btn" id="pronounce-arabic-btn">
+                    <span>🔊</span> نطق عربي
+                </button>
+                <button class="control-btn pronounce-btn" id="pronounce-english-btn">
+                    <span>🔊</span> نطق إنجليزي
+                </button>
+                <button class="control-btn" id="next-btn">
+                    التالي <span>▶</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="quiz-question" id="quiz-question">ما هو الحرف الإنجليزي المقابل لهذا الحرف العربي؟</div>
+            <div class="quiz-letter" id="quiz-letter" style="font-size: 4rem; margin: 15px 0; color: #2b6cb0;">أ</div>
+            
+            <div class="quiz-options" id="quiz-options">
+                <!-- سيتم ملء الخيارات بواسطة JavaScript -->
+            </div>
+            
+            <div class="quiz-feedback" id="quiz-feedback"></div>
+            
+            <div class="auto-next-indicator" id="auto-next-indicator">سيتم الانتقال تلقائياً...</div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="correct-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="wrong-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="level-up-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="click-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // قاعدة بيانات الحروف العربية ومقابلها بالإنجليزية
+        const arabicLetters = [
+            { arabic: "أ", english: "A", name: "همزة", pronunciation: "alif", englishPronunciation: "ey" },
+            { arabic: "ب", english: "B", name: "باء", pronunciation: "baa", englishPronunciation: "bi" },
+            { arabic: "ت", english: "T", name: "تاء", pronunciation: "taa", englishPronunciation: "ti" },
+            { arabic: "ث", english: "TH", name: "ثاء", pronunciation: "thaa", englishPronunciation: "thi" },
+            { arabic: "ج", english: "J", name: "جيم", pronunciation: "jeem", englishPronunciation: "jey" },
+            { arabic: "ح", english: "H", name: "حاء", pronunciation: "haa", englishPronunciation: "eych" },
+            { arabic: "خ", english: "KH", name: "خاء", pronunciation: "khaa", englishPronunciation: "key" },
+            { arabic: "د", english: "D", name: "دال", pronunciation: "dal", englishPronunciation: "di" },
+            { arabic: "ذ", english: "DH", name: "ذال", pronunciation: "thal", englishPronunciation: "di" },
+            { arabic: "ر", english: "R", name: "راء", pronunciation: "raa", englishPronunciation: "ar" },
+            { arabic: "ز", english: "Z", name: "زاي", pronunciation: "zay", englishPronunciation: "zed" },
+            { arabic: "س", english: "S", name: "سين", pronunciation: "seen", englishPronunciation: "es" },
+            { arabic: "ش", english: "SH", name: "شين", pronunciation: "sheen", englishPronunciation: "esh" },
+            { arabic: "ص", english: "S", name: "صاد", pronunciation: "sad", englishPronunciation: "es" },
+            { arabic: "ض", english: "D", name: "ضاد", pronunciation: "dad", englishPronunciation: "di" },
+            { arabic: "ط", english: "T", name: "طاء", pronunciation: "taa", englishPronunciation: "ti" },
+            { arabic: "ظ", english: "DH", name: "ظاء", pronunciation: "zaa", englishPronunciation: "di" },
+            { arabic: "ع", english: "A", name: "عين", pronunciation: "ayn", englishPronunciation: "ey" },
+            { arabic: "غ", english: "GH", name: "غين", pronunciation: "ghayn", englishPronunciation: "ji" },
+            { arabic: "ف", english: "F", name: "فاء", pronunciation: "faa", englishPronunciation: "ef" },
+            { arabic: "ق", english: "Q", name: "قاف", pronunciation: "qaf", englishPronunciation: "kyu" },
+            { arabic: "ك", english: "K", name: "كاف", pronunciation: "kaf", englishPronunciation: "key" },
+            { arabic: "ل", english: "L", name: "لام", pronunciation: "lam", englishPronunciation: "el" },
+            { arabic: "م", english: "M", name: "ميم", pronunciation: "meem", englishPronunciation: "em" },
+            { arabic: "ن", english: "N", name: "نون", pronunciation: "noon", englishPronunciation: "en" },
+            { arabic: "ه", english: "H", name: "هاء", pronunciation: "haa", englishPronunciation: "eych" },
+            { arabic: "و", english: "W", name: "واو", pronunciation: "waw", englishPronunciation: "dabelyu" },
+            { arabic: "ي", english: "Y", name: "ياء", pronunciation: "yaa", englishPronunciation: "wai" }
+        ];
+
+        // عناصر DOM
+        const arabicLetterElement = document.getElementById('arabic-letter');
+        const englishLetterElement = document.getElementById('english-letter');
+        const letterNameElement = document.getElementById('letter-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pronounceArabicBtn = document.getElementById('pronounce-arabic-btn');
+        const pronounceEnglishBtn = document.getElementById('pronounce-english-btn');
+        const soundBtn = document.getElementById('sound-btn');
+        const musicBtn = document.getElementById('music-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const scoreValue = document.querySelector('.score-value');
+        const levelValue = document.querySelector('.level-value');
+        const streakValue = document.querySelector('.streak-value');
+        const quizQuestion = document.getElementById('quiz-question');
+        const quizLetter = document.getElementById('quiz-letter');
+        const quizOptions = document.getElementById('quiz-options');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const progressBar = document.getElementById('progress-bar');
+        const modeArEnBtn = document.getElementById('mode-ar-en');
+        const modeEnArBtn = document.getElementById('mode-en-ar');
+        const autoNextIndicator = document.getElementById('auto-next-indicator');
+
+        // عناصر الصوت
+        const backgroundMusic = document.getElementById('background-music');
+        const correctSound = document.getElementById('correct-sound');
+        const wrongSound = document.getElementById('wrong-sound');
+        const levelUpSound = document.getElementById('level-up-sound');
+        const clickSound = document.getElementById('click-sound');
+
+        // متغيرات اللعبة
+        let currentLetterIndex = 0;
+        let score = 0;
+        let level = 1;
+        let streak = 0;
+        let soundEnabled = true;
+        let musicEnabled = true;
+        let quizActive = false;
+        let currentQuizLetter = null;
+        let questionsAnswered = 0;
+        const questionsPerLevel = 5;
+        let gameMode = 'ar-en'; // عربي إلى إنجليزي
+        let volume = 0.5;
+        let autoNextTimer = null;
+
+        // تهيئة اللعبة
+        function initGame() {
+            updateLetterDisplay();
+            setupEventListeners();
+            setupAudio();
+            generateQuiz();
+        }
+
+        // إعداد الصوت
+        function setupAudio() {
+            // تعيين مستوى الصوت الافتراضي
+            backgroundMusic.volume = volume;
+            correctSound.volume = volume;
+            wrongSound.volume = volume;
+            levelUpSound.volume = volume;
+            clickSound.volume = volume;
+            
+            // تشغيل الموسيقى الخلفية
+            if (musicEnabled) {
+                backgroundMusic.play().catch(e => console.log("Auto-play prevented:", e));
+            }
+        }
+
+        // تحديث عرض الحرف
+        function updateLetterDisplay() {
+            const currentLetter = arabicLetters[currentLetterIndex];
+            arabicLetterElement.textContent = currentLetter.arabic;
+            englishLetterElement.textContent = currentLetter.english;
+            letterNameElement.textContent = `${currentLetter.name} - ${currentLetter.english}`;
+            
+            // تحديث حالة الأزرار
+            prevBtn.disabled = currentLetterIndex === 0;
+            nextBtn.disabled = currentLetterIndex === arabicLetters.length - 1;
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            prevBtn.addEventListener('click', showPreviousLetter);
+            nextBtn.addEventListener('click', showNextLetter);
+            pronounceArabicBtn.addEventListener('click', pronounceArabicLetter);
+            pronounceEnglishBtn.addEventListener('click', pronounceEnglishLetter);
+            soundBtn.addEventListener('click', toggleSound);
+            musicBtn.addEventListener('click', toggleMusic);
+            modeArEnBtn.addEventListener('click', () => switchGameMode('ar-en'));
+            modeEnArBtn.addEventListener('click', () => switchGameMode('en-ar'));
+            volumeSlider.addEventListener('input', updateVolume);
+            
+            // إضافة مستمعي النقر على بطاقات الحروف
+            arabicLetterElement.addEventListener('click', pronounceArabicLetter);
+            englishLetterElement.addEventListener('click', pronounceEnglishLetter);
+        }
+
+        // تحديث مستوى الصوت
+        function updateVolume() {
+            volume = volumeSlider.value / 100;
+            backgroundMusic.volume = volume;
+            correctSound.volume = volume;
+            wrongSound.volume = volume;
+            levelUpSound.volume = volume;
+            clickSound.volume = volume;
+        }
+
+        // تبديل وضع اللعبة
+        function switchGameMode(mode) {
+            playClickSound();
+            gameMode = mode;
+            modeArEnBtn.classList.toggle('active', mode === 'ar-en');
+            modeEnArBtn.classList.toggle('active', mode === 'en-ar');
+            generateQuiz();
+        }
+
+        // عرض الحرف السابق
+        function showPreviousLetter() {
+            playClickSound();
+            if (currentLetterIndex > 0) {
+                currentLetterIndex--;
+                updateLetterDisplay();
+            }
+        }
+
+        // عرض الحرف التالي
+        function showNextLetter() {
+            playClickSound();
+            if (currentLetterIndex < arabicLetters.length - 1) {
+                currentLetterIndex++;
+                updateLetterDisplay();
+            }
+        }
+
+        // نطق الحرف العربي
+        function pronounceArabicLetter() {
+            playClickSound();
+            if (soundEnabled) {
+                const currentLetter = arabicLetters[currentLetterIndex];
+                const utterance = new SpeechSynthesisUtterance(currentLetter.pronunciation);
+                utterance.lang = 'ar-SA';
+                utterance.rate = 0.8;
+                utterance.volume = volume;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // نطق الحرف الإنجليزي
+        function pronounceEnglishLetter() {
+            playClickSound();
+            if (soundEnabled) {
+                const currentLetter = arabicLetters[currentLetterIndex];
+                const utterance = new SpeechSynthesisUtterance(currentLetter.englishPronunciation);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.volume = volume;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // تبديل الصوت
+        function toggleSound() {
+            playClickSound();
+            soundEnabled = !soundEnabled;
+            soundBtn.classList.toggle('active', soundEnabled);
+            soundBtn.innerHTML = soundEnabled ? 
+                '<span>🔊</span> الصوت' : 
+                '<span>🔇</span> الصوت';
+        }
+
+        // تبديل الموسيقى
+        function toggleMusic() {
+            playClickSound();
+            musicEnabled = !musicEnabled;
+            musicBtn.classList.toggle('active', musicEnabled);
+            musicBtn.innerHTML = musicEnabled ? 
+                '<span>🎵</span> الموسيقى' : 
+                '<span>🔇</span> الموسيقى';
+            
+            if (musicEnabled) {
+                backgroundMusic.play();
+            } else {
+                backgroundMusic.pause();
+            }
+        }
+
+        // تشغيل صوت النقر
+        function playClickSound() {
+            if (soundEnabled) {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            }
+        }
+
+        // تشغيل صوت الإجابة الصحيحة
+        function playCorrectSound() {
+            if (soundEnabled) {
+                correctSound.currentTime = 0;
+                correctSound.play();
+            }
+        }
+
+        // تشغيل صوت الإجابة الخاطئة
+        function playWrongSound() {
+            if (soundEnabled) {
+                wrongSound.currentTime = 0;
+                wrongSound.play();
+            }
+        }
+
+        // تشغيل صوت ارتفاع المستوى
+        function playLevelUpSound() {
+            if (soundEnabled) {
+                levelUpSound.currentTime = 0;
+                levelUpSound.play();
+            }
+        }
+
+        // توليد اختبار
+        function generateQuiz() {
+            // إلغاء أي مؤقت سابق
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+            }
+            
+            // إخفاء مؤشر الانتقال التلقائي
+            autoNextIndicator.style.display = 'none';
+            
+            quizActive = true;
+            quizFeedback.textContent = '';
+            quizFeedback.className = 'quiz-feedback';
+            
+            // اختيار حرف عشوائي للاختبار
+            const randomIndex = Math.floor(Math.random() * arabicLetters.length);
+            currentQuizLetter = arabicLetters[randomIndex];
+            
+            // تحديث السؤال بناءً على وضع اللعبة
+            if (gameMode === 'ar-en') {
+                quizQuestion.textContent = 'ما هو الحرف الإنجليزي المقابل لهذا الحرف العربي؟';
+                quizLetter.textContent = currentQuizLetter.arabic;
+                quizLetter.style.color = '#667eea';
+            } else {
+                quizQuestion.textContent = 'ما هو الحرف العربي المقابل لهذا الحرف الإنجليزي؟';
+                quizLetter.textContent = currentQuizLetter.english;
+                quizLetter.style.color = '#f5576c';
+            }
+            
+            // إنشاء الخيارات (الحرف الصحيح + 3 خاطئة)
+            const options = gameMode === 'ar-en' 
+                ? [currentQuizLetter.english] 
+                : [currentQuizLetter.arabic];
+            
+            // إضافة خيارات خاطئة
+            while (options.length < 4) {
+                const randomLetter = arabicLetters[Math.floor(Math.random() * arabicLetters.length)];
+                const option = gameMode === 'ar-en' ? randomLetter.english : randomLetter.arabic;
+                if (option !== options[0] && !options.includes(option)) {
+                    options.push(option);
+                }
+            }
+            
+            // خلط الخيارات
+            shuffleArray(options);
+            
+            // عرض الخيارات
+            displayQuizOptions(options);
+            
+            // تحديث شريط التقدم
+            updateProgressBar();
+        }
+
+        // عرض خيارات الاختبار
+        function displayQuizOptions(options) {
+            quizOptions.innerHTML = '';
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'quiz-option';
+                button.textContent = option;
+                button.addEventListener('click', () => {
+                    playClickSound();
+                    checkQuizAnswer(option, button);
+                });
+                quizOptions.appendChild(button);
+            });
+        }
+
+        // التحقق من إجابة الاختبار
+        function checkQuizAnswer(selectedOption, button) {
+            // تعطيل جميع الأزرار
+            const allButtons = document.querySelectorAll('.quiz-option');
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                // إظهار الإجابة الصحيحة
+                const correctAnswer = gameMode === 'ar-en' 
+                    ? currentQuizLetter.english 
+                    : currentQuizLetter.arabic;
+                if (btn.textContent === correctAnswer) {
+                    btn.classList.add('correct');
+                }
+            });
+            
+            const correctAnswer = gameMode === 'ar-en' 
+                ? currentQuizLetter.english 
+                : currentQuizLetter.arabic;
+                
+            if (selectedOption === correctAnswer) {
+                // الإجابة صحيحة
+                button.classList.add('correct');
+                quizFeedback.textContent = 'إجابة صحيحة! أحسنت!';
+                quizFeedback.classList.add('correct');
+                score += 10;
+                streak++;
+                
+                // تشغيل صوت النجاح
+                playCorrectSound();
+            } else {
+                // الإجابة خاطئة
+                button.classList.add('incorrect');
+                quizFeedback.textContent = `إجابة خاطئة! الإجابة الصحيحة هي: ${correctAnswer}`;
+                quizFeedback.classList.add('incorrect');
+                streak = 0;
+                
+                // تشغيل صوت الخطأ
+                playWrongSound();
+            }
+            
+            questionsAnswered++;
+            updateScore();
+            updateStreak();
+            
+            // التحقق إذا حان وقت الانتقال للمستوى التالي
+            if (questionsAnswered % questionsPerLevel === 0) {
+                level++;
+                updateLevel();
+                playLevelUpSound();
+            }
+            
+            // إظهار مؤشر الانتقال التلقائي
+            autoNextIndicator.style.display = 'block';
+            
+            // الانتقال التلقائي للسؤال التالي بعد 2 ثانية
+            autoNextTimer = setTimeout(generateQuiz, 2000);
+        }
+
+        // تحديث النتيجة
+        function updateScore() {
+            scoreValue.textContent = score;
+        }
+
+        // تحديث المستوى
+        function updateLevel() {
+            levelValue.textContent = level;
+        }
+
+        // تحديث الإجابات المتتالية
+        function updateStreak() {
+            streakValue.textContent = streak;
+            // تغيير اللون بناءً على عدد الإجابات المتتالية
+            if (streak >= 5) {
+                streakValue.style.color = '#38a169';
+            } else if (streak >= 3) {
+                streakValue.style.color = '#d69e2e';
+            } else {
+                streakValue.style.color = '#e53e3e';
+            }
+        }
+
+        // تحديث شريط التقدم
+        function updateProgressBar() {
+            const progress = ((questionsAnswered % questionsPerLevel) / questionsPerLevel) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // خلط المصفوفة (لخلط الخيارات)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // بدء اللعبة
+        initGame();
+    </script>
+</body>
+</html>
