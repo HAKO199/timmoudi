@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title> أسئلة إسلامية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#052021;
+  --panel:#0b3b2e;
+  --gold:#d4a94a;
+  --gold-2:#f0c75a;
+  --muted:#c7d4c8;
+  --accent:#08331f;
+  --card:#fff;
+  --success:#0ea44a;
+  --danger:#e0504c;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:"Cairo",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  background:var(--dark);color:var(--card);-webkit-font-smoothing:antialiased;padding:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* app container */
+.app{
+  width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:14px;padding:18px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 30px 80px rgba(0,0,0,0.6);
+}
+
+/* mosque background SVG (embedded) */
+.app .bg-mosque{
+  position:absolute;inset:0;z-index:0;opacity:0.22;pointer-events:none;background-repeat:no-repeat;background-position:center;background-size:cover;
+  filter:grayscale(10%) brightness(0.8);
+}
+
+/* header */
+.header{position:relative;z-index:3;display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.logo{
+  width:84px;height:84px;border-radius:12px;background:linear-gradient(90deg,var(--gold),var(--gold-2));display:flex;align-items:center;justify-content:center;color:#07201a;font-weight:900;font-size:36px;box-shadow:0 8px 20px rgba(0,0,0,0.35)
+}
+.title{font-size:20px;font-weight:900}
+.subtitle{font-size:13px;color:var(--muted);margin-top:3px}
+
+/* main layout */
+.controls{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;z-index:3}
+.btn{border:none;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:800}
+.btn-start{background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#071818}
+.btn-muted{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.select{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--card)}
+
+.game-area{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:16px;position:relative;z-index:3}
+@media (max-width:980px){ .game-area{grid-template-columns:1fr} }
+
+/* million-style question box */
+.question-panel{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+  border-radius:12px;padding:18px;border:4px solid rgba(212,169,74,0.12);box-shadow:inset 0 -8px 30px rgba(0,0,0,0.25);
+}
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.qnum{color:var(--muted);font-weight:700}
+.qbox{
+  margin-top:14px;padding:16px;border-radius:12px;background:linear-gradient(90deg, rgba(8,51,31,0.95), rgba(6,41,25,0.95));
+  border:2px solid rgba(212,169,74,0.14);box-shadow:0 8px 40px rgba(4,10,7,0.5);color:var(--gold-2)
+}
+.qtext{font-size:22px;font-weight:900;line-height:1.4}
+.emoji{font-size:28px;margin-left:8px}
+
+/* answers like millionaire */
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:600px){ .answers{grid-template-columns:1fr} }
+.answer{
+  padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+  border:2px solid rgba(255,255,255,0.03);cursor:pointer;font-weight:800;display:flex;align-items:center;gap:10px;transition:transform .12s,box-shadow .12s;
+}
+.answer:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.4)}
+.answer .label{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--gold-2)}
+.answer.correct{background:linear-gradient(90deg,#e6ffef,#dfffee);color:#072018;border-color:rgba(34,197,94,0.18);box-shadow:0 12px 30px rgba(34,197,94,0.06)}
+.answer.wrong{background:linear-gradient(90deg,#fff1f0,#ffecec);color:#3b0b0b;border-color:rgba(239,68,68,0.12);box-shadow:0 12px 30px rgba(239,68,68,0.06)}
+
+/* right column */
+.side{display:flex;flex-direction:column;gap:12px}
+.stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.stat .label{color:var(--muted);font-size:13px}
+.stat .value{font-weight:900;font-size:20px}
+
+/* progress */
+.progress{height:14px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+.progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2));width:0%}
+
+/* footer controls */
+.controls-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;margin-bottom:6px}
+.hint{background:rgba(212,169,74,0.08);border-left:4px solid var(--gold);padding:12px;border-radius:8px;color:#2b2b1a}
+
+/* final screen */
+.final-screen{display:none;padding:16px;border-radius:12px;text-align:center}
+.final-screen.show{display:block}
+
+/* decorative arabic pattern */
+.motif{position:absolute;left:-40px;top:-40px;opacity:0.06;font-size:240px;transform:rotate(-12deg);z-index:1}
+
+/* accessibility */
+.answer:focus{outline:3px solid rgba(212,169,74,0.16)}
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="لعبة من سيربح المليون — أسئلة إسلامية">
+    <div class="bg-mosque" id="bgMosque"></div>
+    <div class="motif">✦</div>
+
+    <div class="header">
+      <div class="logo">🕌</div>
+      <div>
+        <div class="title">أسئلة إسلامية</div>
+        <div class="subtitle"> سؤال متسلسل — اختَر الإجابة الصحيحة  </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div>
+        <button id="startBtn" class="btn btn-start">ابدأ اللعبة</button>
+        <button id="restartBtn" class="btn btn-muted">أعد اللعبة</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="small" style="color:var(--muted)">الصوت:</div>
+        <button id="soundToggle" class="btn btn-muted">تشغيل</button>
+      </div>
+    </div>
+
+    <div class="game-area">
+      <div>
+        <div class="question-panel">
+          <div class="q-top">
+            <div class="qnum" id="qnum">السؤال 0 من 100</div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <div class="small" style="color:var(--muted)">النتيجة</div>
+              <div style="font-weight:900" id="score">0</div>
+            </div>
+          </div>
+
+          <div class="qbox" aria-live="polite">
+            <div style="display:flex;align-items:center">
+              <div class="emoji">🕌</div>
+              <div style="flex:1">
+                <div class="qtext" id="qtext">اضغط "ابدأ اللعبة" للبدء</div>
+              </div>
+            </div>
+
+            <div class="answers" id="answers" role="list"></div>
+          </div>
+
+          <div class="controls-bottom">
+            <div class="hint" id="hintBox" style="display:none"></div>
+            <div style="display:flex;gap:8px">
+              <button id="showHint" class="btn btn-muted">عرض التلميح</button>
+            </div>
+          </div>
+
+          <div class="final-screen" id="finalScreen">
+            <h2 id="finalTitle">انتهت اللعبة</h2>
+            <p id="finalText" style="margin-top:6px;color:var(--muted)"></p>
+            <div style="margin-top:12px">
+              <button id="playAgain" class="btn btn-start">العب مرة أخرى</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <aside>
+        <div class="side">
+          <div class="stat">
+            <div class="label">التقدّم</div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:900" id="progressText">0 / 100</div>
+              <div style="font-weight:900" id="percentText">0%</div>
+            </div>
+            <div style="margin-top:8px" class="progress"><i id="progBar"></i></div>
+          </div>
+
+          <div class="stat">
+            <div class="label">الوقت</div>
+            <div style="font-weight:900" id="timer">00:00</div>
+          </div>
+
+          <div class="stat">
+            <div class="label">نصائح</div>
+            <div class="small">انتبه جيدًا، ولا تتسرع. الهدف التعليم والمراجعة.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+/* ---------------------------
+  أسئلة (داخل الكود) — 100 سؤال
+  كل عنصر: { q: 'نص', choices: ['a','b','c','d'], answer: index, hint: '...' (اختياري) }
+----------------------------*/
+const QUESTIONS = [
+{q:'ما هو الركن الأول من أركان الإسلام؟', choices:['الشهادتان','الصلاة','الزكاة','الصوم'], answer:0, hint:'النية والإقرار بوحدانية الله ونبوة محمد صلى الله عليه وسلم.'},
+{q:'كم عدد ركعات صلاة الظهر؟', choices:['2','3','4','1'], answer:2},
+{q:'في أي شهر يُصام رمضان؟', choices:['شوال','رمضان','ذو الحجة','محرم'], answer:1},
+{q:'أين وُلد النبي محمد صلى الله عليه وسلم؟', choices:['المدينة المنورة','مكة المكرمة','الطائف','الحديبة'], answer:1},
+{q:'ما اسم الكتاب الذي أُنزل على النبي؟', choices:['التوراة','الإنجيل','القرآن الكريم','الزبور'], answer:2},
+{q:'كم عدد أجزاء القرآن؟', choices:['20 جزء','30 جزء','10 أجزاء','15 جزء'], answer:1},
+{q:'ما اسم الغار الذي كان يتعبد فيه النبي؟', choices:['غار حراء','غار ثور','غار ثعلبة','غار حِراء (نفس الاسم)'], answer:0},
+{q:'من هو أول خليفة في الإسلام؟', choices:['عمر بن الخطاب','أبو بكر الصديق','عثمان بن عفان','علي بن أبي طالب'], answer:1},
+{q:'كم عدد أركان الإيمان؟', choices:['5','6','7','4'], answer:2, hint:'الإيمان بالملائكة والكتب والرسل واليوم الآخر وغير ذلك.'},
+{q:'ما هي القبلة التي يتجه إليها المسلمون؟', choices:['القدس','مكة المكرمة','المدينة','النجف'], answer:1},
+{q:'ما معنى كلمة "التوحيد"؟', choices:['الإخلاص في العمل','عبادة الله وحده لا شريك له','التصدق','الصلاة'], answer:1},
+{q:'ما هي آية الكرسي؟', choices:['سورة الفاتحة','سورة البقرة آية عظيمة','سورة الإخلاص','سورة الكافرون'], answer:1},
+{q:'ما اسم أول مسجد بُني في الإسلام؟', choices:['المسجد النبوي','المسجد الحرام','مسجد قباء','مسجد الأقصى'], answer:2},
+{q:'من هو مؤذن الرسول الأول؟', choices:['بلال بن رباح','عبد الله بن مسعود','عثمان بن عفان','عمر بن الخطاب'], answer:0},
+{q:'ما هو حكم أكل لحم الميتة الغير مذبوح؟', choices:['مباح','حرام','مستحب','مباح بشروط'], answer:1},
+{q:'ما هي صلاة الجماعة؟', choices:['الصلاة مع الجماعة في المسجد','صلاة وحدية','صلاة في المنزل فقط','صلاة جماعات أهل العلم'], answer:0},
+{q:'من هو الصحابي الذي رُوي عنه أكثر الأحاديث؟', choices:['أبو بكر','أبو هريرة','علي','عثمان'], answer:1},
+{q:'كم عدد سور القرآن؟', choices:['114','120','99','100'], answer:0},
+{q:'ما هو الركن الخامس من أركان الإسلام؟', choices:['الحج','الزكاة','الصوم','الصلاة'], answer:0},
+{q:'ما اسم ليلة تُعد أفضل في رمضان؟', choices:['ليلة القدر','ليلة النصف من شعبان','ليلة الإسراء','ليلة المولد'], answer:0},
+{q:'ما المقصود بالزكاة؟', choices:['صدقة تطوعية','فرض على المال يتحدد بنصاب','هدية','قرض'], answer:1},
+{q:'من هو خاتم الأنبياء؟', choices:['موسى','عيسى','محمد','يونس'], answer:2},
+{q:'كم ركعة الفجر؟', choices:['2','4','3','1'], answer:0},
+{q:'كم ركعة المغرب؟', choices:['3','4','2','1'], answer:0},
+{q:'ما هي لغة القرآن؟', choices:['العبرية','الآرامية','العربية','اللاتينية'], answer:2},
+{q:'ما اسم الصحابي الذي جمع القرآن في عهد أبي بكر؟', choices:['زيد بن ثابت','عثمان','علي','أبو هريرة'], answer:0},
+{q:'ما هي الصدقة التي تُعطى في نهاية رمضان؟', choices:['زكاة المال','صدقة الفطر','وقف','عطيّة'], answer:1},
+{q:'ما اسم جبل عرفات؟', choices:['جبل قرب مكة يزوره الحجاج','جبل في المدينة','جبل في اليمن','جبل في الشام'], answer:0},
+{q:'ما هو الحكم في تغطية المرأة وجهها؟', choices:['واجب عند كثير من العلماء','مستحب فقط','غير مهم','ممنوع'], answer:0},
+{q:'ما هي سنّة النبي في الصلاة بعد الفريضة؟', choices:['الوتر','السنن الرواتب','التسابيح','التهجد فقط'], answer:1},
+{q:'ما هو وقت صلاة العصر تقريبًا؟', choices:['بعد الظهر بقليل حتى قبل المغرب','فجر','عند المغرب','منتصف الليل'], answer:0},
+{q:'ما الذي يجعل الصيام صحيحًا؟', choices:['النية','الطول','الطعام','الشراب فقط'], answer:0},
+{q:'ما اسم المدينة التي هاجر إليها النبي؟', choices:['مكة','المدينة المنورة','الطائف','الحديبة'], answer:1},
+{q:'ما معنى "سنة" في الشريعة؟', choices:['فعل الرسول وأقواله وتقريراته','زمن معين','مكان','طعام'], answer:0},
+{q:'ما الصفة التي ينبغي على المسلم التحلي بها؟', choices:['الصدق','النميمة','الرياء','الغيبة'], answer:0},
+{q:'من هو الذي لقب بسيف الله المسلول؟', choices:['خالد بن الوليد','عمر بن الخطاب','علي','عثمان'], answer:0},
+{q:'ما اسم الصحابي الذي أسلم وهو صغير وعاش مع النبي؟', choices:['عثمان','علي بن أبي طالب','أبو بكر','عمر'], answer:1},
+{q:'ما حكم الغيبة؟', choices:['مباح','محرم','سنة','مستحب'], answer:1},
+{q:'ما الركن الذي يقوم بعد الشهادتين؟', choices:['الصلاة','الزكاة','الحج','الصوم'], answer:0},
+{q:'ما اسم معركة أحد؟', choices:['بدر','أحد','الخندق','الحديبية'], answer:1},
+{q:'ما حكم أكل الميتة؟', choices:['حلال','حرام','مباح','مستحب'], answer:1},
+{q:'من أول من كتب الوحي عن النبي؟', choices:['زيد بن ثابت','علي','أبو بكر','عبد الله بن أم مكتوم'], answer:0},
+{q:'ما المقصود بالإخلاص في العبادة؟', choices:['أداء العبادة لوجه الله وحده','للناس','للنفس فقط','للشهرة'], answer:0},
+{q:'ما اسم السورة التي تبدأ بقصة بني إسرائيل؟', choices:['الإسراء','الأنبياء','يس','الصافات'], answer:0},
+{q:'كم عدد أركان الإسلام؟', choices:['4','5','6','7'], answer:1},
+{q:'ما وقت صلاة العشاء؟', choices:['بعد المغرب بقليل حتى منتصف الليل','قبل الفجر','بعد الظهر','منتصف الليل'], answer:0},
+{q:'ما اسم السورة التي بدأت بـ "بسم الله الرحمن الرحيم" وتعد فاتحة الكتاب؟', choices:['الفاتحة','البقرة','آل عمران','النسيء'], answer:0},
+{q:'ما معنى كلمة "إحسان"؟', choices:['الإحسان إلى الناس','العمل بدون أجر','الابتعاد عن العمل','التجاهل'], answer:0},
+{q:'ما اسم الصحابي الذي اشتهر بحفظه للأحاديث؟', choices:['أبو هريرة','زيد بن ثابت','ابن عباس','عمر'], answer:0},
+{q:'ما حكم من يترك الصلاة عمداً؟', choices:['محمود','مستحب','مذموم ومؤثم','لا شيء'], answer:2},
+{q:'ما هو الحج؟', choices:['رحلة سياحية','ركن من أركان الإسلام لمن استطاع','سنة فقط','عيد'], answer:1},
+{q:'ما اسم الركن الذي يؤديه المسلم ثلاث مرات في اليوم؟', choices:['الصدقة','الصلاة','الصوم','الحج'], answer:1},
+{q:'ما المقصود بالوضوء؟', choices:['الاغتسال الكامل','التطهر بماء مخصوص قبل الصلاة','أداء النوافل','نوع من الطعام'], answer:1},
+{q:'من هو الصحابي الجليل الذي عُرف بالحكمة والعدل وخلف الراشدين؟', choices:['أبو بكر','عمر بن الخطاب','عثمان','علي'], answer:1},
+{q:'ما اسم الليلة التي تبحث عنها الأمة في رمضان؟', choices:['ليلة القدر','ليلة السابع','ليلة الجمعة','ليلة الإثنين'], answer:0},
+{q:'ما معنى كلمة "إسلام" لغويًا؟', choices:['السلام','الاستسلام والطاعة لله','العمل الصالح','الشكر'], answer:1},
+{q:'ما اسم القرآن الكريم في اللغة العربية؟', choices:['كتاب الله','سفر','أعمال','ذكر'], answer:0},
+{q:'ما هي آداب المجلس في الإسلام؟', choices:['الحديث بصوت مرتفع','الحضور للخير والصدق والاحترام','الإزعاج','السب'], answer:1},
+{q:'ما المقصود بالمحبة في الإسلام؟', choices:['المحبة لله ورسوله والعمل بها','المحبة للمال','المحبة للذات','المحبة للجاه'], answer:0},
+{q:'ما اسم الصحابي الذي كان أمين الوحي؟', choices:['زيد بن ثابت','أبو بكر','علي','عثمان'], answer:0},
+{q:'ما حكم الكذب في الدين؟', choices:['مباح','حرام إلا لضرورة معينة','مستحب','سنة'], answer:1},
+{q:'ما اسم الغزوة التي كانت ملحمة للمؤمنين؟', choices:['بدر','أحد','الخندق','مؤتة'], answer:0},
+{q:'ما المقصود بالنية في العبادة؟', choices:['النية لا أهمية لها','نية التفاني لوجه الله','النية للحصول على مال','النية زائد'], answer:1},
+{q:'ما اسم غزوة الخندق؟', choices:['الخندق','الأحزاب','بدر','أحد'], answer:0},
+{q:'ما واجب المسلم تجاه والديه؟', choices:['الإحسان والإكرام والطاعة ما لم يأمرا بمعصية','العقوق','التجاهل','الابتعاد'], answer:0},
+{q:'ما عدد أيام عيد الأضحى في التشريع؟', choices:['1','3','4','10'], answer:1, hint:'أيام التشريق الثلاثة بالإضافة ليوم النحر.'},
+{q:'ما اسم الصحابي الذي رُوي عنه كثير من الأدعية؟', choices:['أبو هريرة','ابن عباس','عبد الله بن مسعود','أبو موسى الأشعري'], answer:2},
+{q:'ما المقصود بـ "الشفاعة"؟', choices:['الطلب من الله بالواسطة','الضرر بالآخرين','المنافسة','الظهور'], answer:0},
+{q:'ما معنى التوبة؟', choices:['الندم والإقلاع عن الذنب والعزم على عدم العودة','الاستمرارية في الخطأ','الادعاء','التلميح'], answer:0},
+{q:'ما الذي يرفع الدرجات عند الله؟', choices:['الصدقة والعبادة والذكر','الجاه فقط','الغنى','العمل السري'], answer:0},
+{q:'ما هي علامة قبول العبادة؟', choices:['الله وحده يعلم قبولها','الشهرة','العدم','الابتعاد'], answer:0},
+{q:'ما المقصود بالاقتداء بالنبي؟', choices:['اتباع سنته وخلقه وأقواله','محاولة التشبه ظاهرياً فقط','الابتعاد عنه','التجاهل'], answer:0},
+{q:'ما حكم السحر؟', choices:['مباح','حرام ويجب الابتعاد عنه','مستحب','سلوك ديني'], answer:1},
+{q:'ما معنى "العدل" في الإسلام؟', choices:['الانصاف والاستقامة في الحكم والمعاملة','الظلم','الانحياز','الاعتماد على الذات'], answer:0},
+{q:'ما اسم الصحابي الذي شارك في فتح مكة؟', choices:['خالد بن الوليد','علي بن أبي طالب','الحباب بن المنذر','الأنصار'], answer:1},
+{q:'ما هي الصفة التي تُحبب المؤمنين في القرآن؟', choices:['الصدق والتقوى','الرياء','النفاق','الكسل'], answer:0},
+{q:'ما الذي يميّز القرآن عن سائر الكتب؟', choices:['كتابة بشرية','كلام الله المنزل','أسطورة','تاريخ فقط'], answer:1},
+{q:'ما حكم الاعتداء على حقوق الناس؟', choices:['لا بأس','محرم','مرغوب','بدعة'], answer:1},
+{q:'ما اسم آخر نبيّ بُعث؟', choices:['موسى','عيسى','محمد','داود'], answer:2}
+]; // عدد الأسئلة المتوفرة حالياً
+
+/* إذا كان عدد QUESTIONS أقل من 100 نكمله بأسئلة عامة تجريبية (لن يؤثر إن كانت لديك 100 بالفعل) */
+(function ensureHundred(){
+  const need = 100 - QUESTIONS.length;
+  for(let i=0;i<need;i++){
+    QUESTIONS.push({
+      q: `سؤال تجريبي ${QUESTIONS.length+1}: ما هو معنى كلمة "اختبار"؟`,
+      choices: ['امتحان','نشاط','مرح','تعليم'],
+      answer:0,
+      hint:'سؤال تجريبي تلقائي'
+    });
+  }
+})();
+
+/* ===== عناصر DOM ===== */
+const startBtn = document.getElementById('startBtn');
+const restartBtn = document.getElementById('restartBtn');
+const soundToggle = document.getElementById('soundToggle');
+const qnumEl = document.getElementById('qnum');
+const qtextEl = document.getElementById('qtext');
+const answersEl = document.getElementById('answers');
+const hintBox = document.getElementById('hintBox');
+const showHint = document.getElementById('showHint');
+const finalScreen = document.getElementById('finalScreen');
+const finalTitle = document.getElementById('finalTitle');
+const finalText = document.getElementById('finalText');
+const playAgain = document.getElementById('playAgain');
+
+const progressText = document.getElementById('progressText');
+const percentText = document.getElementById('percentText');
+const progBar = document.getElementById('progBar');
+const timerEl = document.getElementById('timer');
+const scoreEl = document.getElementById('score');
+
+/* ===== حالة اللعبة ===== */
+let index = 0;
+let score = 0;
+let soundOn = true;
+let started = false;
+let timerInterval = null;
+let startTime = null;
+
+/* ===== WebAudio للأصوات (لا ملفات خارجية) ===== */
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function ensureAudio(){ if(!audioCtx) audioCtx = new AudioCtx(); }
+function playBeep(freq=800,dur=0.08,type='sine',gainVal=0.06){
+  if(!soundOn) return;
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.value = gainVal;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+function playCorrect(){ playBeep(880,0.12,'sine',0.08); setTimeout(()=>playBeep(1320,0.08,'sine',0.06),90); }
+function playWrong(){ playBeep(240,0.18,'sawtooth',0.09); }
+function playClick(){ playBeep(660,0.06,'sine',0.04); }
+
+/* ===== timer ===== */
+function startTimer(){ startTime = Date.now(); clearInterval(timerInterval); timerInterval = setInterval(()=>{
+  const s = Math.floor((Date.now()-startTime)/1000);
+  const mm = String(Math.floor(s/60)).padStart(2,'0'); const ss = String(s%60).padStart(2,'0');
+  timerEl.textContent = `${mm}:${ss}`;
+},400); }
+function stopTimer(){ clearInterval(timerInterval); }
+
+/* ===== render question sequentially (1..100) ===== */
+function renderCurrent(){
+  const qObj = QUESTIONS[index];
+  qnumEl.textContent = `السؤال ${index+1} من ${QUESTIONS.length}`;
+  qtextEl.innerHTML = `${escapeHtml(qObj.q)}`;
+  answersEl.innerHTML = '';
+  hintBox.style.display = 'none';
+  if(qObj.hint) hintBox.textContent = qObj.hint;
+  else hintBox.textContent = '';
+
+  // four choices
+  qObj.choices.forEach((c,i)=>{
+    const a = document.createElement('div');
+    a.className = 'answer';
+    a.tabIndex = 0;
+    a.setAttribute('data-index', i);
+    a.innerHTML = `<div class="label">${String.fromCharCode(65+i)}</div><div style="flex:1">${escapeHtml(c)}</div>`;
+    // click handler
+    a.addEventListener('click', ()=> handleChoice(i,a));
+    a.addEventListener('keydown', (e)=>{ if(e.key==='Enter') handleChoice(i,a); });
+    answersEl.appendChild(a);
+  });
+
+  // update progress
+  progressText.textContent = `${index+1} / ${QUESTIONS.length}`;
+  const pct = Math.round(((index)/QUESTIONS.length)*100);
+  percentText.textContent = `${pct}%`;
+  progBar.style.width = `${pct}%`;
+}
+
+/* handle choice: if correct -> immediate next; if wrong -> show correct then next after delay */
+let lock = false;
+function handleChoice(choiceIndex, element){
+  if(lock) return;
+  lock = true;
+  const qObj = QUESTIONS[index];
+  const correct = qObj.answer;
+  // mark chosen
+  if(choiceIndex === correct){
+    element.classList.add('correct');
+    score += 10;
+    scoreEl.textContent = score;
+    playCorrect();
+    // short delay then next (immediate as requested — but add tiny ms for visual)
+    setTimeout(()=> {
+      index++;
+      if(index >= QUESTIONS.length) return finish();
+      renderCurrent();
+      lock = false;
+    }, 280);
+  } else {
+    element.classList.add('wrong');
+    // mark correct
+    const elems = answersEl.children;
+    if(elems[correct]) elems[correct].classList.add('correct');
+    playWrong();
+    // wait a bit then next
+    setTimeout(()=>{
+      index++;
+      if(index >= QUESTIONS.length) return finish();
+      renderCurrent();
+      lock = false;
+    }, 1500);
+  }
+}
+
+/* finish game */
+function finish(){
+  stopTimer();
+  // show final screen
+  document.getElementById('qtext').textContent = '';
+  answersEl.innerHTML = '';
+  finalScreen.classList.add('show');
+  finalTitle.textContent = 'انتهت اللعبة 🎉';
+  finalText.textContent = `نيلت ${score} نقطة من أصل ${QUESTIONS.length*10}. جزاك الله خيرًا — تذكّر أن الهدف التعلم.`;
+  playAgain.focus();
+  // progress to 100
+  progBar.style.width = '100%';
+  percentText.textContent = '100%';
+}
+
+/* controls */
+startBtn.addEventListener('click', ()=> {
+  if(!started){
+    started = true;
+    startTime = Date.now();
+    startTimer();
+    index = 0; score = 0; scoreEl.textContent = score;
+    finalScreen.classList.remove('show');
+    renderCurrent();
+    playClick();
+  } else {
+    // if already started, restart
+    restartGame();
+  }
+});
+restartBtn.addEventListener('click', ()=> restartGame());
+playAgain.addEventListener('click', ()=> restartGame());
+
+function restartGame(){
+  playClick();
+  started = true;
+  index = 0; score = 0; scoreEl.textContent = score; finalScreen.classList.remove('show');
+  startTime = Date.now(); startTimer();
+  renderCurrent();
+}
+
+/* hint button */
+showHint.addEventListener('click', ()=> {
+  const q = QUESTIONS[index];
+  if(q.hint){
+    hintBox.style.display = 'block';
+    // briefly highlight
+    hintBox.animate([{opacity:0},{opacity:1}],{duration:360,fill:'forwards'});
+  } else {
+    alert('لا يوجد تلميح لهذا السؤال');
+  }
+});
+
+/* sound toggle */
+soundToggle.addEventListener('click', ()=> {
+  soundOn = !soundOn;
+  soundToggle.textContent = soundOn ? 'تشغيل' : 'كتم';
+  if(soundOn) playClick();
+});
+
+/* utility to escape HTML */
+function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* set mosque SVG background (data URL) — embedded so يعمل دون إنترنت */
+(function setMosqueBg(){
+  const svg = `
+  <svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'>
+    <defs>
+      <linearGradient id='g' x1='0' x2='0' y1='0' y2='1'>
+        <stop offset='0' stop-color='#062a1b'/>
+        <stop offset='1' stop-color='#022018'/>
+      </linearGradient>
+    </defs>
+    <rect width='100%' height='100%' fill='url(#g)'/>
+    <g fill='none' stroke='rgba(212,169,74,0.06)' stroke-width='2'>
+      <path d='M200 700 Q400 600 600 700 T1000 700 T1400 700' />
+      <path d='M0 500 Q200 300 400 500 T800 500 T1200 500 T1600 500'/>
+    </g>
+    <g fill='rgba(212,169,74,0.06)'>
+      <ellipse cx='400' cy='720' rx='220' ry='40'/>
+      <ellipse cx='1000' cy='720' rx='220' ry='40'/>
+    </g>
+    <!-- mosque silhouette -->
+    <g transform='translate(120,120)' fill='rgba(0,0,0,0.08)'>
+      <rect x='200' y='220' width='600' height='260' rx='12'/>
+      <rect x='120' y='260' width='100' height='200' rx='8'/>
+      <rect x='820' y='260' width='100' height='200' rx='8'/>
+      <ellipse cx='500' cy='220' rx='150' ry='60'/>
+      <path d='M380 220 Q500 110 620 220 Z' />
+      <rect x='460' y='150' width='80' height='120' rx='8'/>
+      <!-- minarets -->
+      <rect x='100' y='80' width='40' height='480' rx='8'/>
+      <rect x='1160' y='80' width='40' height='480' rx='8'/>
+      <circle cx='120' cy='60' r='18'/>
+      <circle cx='1180' cy='60' r='18'/>
+    </g>
+  </svg>`;
+  const url = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  document.getElementById('bgMosque').style.backgroundImage = `url("${url}")`;
+})();
+
+/* initialize UI */
+(function init(){
+  document.getElementById('qnum').textContent = `السؤال 0 من ${QUESTIONS.length}`;
+  document.getElementById('qtext').textContent = 'اضغط "ابدأ اللعبة" للبدء';
+  timerEl.textContent = '00:00';
+  scoreEl.textContent = '0';
+  progressText.textContent = `0 / ${QUESTIONS.length}`;
+  percentText.textContent = '0%';
+  progBar.style.width = '0%';
+})();
+
+/* accessibility: allow using 1-4 keys */
+document.addEventListener('keydown', (e)=>{
+  if(!started) return;
+  if(['1','2','3','4'].includes(e.key)){
+    const idx = parseInt(e.key,10)-1;
+    const child = answersEl.children[idx];
+    if(child) child.click();
+  }
+});
+</script>
+</body>
+</html>
