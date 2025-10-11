@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة كتابة الجمل الإنجليزية</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #edf2f7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .score-container, .level-container, .streak-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .score-label, .level-label, .streak-label {
+            font-weight: bold;
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .score-value, .level-value, .streak-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        
+        .streak-value {
+            color: #e53e3e;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .sentence-container {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+        
+        .sentence-arabic {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .sentence-english {
+            font-size: 1.5rem;
+            color: #4a5568;
+            margin-bottom: 25px;
+            direction: ltr;
+            font-style: italic;
+        }
+        
+        .input-container {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .sentence-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            direction: ltr;
+            transition: all 0.3s ease;
+        }
+        
+        .sentence-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+        
+        .sentence-input.correct {
+            border-color: #48bb78;
+            background-color: #f0fff4;
+        }
+        
+        .sentence-input.incorrect {
+            border-color: #f56565;
+            background-color: #fff5f5;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .control-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .control-btn:hover {
+            background: #3182ce;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .control-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .pronounce-btn {
+            background: #805ad5;
+        }
+        
+        .pronounce-btn:hover {
+            background: #6b46c1;
+        }
+        
+        .hint-btn {
+            background: #ed8936;
+        }
+        
+        .hint-btn:hover {
+            background: #dd6b20;
+        }
+        
+        .feedback {
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .sound-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .sound-btn {
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .sound-btn.active {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        
+        .volume-slider {
+            width: 100px;
+        }
+        
+        .auto-next-indicator {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin-top: 10px;
+        }
+        
+        .hint-text {
+            font-size: 1.1rem;
+            color: #4a5568;
+            background: #fffaf0;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            direction: ltr;
+        }
+        
+        .instruction {
+            font-size: 1rem;
+            color: #4a5568;
+            margin: 10px 0;
+            background: #ebf8ff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .sentence-arabic {
+                font-size: 1.5rem;
+            }
+            
+            .sentence-english {
+                font-size: 1.3rem;
+            }
+            
+            .sentence-input {
+                font-size: 1.1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>لعبة كتابة الجمل الإنجليزية</h1>
+        <p class="subtitle">اكتب الجملة الإنجليزية كما تظهر مع الترجمة العربية</p>
+        
+        <div class="sound-controls">
+            <button class="sound-btn active" id="sound-btn">
+                <span>🔊</span> الصوت
+            </button>
+            <button class="sound-btn active" id="music-btn">
+                <span>🎵</span> الموسيقى
+            </button>
+        </div>
+        
+        <div class="volume-control">
+            <span>🔊</span>
+            <input type="range" min="0" max="100" value="50" class="volume-slider" id="volume-slider">
+            <span>🔈</span>
+        </div>
+        
+        <div class="game-info">
+            <div class="score-container">
+                <div class="score-label">النتيجة</div>
+                <div class="score-value">0</div>
+            </div>
+            
+            <div class="level-container">
+                <div class="level-label">المستوى</div>
+                <div class="level-value">1</div>
+            </div>
+            
+            <div class="streak-container">
+                <div class="streak-label">الإجابات المتتالية</div>
+                <div class="streak-value">0</div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="sentence-container">
+                <div class="instruction">اكتب الجملة الإنجليزية كما تظهر بالأسفل:</div>
+                
+                <div class="sentence-arabic" id="sentence-arabic">أنا أحب التعلم</div>
+                <div class="sentence-english" id="sentence-english">I love learning</div>
+                
+                <div class="input-container">
+                    <input type="text" class="sentence-input" id="sentence-input" placeholder="اكتب الجملة الإنجليزية هنا..." autocomplete="off">
+                </div>
+                
+                <div class="hint-text" id="hint-text" style="display: none;"></div>
+                
+                <div class="feedback" id="feedback"></div>
+                
+                <div class="auto-next-indicator" id="auto-next-indicator">سيتم الانتقال للجملة التالية تلقائياً...</div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn pronounce-btn" id="pronounce-btn">
+                    <span>🔊</span> نطق الجملة
+                </button>
+                <button class="control-btn hint-btn" id="hint-btn">
+                    <span>💡</span> مساعدة
+                </button>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="correct-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="wrong-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="level-up-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="click-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="typing-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-1386.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // قاعدة بيانات الجمل العربية والإنجليزية
+        const sentences = [
+            { arabic: "أنا أحب التعلم", english: "I love learning" },
+            { arabic: "القطة تلعب في الحديقة", english: "The cat plays in the garden" },
+            { arabic: "الشمس مشرقة اليوم", english: "The sun is shining today" },
+            { arabic: "أذهب إلى المدرسة كل يوم", english: "I go to school every day" },
+            { arabic: "أمي تطبخ الطعام اللذيذ", english: "My mother cooks delicious food" },
+            { arabic: "أبي يعمل في المستشفى", english: "My father works in the hospital" },
+            { arabic: "الكتاب على الطاولة", english: "The book is on the table" },
+            { arabic: "أشرب الماء عندما أعطش", english: "I drink water when I am thirsty" },
+            { arabic: "الطقس جميل في الربيع", english: "The weather is beautiful in spring" },
+            { arabic: "ألعب كرة القدم مع أصدقائي", english: "I play football with my friends" },
+            { arabic: "الطفل يقرأ قصة قبل النوم", english: "The child reads a story before sleeping" },
+            { arabic: "السيارة الجديدة سريعة", english: "The new car is fast" },
+            { arabic: "أدرس اللغة الإنجليزية", english: "I study English language" },
+            { arabic: "الزهور متفتحة في الربيع", english: "The flowers are blooming in spring" },
+            { arabic: "أكلت تفاحة للغداء", english: "I ate an apple for lunch" },
+            { arabic: "الطالب يجيب على السؤال", english: "The student answers the question" },
+            { arabic: "المعلم يشرح الدرس", english: "The teacher explains the lesson" },
+            { arabic: "الكلب يلعب بالكرة", english: "The dog plays with the ball" },
+            { arabic: "أشاهد التلفزيون المساء", english: "I watch television in the evening" },
+            { arabic: "الأطفال يغنون في الحفلة", english: "The children sing at the party" },
+            { arabic: "أذهب إلى السوق لشراء الطعام", english: "I go to the market to buy food" },
+            { arabic: "السماء زرقاء وصافية", english: "The sky is blue and clear" },
+            { arabic: "أقرأ كتاباً مثيراً", english: "I read an exciting book" },
+            { arabic: "الطائرة تحلق في السماء", english: "The airplane flies in the sky" },
+            { arabic: "أزرع الورود في الحديقة", english: "I plant roses in the garden" },
+            { arabic: "السمكة تسبح في الماء", english: "The fish swims in the water" },
+            { arabic: "أكتب رسالة إلى صديقي", english: "I write a letter to my friend" },
+            { arabic: "الموسيقى جميلة ومريحة", english: "The music is beautiful and relaxing" },
+            { arabic: "أركب الدراجة في الصباح", english: "I ride the bicycle in the morning" },
+            { arabic: "الطاهي يحضر الطعام الشهي", english: "The chef prepares delicious food" },
+            { arabic: "أزور جدتي في العطلة", english: "I visit my grandmother on vacation" },
+            { arabic: "النجوم تلمع في الليل", english: "The stars shine at night" },
+            { arabic: "أحلم بأن أصبح طبيباً", english: "I dream of becoming a doctor" },
+            { arabic: "الطائر يغرد على الشجرة", english: "The bird sings on the tree" },
+            { arabic: "أعمل بجد لتحقيق أحلامي", english: "I work hard to achieve my dreams" },
+            { arabic: "البحر واسع وعميق", english: "The sea is wide and deep" },
+            { arabic: "أحب السفر إلى بلاد جديدة", english: "I love traveling to new countries" },
+            { arabic: "القمر مضيء في الظلام", english: "The moon is bright in the dark" },
+            { arabic: "أتعلم من أخطائي", english: "I learn from my mistakes" },
+            { arabic: "الوردة حمراء وجميلة", english: "The rose is red and beautiful" },
+            { arabic: "أستمتع بالوقت مع عائلتي", english: "I enjoy time with my family" },
+            { arabic: "الثلج يغطي الجبال", english: "The snow covers the mountains" },
+            { arabic: "أحب الاستماع إلى الموسيقى", english: "I love listening to music" },
+            { arabic: "الفراشة تطير بين الزهور", english: "The butterfly flies among the flowers" },
+            { arabic: "أمارس الرياضة يومياً", english: "I exercise daily" },
+            { arabic: "القهوة ساخنة ولذيذة", english: "The coffee is hot and delicious" },
+            { arabic: "أحب مساعدة الآخرين", english: "I love helping others" },
+            { arabic: "الطريق طويل ومتعرج", english: "The road is long and winding" },
+            { arabic: "أقرأ الجريدة كل صباح", english: "I read the newspaper every morning" },
+            { arabic: "الطفل الصغير يبتسم", english: "The little child smiles" }
+        ];
+
+        // عناصر DOM
+        const sentenceArabicElement = document.getElementById('sentence-arabic');
+        const sentenceEnglishElement = document.getElementById('sentence-english');
+        const sentenceInput = document.getElementById('sentence-input');
+        const hintText = document.getElementById('hint-text');
+        const feedbackElement = document.getElementById('feedback');
+        const pronounceBtn = document.getElementById('pronounce-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const soundBtn = document.getElementById('sound-btn');
+        const musicBtn = document.getElementById('music-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const scoreValue = document.querySelector('.score-value');
+        const levelValue = document.querySelector('.level-value');
+        const streakValue = document.querySelector('.streak-value');
+        const progressBar = document.getElementById('progress-bar');
+        const autoNextIndicator = document.getElementById('auto-next-indicator');
+
+        // عناصر الصوت
+        const backgroundMusic = document.getElementById('background-music');
+        const correctSound = document.getElementById('correct-sound');
+        const wrongSound = document.getElementById('wrong-sound');
+        const levelUpSound = document.getElementById('level-up-sound');
+        const clickSound = document.getElementById('click-sound');
+        const typingSound = document.getElementById('typing-sound');
+
+        // متغيرات اللعبة
+        let currentSentenceIndex = 0;
+        let score = 0;
+        let level = 1;
+        let streak = 0;
+        let soundEnabled = true;
+        let musicEnabled = true;
+        let volume = 0.5;
+        let questionsAnswered = 0;
+        const questionsPerLevel = 10;
+        let autoNextTimer = null;
+        let usedSentences = [];
+        let currentSentence = null;
+        let hintsUsed = 0;
+
+        // تهيئة اللعبة
+        function initGame() {
+            setupEventListeners();
+            setupAudio();
+            generateSentence();
+        }
+
+        // إعداد الصوت
+        function setupAudio() {
+            // تعيين مستوى الصوت الافتراضي
+            backgroundMusic.volume = volume;
+            correctSound.volume = volume;
+            wrongSound.volume = volume;
+            levelUpSound.volume = volume;
+            clickSound.volume = volume;
+            typingSound.volume = volume * 0.3;
+            
+            // تشغيل الموسيقى الخلفية
+            if (musicEnabled) {
+                backgroundMusic.play().catch(e => console.log("Auto-play prevented:", e));
+            }
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            sentenceInput.addEventListener('input', handleInput);
+            sentenceInput.addEventListener('keypress', handleKeyPress);
+            pronounceBtn.addEventListener('click', pronounceSentence);
+            hintBtn.addEventListener('click', showHint);
+            soundBtn.addEventListener('click', toggleSound);
+            musicBtn.addEventListener('click', toggleMusic);
+            volumeSlider.addEventListener('input', updateVolume);
+        }
+
+        // تحديث مستوى الصوت
+        function updateVolume() {
+            volume = volumeSlider.value / 100;
+            backgroundMusic.volume = volume;
+            correctSound.volume = volume;
+            wrongSound.volume = volume;
+            levelUpSound.volume = volume;
+            clickSound.volume = volume;
+            typingSound.volume = volume * 0.3;
+        }
+
+        // توليد جملة جديدة
+        function generateSentence() {
+            // إلغاء أي مؤقت سابق
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+            }
+            
+            // إخفاء مؤشر الانتقال التلقائي والمساعدة
+            autoNextIndicator.style.display = 'none';
+            hintText.style.display = 'none';
+            hintsUsed = 0;
+            
+            // إعادة تعيين الحقل
+            sentenceInput.value = '';
+            sentenceInput.className = 'sentence-input';
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            
+            // الحصول على جملة عشوائية لم تستخدم من قبل
+            let availableSentences = sentences.filter(sentence => !usedSentences.includes(sentence.arabic));
+            if (availableSentences.length === 0) {
+                // إذا استخدمنا جميع الجمل، نعيد استخدامها
+                usedSentences = [];
+                availableSentences = sentences;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * availableSentences.length);
+            currentSentence = availableSentences[randomIndex];
+            usedSentences.push(currentSentence.arabic);
+            
+            // تحديث العرض - إظهار كل من العربية والإنجليزية
+            sentenceArabicElement.textContent = currentSentence.arabic;
+            sentenceEnglishElement.textContent = currentSentence.english;
+            
+            // تحديث شريط التقدم
+            updateProgressBar();
+            
+            // التركيز على حقل الإدخال
+            sentenceInput.focus();
+        }
+
+        // التعامل مع الإدخال
+        function handleInput() {
+            // تشغيل صوت الكتابة
+            if (soundEnabled && sentenceInput.value.length > 0) {
+                typingSound.currentTime = 0;
+                typingSound.play();
+            }
+        }
+
+        // التعامل مع ضغط المفاتيح
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        }
+
+        // التحقق من الإجابة
+        function checkAnswer() {
+            const userAnswer = sentenceInput.value.trim();
+            const correctAnswer = currentSentence.english;
+            
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                // الإجابة صحيحة
+                sentenceInput.className = 'sentence-input correct';
+                feedbackElement.textContent = 'إجابة صحيحة! أحسنت! 🎉';
+                feedbackElement.classList.add('correct');
+                score += 10;
+                streak++;
+                
+                // تشغيل صوت النجاح
+                playCorrectSound();
+            } else {
+                // الإجابة خاطئة
+                sentenceInput.className = 'sentence-input incorrect';
+                feedbackElement.textContent = 'إجابة خاطئة! حاول مرة أخرى.';
+                feedbackElement.classList.add('incorrect');
+                streak = 0;
+                
+                // تشغيل صوت الخطأ
+                playWrongSound();
+                return;
+            }
+            
+            questionsAnswered++;
+            updateScore();
+            updateStreak();
+            
+            // التحقق إذا حان وقت الانتقال للمستوى التالي
+            if (questionsAnswered % questionsPerLevel === 0) {
+                level++;
+                updateLevel();
+                playLevelUpSound();
+            }
+            
+            // إظهار مؤشر الانتقال التلقائي
+            autoNextIndicator.style.display = 'block';
+            
+            // الانتقال التلقائي للجملة التالية بعد 2 ثواني
+            autoNextTimer = setTimeout(generateSentence, 2000);
+        }
+
+        // نطق الجملة الإنجليزية
+        function pronounceSentence() {
+            playClickSound();
+            if (soundEnabled) {
+                const utterance = new SpeechSynthesisUtterance(currentSentence.english);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.volume = volume;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // عرض مساعدة
+        function showHint() {
+            playClickSound();
+            hintsUsed++;
+            
+            if (hintsUsed === 1) {
+                // إظهار أول حرف من كل كلمة
+                const words = currentSentence.english.split(' ');
+                const hint = words.map(word => word.charAt(0) + '_'.repeat(word.length - 1)).join(' ');
+                hintText.textContent = `مساعدة: ${hint}`;
+                hintText.style.display = 'block';
+                score = Math.max(0, score - 2);
+            } else if (hintsUsed === 2) {
+                // إظهار عدد الكلمات
+                const wordCount = currentSentence.english.split(' ').length;
+                hintText.textContent = `عدد الكلمات: ${wordCount}`;
+                score = Math.max(0, score - 3);
+            }
+            
+            updateScore();
+        }
+
+        // تبديل الصوت
+        function toggleSound() {
+            playClickSound();
+            soundEnabled = !soundEnabled;
+            soundBtn.classList.toggle('active', soundEnabled);
+            soundBtn.innerHTML = soundEnabled ? 
+                '<span>🔊</span> الصوت' : 
+                '<span>🔇</span> الصوت';
+        }
+
+        // تبديل الموسيقى
+        function toggleMusic() {
+            playClickSound();
+            musicEnabled = !musicEnabled;
+            musicBtn.classList.toggle('active', musicEnabled);
+            musicBtn.innerHTML = musicEnabled ? 
+                '<span>🎵</span> الموسيقى' : 
+                '<span>🔇</span> الموسيقى';
+            
+            if (musicEnabled) {
+                backgroundMusic.play();
+            } else {
+                backgroundMusic.pause();
+            }
+        }
+
+        // تشغيل صوت النقر
+        function playClickSound() {
+            if (soundEnabled) {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            }
+        }
+
+        // تشغيل صوت الإجابة الصحيحة
+        function playCorrectSound() {
+            if (soundEnabled) {
+                correctSound.currentTime = 0;
+                correctSound.play();
+            }
+        }
+
+        // تشغيل صوت الإجابة الخاطئة
+        function playWrongSound() {
+            if (soundEnabled) {
+                wrongSound.currentTime = 0;
+                wrongSound.play();
+            }
+        }
+
+        // تشغيل صوت ارتفاع المستوى
+        function playLevelUpSound() {
+            if (soundEnabled) {
+                levelUpSound.currentTime = 0;
+                levelUpSound.play();
+            }
+        }
+
+        // تحديث النتيجة
+        function updateScore() {
+            scoreValue.textContent = score;
+        }
+
+        // تحديث المستوى
+        function updateLevel() {
+            levelValue.textContent = level;
+        }
+
+        // تحديث الإجابات المتتالية
+        function updateStreak() {
+            streakValue.textContent = streak;
+            // تغيير اللون بناءً على عدد الإجابات المتتالية
+            if (streak >= 5) {
+                streakValue.style.color = '#38a169';
+            } else if (streak >= 3) {
+                streakValue.style.color = '#d69e2e';
+            } else {
+                streakValue.style.color = '#e53e3e';
+            }
+        }
+
+        // تحديث شريط التقدم
+        function updateProgressBar() {
+            const progress = ((questionsAnswered % questionsPerLevel) / questionsPerLevel) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // بدء اللعبة
+        initGame();
+    </script>
+</body>
+</html>

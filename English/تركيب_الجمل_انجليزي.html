@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>لعبة تركيب الجمل الإنجليزية — 100 جملة</title>
+<style>
+  :root{
+    --bg:#e8fff0;
+    --panel:#ffffff;
+    --text:#04313a;
+    --muted:#4b6b75;
+    --green:#059669;
+    --accent1:#06b6d4; --accent2:#3b82f6; --accent3:#f97316; --accent4:#ef4444;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Tajawal',system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#e8fff0,#f0fff9);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .wrap{width:100%;max-width:980px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .logo{width:64px;height:64;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--accent1),var(--accent2));font-size:18px}
+  h1{margin:0;font-size:20px}
+  .meta{color:var(--muted);font-size:13px}
+
+  /* rainbow border panel */
+  .game-panel{
+    background:var(--panel);
+    border-radius:calc(var(--radius) + 8px);
+    padding:14px;
+    position:relative;
+    overflow:visible;
+  }
+  .rainbow-frame{
+    border-radius:calc(var(--radius) + 8px);
+    padding:6px;
+    background: linear-gradient(90deg, #ff5f6d, #ffc371, #47b78a, #06b6d4, #3b82f6, #9b5de5);
+  }
+  .panel-inner{
+    border-radius:var(--radius);
+    background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.98));
+    padding:18px;
+    box-shadow:0 18px 40px rgba(2,6,23,0.06);
+  }
+
+  .top-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .progress{display:flex;align-items:center;gap:12px}
+  .meter{width:260px;height:10px;background:#eefaf5;border-radius:999px;overflow:hidden;border:1px solid rgba(4,49,58,0.04)}
+  .meter > i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--accent2));width:0%}
+  .score{font-weight:800}
+
+  .game-area{margin-top:14px;display:flex;flex-direction:column;gap:12px;align-items:stretch}
+  .translation{font-weight:800;color:var(--green);font-size:18px}
+  .prompt{font-weight:900;font-size:22px;color:var(--text)}
+  .slot-row{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border-radius:12px;border:2px dashed rgba(4,49,58,0.06);min-height:64px;align-items:center;justify-content:center;transition:transform .18s,box-shadow .18s}
+  .slot{min-width:64px;min-height:40px;padding:8px 12px;border-radius:999px;border:1px dashed rgba(4,49,58,0.06);display:flex;align-items:center;justify-content:center;background:transparent;color:var(--text);cursor:pointer}
+  .slot.placed{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;border:0}
+
+  .pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfffd);border:1px solid rgba(4,49,58,0.04)}
+  .word-pill{padding:8px 12px;border-radius:999px;background:#fff;border:1px solid rgba(4,49,58,0.06);cursor:pointer;user-select:none;box-shadow:0 6px 18px rgba(2,6,23,0.03)}
+  .word-pill.dragging{opacity:.5;transform:scale(.98)}
+
+  .controls{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:8px}
+  .btn{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;font-weight:800;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--muted);border:1px solid rgba(4,49,58,0.06)}
+  .check-btn{background:linear-gradient(90deg,#16a34a,#059669)}
+
+  .feedback{font-weight:800;min-height:26px}
+  .feedback.ok{color:var(--green)}
+  .feedback.bad{color:var(--accent4)}
+
+  /* confetti canvas absolute */
+  #confettiCanvas{position:fixed;left:0;top:0;pointer-events:none;z-index:9999}
+
+  /* final modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:10000}
+  .modal.open{display:flex}
+  .modal-box{background:#fff;padding:22px;border-radius:12px;max-width:720px;width:94%;text-align:center}
+  .rating{font-weight:900;font-size:22px;color:var(--green)}
+  .celebrate-emoji{font-size:48px;margin-top:10px}
+
+  /* responsive */
+  @media(max-width:800px){
+    .meter{width:160px}
+    .prompt{font-size:18px}
+  }
+</style>
+</head>
+<body>
+  <canvas id="confettiCanvas"></canvas>
+  <div class="wrap">
+    <header style="display:flex;align-items:center;gap:12px">
+      <div class="logo">EN</div>
+      <div>
+        <h1>لعبة تركيب الجمل الإنجليزية — 100 جملة</h1>
+        <div class="meta">الترجمة العربية تظهر للمساعدة — اجمع الكلمات بالترتيب الصحيح</div>
+      </div>
+    </header>
+
+    <div class="game-panel rainbow-frame">
+      <div class="panel-inner">
+
+        <div class="top-row">
+          <div class="progress">
+            <div style="font-weight:800">التقدّم</div>
+            <div class="meter"><i id="meterBar"></i></div>
+            <div class="score" id="progressText">0 / 100</div>
+          </div>
+
+          <div style="text-align:left">
+            <div>صوت: <button id="muteToggle" class="btn ghost">🔊 تشغيل</button></div>
+          </div>
+        </div>
+
+        <div class="game-area">
+          <div class="translation" id="sentenceTranslation">...</div>
+          <div class="prompt" id="sentencePrompt">...</div>
+
+          <div class="slot-row" id="slotRow" aria-label="slots"></div>
+
+          <div class="pool" id="wordPool" aria-label="pool"></div>
+
+          <div class="controls">
+            <div style="display:flex;gap:8px;align-items:center">
+              <button id="shuffleBtn" class="btn ghost">🔀 خلط</button>
+              <button id="newBtn" class="btn ghost">⏭️ سؤال جديد</button>
+              <button id="checkBtn" class="btn check-btn">تحقق</button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- modal النتائج النهائية -->
+  <div id="resultModal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-box">
+      <h2>🎉 انتهت اللعبة!</h2>
+      <div style="margin-top:8px">نتيجتك: <strong id="finalScore">0</strong> / 100</div>
+      <div style="margin-top:8px">تقييم الأداء: <div class="rating" id="ratingText">—</div></div>
+      <div class="celebrate-emoji" id="celebrateEmoji">🎉</div>
+      <div style="margin-top:12px">
+        <button id="playAgain" class="btn">🔁 إعادة اللعب</button>
+        <button id="closeModal" class="btn ghost">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ================== بيانات 100 جملة ==================
+   كل عنصر: {en, ar, words: [...]}
+   (100 جملة يومية مبسطة)
+*/
+const SENTENCES = [
+{en:"I am happy", ar:"أنا سعيد", words:["I","am","happy"]},
+{en:"She is at school", ar:"هي في المدرسة", words:["She","is","at","school"]},
+{en:"What is your name?", ar:"ما اسمك؟", words:["What","is","your","name?"]},
+{en:"He likes to play", ar:"هو يحب أن يلعب", words:["He","likes","to","play"]},
+{en:"We are friends", ar:"نحن أصدقاء", words:["We","are","friends"]},
+{en:"They go to work", ar:"هم يذهبون إلى العمل", words:["They","go","to","work"]},
+{en:"I love my family", ar:"أنا أحب عائلتي", words:["I","love","my","family"]},
+{en:"She drinks water", ar:"هي تشرب ماء", words:["She","drinks","water"]},
+{en:"Open the door please", ar:"افتح الباب من فضلك", words:["Open","the","door","please"]},
+{en:"Close the window", ar:"أغلق النافذة", words:["Close","the","window"]},
+{en:"I eat breakfast", ar:"أنا أتناول الإفطار", words:["I","eat","breakfast"]},
+{en:"He reads a book", ar:"هو يقرأ كتابًا", words:["He","reads","a","book"]},
+{en:"She is my teacher", ar:"هي معلمتي", words:["She","is","my","teacher"]},
+{en:"We play football", ar:"نلعب كرة القدم", words:["We","play","football"]},
+{en:"They are at home", ar:"هم في المنزل", words:["They","are","at","home"]},
+{en:"I need help", ar:"أحتاج مساعدة", words:["I","need","help"]},
+{en:"Do you speak English?", ar:"هل تتكلم الإنجليزية؟", words:["Do","you","speak","English?"]},
+{en:"He is a good doctor", ar:"هو طبيب جيد", words:["He","is","a","good","doctor"]},
+{en:"She likes music", ar:"هي تحب الموسيقى", words:["She","likes","music"]},
+{en:"I have a car", ar:"لدي سيارة", words:["I","have","a","car"]},
+{en:"They want to eat", ar:"هم يريدون أن يأكلوا", words:["They","want","to","eat"]},
+{en:"Please sit down", ar:"الرجاء الجلوس", words:["Please","sit","down"]},
+{en:"Stand up now", ar:"قف الآن", words:["Stand","up","now"]},
+{en:"Walk to the park", ar:"امشِ إلى الحديقة", words:["Walk","to","the","park"]},
+{en:"Run fast", ar:"اركض بسرعة", words:["Run","fast"]},
+{en:"I am tired", ar:"أنا متعب", words:["I","am","tired"]},
+{en:"She is very kind", ar:"هي طيبة جدًا", words:["She","is","very","kind"]},
+{en:"He can swim", ar:"هو يستطيع السباحة", words:["He","can","swim"]},
+{en:"We read together", ar:"نقرأ معًا", words:["We","read","together"]},
+{en:"They watch TV", ar:"هم يشاهدون التلفاز", words:["They","watch","TV"]},
+{en:"I like coffee", ar:"أحب القهوة", words:["I","like","coffee"]},
+{en:"She cooks dinner", ar:"هي تطبخ العشاء", words:["She","cooks","dinner"]},
+{en:"He opens the book", ar:"هو يفتح الكتاب", words:["He","opens","the","book"]},
+{en:"Close the door", ar:"أغلق الباب", words:["Close","the","door"]},
+{en:"I go to school", ar:"أذهب إلى المدرسة", words:["I","go","to","school"]},
+{en:"She studies hard", ar:"هي تدرس بجد", words:["She","studies","hard"]},
+{en:"He writes a letter", ar:"هو يكتب رسالة", words:["He","writes","a","letter"]},
+{en:"We eat together", ar:"نأكل معًا", words:["We","eat","together"]},
+{en:"They play games", ar:"هم يلعبون ألعابًا", words:["They","play","games"]},
+{en:"I wash my hands", ar:"أغسل يدي", words:["I","wash","my","hands"]},
+{en:"Please be quiet", ar:"من فضلك كن هادئا", words:["Please","be","quiet"]},
+{en:"Do your homework", ar:"قم بواجبك", words:["Do","your","homework"]},
+{en:"He has two brothers", ar:"له أخوان", words:["He","has","two","brothers"]},
+{en:"She needs a pencil", ar:"هي تحتاج قلم رصاص", words:["She","needs","a","pencil"]},
+{en:"I opened the window", ar:"فتحت النافذة", words:["I","opened","the","window"]},
+{en:"We visited the zoo", ar:"زرنا حديقة الحيوان", words:["We","visited","the","zoo"]},
+{en:"They bought food", ar:"اشتروا طعاما", words:["They","bought","food"]},
+{en:"I like this song", ar:"أنا أحب هذه الأغنية", words:["I","like","this","song"]},
+{en:"She does exercise", ar:"هي تمارس الرياضة", words:["She","does","exercise"]},
+{en:"He plays the piano", ar:"هو يعزف على البيانو", words:["He","plays","the","piano"]},
+{en:"We drink milk", ar:"نحن نشرب الحليب", words:["We","drink","milk"]},
+{en:"They arrive early", ar:"وصلوا مبكراً", words:["They","arrive","early"]},
+{en:"I open the book", ar:"أفتح الكتاب", words:["I","open","the","book"]},
+{en:"She wears a dress", ar:"هي ترتدي فستانا", words:["She","wears","a","dress"]},
+{en:"He cleans his room", ar:"هو ينظف غرفته", words:["He","cleans","his","room"]},
+{en:"We enjoy summer", ar:"نستمتع بالصيف", words:["We","enjoy","summer"]},
+{en:"They drive a car", ar:"هم يقودون سيارة", words:["They","drive","a","car"]},
+{en:"I lost my keys", ar:"فقدت مفاتيحي", words:["I","lost","my","keys"]},
+{en:"She found a coin", ar:"وجدت عملة", words:["She","found","a","coin"]},
+{en:"He broke the toy", ar:"كسر اللعبة", words:["He","broke","the","toy"]},
+{en:"We make coffee", ar:"نعد القهوة", words:["We","make","coffee"]},
+{en:"They clean the house", ar:"ينظفون المنزل", words:["They","clean","the","house"]},
+{en:"I like to read", ar:"أحب القراءة", words:["I","like","to","read"]},
+{en:"She listens to music", ar:"هي تستمع للموسيقى", words:["She","listens","to","music"]},
+{en:"He sells fruit", ar:"هو يبيع الفاكهة", words:["He","sells","fruit"]},
+{en:"We walk the dog", ar:"نخرج الكلب للمشي", words:["We","walk","the","dog"]},
+{en:"They swim in the sea", ar:"هم يسبحون في البحر", words:["They","swim","in","the","sea"]},
+{en:"I watch the stars", ar:"أشاهد النجوم", words:["I","watch","the","stars"]},
+{en:"She plants a tree", ar:"تزرع شجرة", words:["She","plants","a","tree"]},
+{en:"He fixes the car", ar:"يصلح السيارة", words:["He","fixes","the","car"]},
+{en:"We sing a song", ar:"نغني أغنية", words:["We","sing","a","song"]},
+{en:"They cook dinner", ar:"يطبخون العشاء", words:["They","cook","dinner"]},
+{en:"I visit my friend", ar:"أزور صديقي", words:["I","visit","my","friend"]},
+{en:"She buys bread", ar:"تشتري خبزًا", words:["She","buys","bread"]},
+{en:"He pays the bill", ar:"يدفع الفاتورة", words:["He","pays","the","bill"]},
+{en:"We call the doctor", ar:"نتصل بالطبيب", words:["We","call","the","doctor"]},
+{en:"They travel by bus", ar:"يسافرون بالحافلة", words:["They","travel","by","bus"]},
+{en:"I wake up early", ar:"أستيقظ مبكراً", words:["I","wake","up","early"]},
+{en:"She brushes her teeth", ar:"تنظف أسنانها", words:["She","brushes","her","teeth"]},
+{en:"He wears a hat", ar:"هو يرتدي قبعة", words:["He","wears","a","hat"]},
+{en:"We paint the wall", ar:"نطلي الحائط", words:["We","paint","the","wall"]},
+{en:"They feed the cat", ar:"يطعمون القطة", words:["They","feed","the","cat"]},
+{en:"I bought a gift", ar:"اشتريت هدية", words:["I","bought","a","gift"]},
+{en:"She opened the box", ar:"فتحت الصندوق", words:["She","opened","the","box"]},
+{en:"He closed the shop", ar:"أغلق المتجر", words:["He","closed","the","shop"]},
+{en:"We learned English", ar:"تعلمنا الإنجليزية", words:["We","learned","English"]},
+{en:"They speak slowly", ar:"يتكلمون ببطء", words:["They","speak","slowly"]},
+{en:"I enjoy the movie", ar:"استمتعت بالفيلم", words:["I","enjoy","the","movie"]},
+{en:"She likes chocolate", ar:"تحب الشوكولاتة", words:["She","likes","chocolate"]},
+{en:"He studies every day", ar:"يدرس كل يوم", words:["He","studies","every","day"]},
+{en:"We dance at night", ar:"نرقص في الليل", words:["We","dance","at","night"]},
+{en:"They celebrate together", ar:"يحتفلون معًا", words:["They","celebrate","together"]},
+{en:"I keep my promise", ar:"أفي بوعدي", words:["I","keep","my","promise"]},
+{en:"She tells a story", ar:"تحكي قصة", words:["She","tells","a","story"]},
+{en:"He opens his bag", ar:"يفتح حقيبته", words:["He","opens","his","bag"]},
+{en:"We share our food", ar:"نشارك طعامنا", words:["We","share","our","food"]},
+{en:"They enjoy the trip", ar:"يستمتعون بالرحلة", words:["They","enjoy","the","trip"]},
+{en:"I lock the door", ar:"أقفل الباب", words:["I","lock","the","door"]},
+{en:"She waters the plants", ar:"تسقي النباتات", words:["She","waters","the","plants"]},
+{en:"He cleans the kitchen", ar:"ينظف المطبخ", words:["He","cleans","the","kitchen"]},
+{en:"We open presents", ar:"نفتح الهدايا", words:["We","open","presents"]},
+{en:"They run in the park", ar:"يركضون في الحديقة", words:["They","run","in","the","park"]},
+{en:"I say hello", ar:"أقول مرحبا", words:["I","say","hello"]},
+{en:"She asks a question", ar:"تطرح سؤالا", words:["She","asks","a","question"]},
+{en:"He answers politely", ar:"يجيب بأدب", words:["He","answers","politely"]},
+{en:"We have fun", ar:"نقضي وقت ممتع", words:["We","have","fun"]},
+{en:"They learn new words", ar:"يتعلمون كلمات جديدة", words:["They","learn","new","words"]},
+{en:"I like summer", ar:"أحب الصيف", words:["I","like","summer"]},
+{en:"She studies at night", ar:"تدرس في الليل", words:["She","studies","at","night"]},
+{en:"He helps his mother", ar:"يساعد والدته", words:["He","helps","his","mother"]},
+{en:"We meet at noon", ar:"نلتقي في الظهر", words:["We","meet","at","noon"]},
+{en:"They clean the room", ar:"ينظفون الغرفة", words:["They","clean","the","room"]},
+{en:"I call my dad", ar:"أتصل بوالدي", words:["I","call","my","dad"]},
+{en:"She paints a picture", ar:"ترسم لوحة", words:["She","paints","a","picture"]},
+{en:"He carries a bag", ar:"يحمل حقيبة", words:["He","carries","a","bag"]},
+{en:"We visit the museum", ar:"نزور المتحف", words:["We","visit","the","museum"]},
+{en:"They enjoy the meal", ar:"يستمتعون بالوجبة", words:["They","enjoy","the","meal"]},
+{en:"I write a note", ar:"أكتب ملاحظة", words:["I","write","a","note"]},
+{en:"She takes a photo", ar:"تلتقط صورة", words:["She","takes","a","photo"]},
+{en:"He watches the birds", ar:"يشاهد الطيور", words:["He","watches","the","birds"]},
+{en:"We plant flowers", ar:"نزرع أزهارًا", words:["We","plant","flowers"]},
+{en:"They smile together", ar:"يبتسمون معًا", words:["They","smile","together"]}
+]; // مجموع الجمل هنا = 100 تقريبًا
+
+/* ============ state ============ */
+let index = 0; // current question index
+let score = 0;
+let muted = false;
+
+/* UI refs */
+const meterBar = document.getElementById('meterBar');
+const progressText = document.getElementById('progressText');
+const sentenceTranslation = document.getElementById('sentenceTranslation');
+const sentencePrompt = document.getElementById('sentencePrompt');
+const slotRow = document.getElementById('slotRow');
+const wordPool = document.getElementById('wordPool');
+const feedback = document.getElementById('feedback');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const newBtn = document.getElementById('newBtn');
+const checkBtn = document.getElementById('checkBtn');
+const muteToggle = document.getElementById('muteToggle');
+
+const resultModal = document.getElementById('resultModal');
+const finalScoreEl = document.getElementById('finalScore');
+const ratingText = document.getElementById('ratingText');
+const celebrateEmoji = document.getElementById('celebrateEmoji');
+const playAgain = document.getElementById('playAgain');
+const closeModal = document.getElementById('closeModal');
+
+muteToggle.addEventListener('click', ()=>{
+  muted = !muted;
+  muteToggle.textContent = muted ? '🔇 كتم' : '🔊 تشغيل';
+});
+
+/* helper */
+function shuffle(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
+function speak(text, lang='en-US', rate=0.95){
+  if(muted) return;
+  if(!('speechSynthesis' in window)) return;
+  const ut = new SpeechSynthesisUtterance(text);
+  ut.lang = lang;
+  ut.rate = rate;
+  // try to pick english voice for en-US
+  const voices = speechSynthesis.getVoices();
+  if(voices && voices.length){
+    const v = voices.find(v=>/en-(US|GB)|English/i.test((v.lang||'')+' '+(v.name||''))) || voices.find(v=>/en/i.test(v.lang)) || voices[0];
+    if(v) ut.voice = v;
+  }
+  speechSynthesis.cancel();
+  speechSynthesis.speak(ut);
+}
+
+/* confetti simple implementation */
+const confettiCanvas = document.getElementById('confettiCanvas');
+const ctx = confettiCanvas.getContext('2d');
+let confettiPieces = [];
+function resizeCanvas(){ confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function createConfetti(){
+  confettiPieces = [];
+  const colors = ['#ff5f6d','#ffc371','#47b78a','#06b6d4','#3b82f6','#9b5de5'];
+  for(let i=0;i<120;i++){
+    confettiPieces.push({
+      x: Math.random()*confettiCanvas.width,
+      y: Math.random()*-confettiCanvas.height,
+      r: 6+Math.random()*8,
+      dx: -2 + Math.random()*4,
+      dy: 2 + Math.random()*6,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      drot: -5 + Math.random()*10
+    });
+  }
+  runConfetti();
+}
+
+let confettiRunning = false;
+function runConfetti(){
+  confettiRunning = true;
+  let t0 = performance.now();
+  function frame(now){
+    const dt = (now - t0)/1000;
+    t0 = now;
+    ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+    confettiPieces.forEach(p=>{
+      p.x += p.dx;
+      p.y += p.dy;
+      p.rot += p.drot;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+      ctx.restore();
+    });
+    confettiPieces = confettiPieces.filter(p=> p.y < confettiCanvas.height + 30);
+    if(confettiPieces.length>0) requestAnimationFrame(frame);
+    else { confettiRunning = false; ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ========== rendering question ========== */
+let poolWords = [];
+let slots = [];
+
+function updateProgressUI(){
+  const total = SENTENCES.length;
+  meterBar.style.width = `${Math.round((index/total)*100)}%`;
+  progressText.textContent = `${index} / ${total}`;
+}
+
+function renderQuestion(){
+  feedback.textContent = '';
+  if(index >= SENTENCES.length){
+    // finish
+    showResult();
+    return;
+  }
+  updateProgressUI();
+  const current = SENTENCES[index];
+  sentenceTranslation.textContent = current.ar;
+  sentencePrompt.textContent = current.en.replace(/\?/g,'?'); // display sentence (optional)
+  // speak sentence
+  speak(current.en, 'en-US', 0.95);
+
+  // prepare pool: correct words (shuffled) plus maybe 1 distractor sometimes
+  poolWords = shuffle(current.words.map((w,i)=> ({text:w, id:i})));
+  // occasionally add distractor words to increase challenge
+  if(Math.random() < 0.12){
+    const extra = WORDS_sample_random(); // small helper to get a random simple word
+    poolWords.push({text:extra, id:-1});
+  }
+  poolWords = shuffle(poolWords);
+  slots = new Array(current.words.length).fill(null);
+
+  // render slots
+  slotRow.innerHTML = '';
+  for(let i=0;i<slots.length;i++){
+    const s = document.createElement('div');
+    s.className = 'slot';
+    s.dataset.index = i;
+    s.addEventListener('dragover', e=> e.preventDefault());
+    s.addEventListener('drop', e=>{
+      e.preventDefault();
+      const pi = Number(e.dataTransfer.getData('text/plain'));
+      placeFromPoolByIndex(pi, i);
+    });
+    s.addEventListener('click', ()=> {
+      // if filled -> return to pool
+      if(slots[i] !== null){
+        poolWords.push({text: slots[i], id:-1});
+        slots[i] = null;
+        renderPool();
+        renderSlots();
+      }
+    });
+    slotRow.appendChild(s);
+  }
+
+  renderPool();
+  renderSlots();
+}
+
+function WORDS_sample_random(){
+  // small list of common single words as possible distractors
+  const extras = ["please","today","soon","again","very","fast","slow","nice","big","small","now"];
+  return extras[Math.floor(Math.random()*extras.length)];
+}
+
+function renderPool(){
+  wordPool.innerHTML = '';
+  poolWords.forEach((pw, idx)=>{
+    const el = document.createElement('div');
+    el.className = 'word-pill';
+    el.draggable = true;
+    el.dataset.idx = idx;
+    el.textContent = pw.text;
+    el.addEventListener('dragstart', (ev)=>{
+      ev.dataTransfer.setData('text/plain', idx);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', ()=> el.classList.remove('dragging'));
+    el.addEventListener('click', ()=>{
+      // place into first empty slot
+      const firstEmpty = slots.indexOf(null);
+      if(firstEmpty === -1) return;
+      placeFromPoolByIndex(idx, firstEmpty);
+    });
+    wordPool.appendChild(el);
+  });
+}
+
+function placeFromPoolByIndex(poolIndex, slotIndex){
+  if(poolIndex < 0 || poolIndex >= poolWords.length) return;
+  const w = poolWords[poolIndex].text;
+  poolWords.splice(poolIndex,1);
+  slots[slotIndex] = w;
+  renderPool();
+  renderSlots();
+}
+
+function renderSlots(){
+  Array.from(slotRow.children).forEach((el,i)=>{
+    const val = slots[i];
+    el.textContent = val ? val : '';
+    el.classList.toggle('placed', !!val);
+  });
+}
+
+/* check logic */
+checkBtn.addEventListener('click', checkAnswer);
+
+function checkAnswer(){
+  // ensure all slots filled
+  if(slots.includes(null)){
+    feedback.textContent = 'المرجو ملء كل الخانات أولاً';
+    feedback.className = 'feedback bad';
+    speak('Please fill all slots', 'en-US', 1);
+    return;
+  }
+  const user = slots.slice();
+  const correct = SENTENCES[index].words.slice();
+  // normalize punctuation spacing for comparison
+  const userStr = user.join(' ').trim();
+  const correctStr = correct.join(' ').trim();
+  if(userStr === correctStr){
+    // correct
+    feedback.textContent = '✅ إجابة صحيحة';
+    feedback.className = 'feedback ok';
+    score++;
+    // speak positive
+    speak('Correct', 'en-US', 1.0);
+    // update progress and auto-next
+    index++;
+    updateProgressUI();
+    // celebration small effect (flash)
+    slotRow.classList.add('celebrate');
+    setTimeout(()=> slotRow.classList.remove('celebrate'), 350);
+    // auto next after brief delay
+    setTimeout(()=> {
+      if(index < SENTENCES.length) renderQuestion();
+      else showResult();
+    }, 900);
+  } else {
+    // wrong
+    feedback.textContent = '❌ ترتيب خاطئ — حاول مرة أخرى';
+    feedback.className = 'feedback bad';
+    // speak wrong
+    speak('Wrong. Try again', 'en-US', 1.0);
+    // shake
+    slotRow.classList.add('shake');
+    setTimeout(()=> slotRow.classList.remove('shake'), 480);
+  }
+}
+
+/* shuffle and new question */
+shuffleBtn.addEventListener('click', ()=>{
+  poolWords = shuffle(poolWords);
+  renderPool();
+});
+newBtn.addEventListener('click', ()=>{
+  index++;
+  if(index >= SENTENCES.length) showResult(); else renderQuestion();
+});
+
+/* result display */
+function showResult(){
+  finalScoreEl.textContent = score;
+  // rating thresholds (adjustable)
+  const percent = Math.round((score / SENTENCES.length) * 100);
+  let rating = '';
+  if(percent < 50) rating = 'ضعيف';
+  else if(percent < 70) rating = 'متوسط';
+  else if(percent < 90) rating = 'جيد';
+  else rating = 'جيد جدًا';
+  ratingText.textContent = `${rating} — ${percent}%`;
+  // emoji
+  if(percent < 50) celebrateEmoji.textContent = '🙂';
+  else if(percent < 70) celebrateEmoji.textContent = '🎖️';
+  else if(percent < 90) celebrateEmoji.textContent = '🏆';
+  else celebrateEmoji.textContent = '🎉🏅';
+  // show modal
+  resultModal.classList.add('open');
+  // confetti and sound for high scores
+  if(percent >= 70){
+    createConfetti();
+    speak('Congratulations! You finished the game', 'en-US', 1.0);
+  } else {
+    speak('Game finished', 'en-US', 0.95);
+  }
+}
+
+/* modal actions */
+playAgain.addEventListener('click', ()=> {
+  resultModal.classList.remove('open');
+  index = 0; score = 0;
+  updateProgressUI();
+  renderQuestion();
+});
+closeModal.addEventListener('click', ()=> resultModal.classList.remove('open'));
+
+/* keyboard shortcuts */
+document.addEventListener('keydown', (e)=> {
+  if(e.key === 'Enter') checkAnswer();
+  if(e.key === ' ') { e.preventDefault(); /* space to speak current sentence */ const cur = SENTENCES[index]; if(cur) speak(cur.en); }
+});
+
+/* init voices for some browsers */
+if (typeof speechSynthesis !== 'undefined') speechSynthesis.onvoiceschanged = ()=>{};
+
+/* start */
+renderQuestion();
+updateProgressUI();
+</script>
+</body>
+</html>
