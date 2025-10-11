@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>التعليم الابتدائي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:'Tajawal',sans-serif;background:#0b1220;color:#fff}
+    header{background:#0f1f3a;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+    header .left{display:flex;align-items:center;gap:10px}
+    header input{padding:6px;border-radius:6px;border:0}
+    header .social a{margin:0 5px;color:#fff;text-decoration:none;font-size:18px}
+
+    .container{display:flex;min-height:100vh}
+    nav{width:220px;background:#111c33;padding:20px;box-shadow:2px 0 5px rgba(0,0,0,.4)}
+    nav h3{margin-top:0;font-size:18px}
+    nav button{display:block;width:100%;padding:10px;margin:8px 0;border:0;border-radius:8px;background:#1d2d50;color:#fff;cursor:pointer;font-size:15px}
+    nav button:hover{background:#2a3e70}
+
+    main{flex:1;padding:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+    .card{background:#1c2745;padding:20px;border-radius:12px;text-align:center;box-shadow:0 6px 12px rgba(0,0,0,.4)}
+    .card h4{margin:0 0 10px}
+    .card button{padding:8px 12px;border:0;border-radius:8px;background:#3b82f6;color:#fff;cursor:pointer}
+    .card button:hover{background:#2563eb}
+
+    /* modal */
+    .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:100}
+    .modal-content{width:80%;height:80%;background:#fff;position:relative;border-radius:10px;overflow:hidden}
+    .modal-content iframe{width:100%;height:100%;border:0}
+    .close{position:absolute;top:10px;right:15px;font-size:20px;font-weight:bold;cursor:pointer;color:#000}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="left">
+      <strong>📘 التعليم الابتدائي</strong>
+      <input type="text" id="studentName" placeholder="اسم الطالب">
+    </div>
+    <div class="social">
+      <a href="#">🌐</a>
+      <a href="#">📘</a>
+      <a href="#">🐦</a>
+    </div>
+  </header>
+  <div class="container">
+    <nav>
+      <h3>المستويات</h3>
+      <button onclick="showLevel('1')">السنة الأولى</button>
+      <button onclick="showLevel('2')">السنة الثانية</button>
+      <button onclick="showLevel('3')">السنة الثالثة</button>
+      <button onclick="showLevel('4')">السنة الرابعة</button>
+      <button onclick="showLevel('5')">السنة الخامسة</button>
+    </nav>
+    <main id="mainContent">
+      <h2>اختر مستوى لعرض المواد</h2>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="pdfModal">
+    <div class="modal-content">
+      <span class="close" onclick="closePDF()">&times;</span>
+      <iframe id="pdfFrame"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      "1": {
+        name: "السنة الأولى ابتدائي",
+        subjects: {
+          "اللغة العربية": ["حروف الهجاء","كلمات بسيطة"],
+          "الرياضيات": ["الأعداد من 1 إلى 10","الجمع البسيط"],
+          "التربية الإسلامية": ["أركان الإسلام","دعاء النوم"],
+          "الفرنسية": ["الأبجدية الفرنسية","كلمات أساسية"]
+        }
+      },
+      "2": {
+        name: "السنة الثانية ابتدائي",
+        subjects: {
+          "اللغة العربية": ["الضمائر","الفعل الماضي"],
+          "الرياضيات": ["الأعداد حتى 100","الطرح"],
+          "التربية الإسلامية": ["الطهارة","سورة الفاتحة"],
+          "الفرنسية": ["الأعداد","الألوان"],
+          "التاريخ والجغرافيا": ["خريطة الجزائر","الأعياد الوطنية"]
+        }
+      },
+      "3": {
+        name: "السنة الثالثة ابتدائي",
+        subjects: {
+          "اللغة العربية": ["المثنى","الفعل المضارع"],
+          "الرياضيات": ["الضرب","القسمة"],
+          "العلوم": ["النباتات","الحيوانات"],
+          "التربية المدنية": ["النظام المدرسي","حقوق الطفل"],
+          "الإنجليزية": ["Hello","Family"]
+        }
+      },
+      "4": {
+        name: "السنة الرابعة ابتدائي",
+        subjects: {
+          "اللغة العربية": ["الجملة الاسمية","النكرة والمعرفة"],
+          "الرياضيات": ["الكسور","الهندسة"],
+          "العلوم": ["الجهاز الهضمي","الماء"],
+          "الفرنسية": ["الفعل avoir","الفعل être"],
+          "التاريخ والجغرافيا": ["الحياة في الريف","الحياة في المدينة"]
+        }
+      },
+      "5": {
+        name: "السنة الخامسة ابتدائي",
+        subjects: {
+          "اللغة العربية": ["الجملة الفعلية","إعراب الجملة"],
+          "الرياضيات": ["النسبة المئوية","المحيط والمساحة"],
+          "العلوم": ["الجهاز العصبي","البيئة"],
+          "الفرنسية": ["الأزمنة","المفرد والجمع"],
+          "الإنجليزية": ["My school","Daily routine"],
+          "التربية الإسلامية": ["سورة الإخلاص","بر الوالدين"]
+        }
+      }
+    };
+
+    function showLevel(lvl){
+      const level = data[lvl];
+      let html = `<h2>${level.name}</h2><div class='grid'>`;
+      for(const [subject,lessons] of Object.entries(level.subjects)){
+        html += `<div class='card'><h4>${subject}</h4><button onclick="showLessons('${lvl}','${subject}')">📚 عرض الدروس</button></div>`;
+      }
+      html += "</div>";
+      document.getElementById('mainContent').innerHTML = html;
+    }
+
+    function showLessons(lvl,subject){
+      const lessons = data[lvl].subjects[subject];
+      let html = `<h2>${subject} - ${data[lvl].name}</h2><div class='grid'>`;
+      lessons.forEach((lesson,i)=>{
+        html += `<div class='card'><h4>${lesson}</h4><button onclick="openPDF('${subject}_${i+1}.pdf')">📄 عرض PDF</button></div>`;
+      });
+      html += "</div>";
+      document.getElementById('mainContent').innerHTML = html;
+    }
+
+    function openPDF(file){
+      document.getElementById('pdfModal').style.display='flex';
+      document.getElementById('pdfFrame').src=file;
+    }
+    function closePDF(){
+      document.getElementById('pdfModal').style.display='none';
+      document.getElementById('pdfFrame').src='';
+    }
+
+    // حفظ اسم الطالب
+    const studentNameInput=document.getElementById('studentName');
+    studentNameInput.value=localStorage.getItem('studentName')||'';
+    studentNameInput.addEventListener('change',()=>localStorage.setItem('studentName',studentNameInput.value));
+  </script>
+</body>
+</html>

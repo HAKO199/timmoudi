@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>نظام التعليم — المتوسط (1-4 متوسط)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --top:#0b3a72; --accent:#0b69ff; --muted:#64748b; --card:#ffffff;
+  --success:#16a34a; --danger:#ef4444; --bg:#f3f8ff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Cairo',sans-serif;background:linear-gradient(180deg,var(--bg),#eaf4ff);color:#062233}
+.topbar{background:linear-gradient(90deg,var(--top),#072a5a);color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff}
+.top-right{display:flex;gap:12px;align-items:center}
+.socials{display:flex;gap:8px;align-items:center}
+.socials a{color:#fff;text-decoration:none;font-size:18px;padding:6px;border-radius:8px;opacity:.95}
+.student-box{display:flex;flex-direction:column;align-items:flex-end}
+.student-box input{padding:8px;border-radius:8px;border:0;width:220px;text-align:right}
+
+/* layout */
+.app{display:grid;grid-template-columns:260px 1fr 320px;gap:18px;padding:18px}
+@media(max-width:1100px){.app{grid-template-columns:1fr;padding:12px} .right-col, .left-col{order:2} .center-col{order:1}}
+.panel{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 12px 30px rgba(12,20,40,0.06)}
+
+/* right column: levels */
+.right-col{height:calc(100vh - 120px);overflow:auto}
+.levels{display:flex;flex-direction:column;gap:8px}
+.level-btn{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f6fbff);cursor:pointer;border:1px solid rgba(0,0,0,0.04);font-weight:800}
+.level-btn.active{box-shadow:0 12px 30px rgba(11,105,255,0.08);border-color:rgba(11,105,255,0.12)}
+
+/* center: subjects & lessons */
+.center-col{min-height:60vh;overflow:auto}
+.subjects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.subject-card{background:linear-gradient(180deg,#fff,#f8fdff);padding:14px;border-radius:12px;cursor:pointer;text-align:center;border:1px solid rgba(0,0,0,0.03);transition:all .12s}
+.subject-card:hover{transform:translateY(-6px)}
+.lessons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:12px}
+.lesson-card{background:linear-gradient(180deg,#fff,#fbfeff);padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.03)}
+.lesson-title{font-weight:800}
+.lesson-meta{color:var(--muted);font-size:13px;margin-top:6px}
+
+/* left: controls & info */
+.left-col{height:calc(100vh - 120px);overflow:auto}
+.controls{display:flex;gap:8px;align-items:center}
+
+/* modal pdf */
+.modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:999}
+.modal{width:92%;max-width:1100px;height:88%;background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.modal header{background:linear-gradient(90deg,var(--accent),#06b6d4);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+.modal iframe{flex:1;border:0}
+
+/* buttons */
+.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:800}
+.btn.primary{background:linear-gradient(90deg,var(--accent),#06b6d4);color:#fff}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+
+/* footer */
+.footer{margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">المتوسط</div>
+    <div>
+      <div style="font-weight:900;font-size:18px">نظام التعليم — المرحلة المتوسطة</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.92)">المستويات 1 — 4 متوسط · دروس PDF مولّدة داخليًا</div>
+    </div>
+  </div>
+
+  <div class="top-right">
+    <div class="socials" aria-hidden>
+      <a href="#" title="Facebook">📘</a>
+      <a href="#" title="YouTube">▶️</a>
+      <a href="#" title="Instagram">📸</a>
+      <a href="#" title="Twitter">🐦</a>
+    </div>
+
+    <div class="student-box">
+      <label style="font-weight:800;color:#fff;margin-bottom:6px;text-align:right">اسم الطالب</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="studentName" placeholder="اكتب اسم الطالب ثم اضغط حفظ" />
+        <button class="btn primary" id="saveStudentBtn">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <!-- right column: niveaux -->
+  <aside class="panel right-col">
+    <div style="font-weight:900;margin-bottom:8px">المستويات</div>
+    <div class="levels" id="levelsList"></div>
+    <div style="margin-top:12px">
+      <div style="font-weight:800">الشعب</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn ghost" id="streamScientific">علمي</button>
+        <button class="btn ghost" id="streamLiterary">أدبي</button>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div style="font-weight:800">حفظ / تصدير</div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="btn ghost" id="exportBtn">تصدير التقدّم</button>
+        <button class="btn ghost" id="importBtn">استيراد تقدّم</button>
+      </div>
+    </div>
+    <div style="margin-top:12px;color:var(--muted)" id="progressText">سجّل اسم الطالب لبدء الحفظ</div>
+  </aside>
+
+  <!-- center column: subjects & lessons -->
+  <main class="panel center-col">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:900">المواد</div>
+        <div style="color:var(--muted);font-size:13px" id="pathLabel">اختر مستوى ثم مادة</div>
+      </div>
+      <div class="controls">
+        <div style="font-weight:800;color:var(--muted)">أظهر المواد للمستوى</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <div class="subjects-grid" id="subjectsGrid"></div>
+    </div>
+
+    <div id="lessonsArea" style="margin-top:18px">
+      <div style="font-weight:900">الدروس</div>
+      <div class="lessons-grid" id="lessonsGrid"></div>
+    </div>
+
+    <div class="footer">جميع الدروس تنشأ كـ PDF عند النقر — يمكنك تعديل نصوص الدروس داخل كود الـ JavaScript بسهولة.</div>
+  </main>
+
+  <!-- left column: optional info -->
+  <aside class="panel left-col">
+    <div style="font-weight:900">تفاصيل</div>
+    <div style="margin-top:8px;color:var(--muted);font-size:14px">
+      هذا النظام مولّد دروسًا نموذجية لكل مادة — كل درس يمكن عرضه كـ PDF داخل نافذة منبثقة قابلة للطباعة أو الحفظ.
+    </div>
+
+    <div style="margin-top:12px">
+      <div style="font-weight:800">خيارات</div>
+      <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+        <button class="btn ghost" id="openAllBtn">طباعة جميع دروس المادة</button>
+        <button class="btn ghost" id="clearProgressBtn">مسح التقدّم</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- modal pdf viewer -->
+<div class="modal-backdrop" id="pdfModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <header>
+      <div id="modalTitle">عرض الدرس</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" id="printPdfBtn">طباعة</button>
+        <button class="btn ghost" id="closePdfBtn">إغلاق</button>
+      </div>
+    </header>
+    <iframe id="pdfFrame" title="PDF Viewer"></iframe>
+  </div>
+</div>
+
+<!-- jsPDF CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+/* ============================
+   بيانات الكتالوج (المواد لكل مستوى)
+   يمكن تعديل القوائم هنا بسهولة
+   ============================ */
+
+const LEVELS = [
+  {id:1, name:'السنة الأولى متوسط'},
+  {id:2, name:'السنة الثانية متوسط'},
+  {id:3, name:'السنة الثالثة متوسط'},
+  {id:4, name:'السنة الرابعة متوسط'}
+];
+
+const SUBJECTS = {
+  scientific: ['الرياضيات','العلوم الطبيعية','الفيزياء','اللغة العربية','الفرنسية','الإعلام الآلي'],
+  literary:  ['اللغة العربية','التاريخ','الجغرافيا','الفرنسية','الفلسفة','التربية الإسلامية']
+};
+
+const LESSONS_PER_SUBJECT = 6; // عدد الدروس المولدة لكل مادة (قابلة للتغيير)
+
+/* مولّد درس نموذجي */
+function makeLesson(levelId, subjectName, idx){
+  const levelName = LEVELS.find(l=>l.id===levelId).name;
+  const title = `${subjectName} — الدرس ${idx} (${levelName})`;
+  const content = `هذا ملخص لدرس رقم ${idx} في مادة ${subjectName} للـ ${levelName}. يتضمّن شرحًا مختصرًا للنقاط الأساسية، أمثلة عملية، وبعض التمارين المقترحة للمتدرّب.`;
+  const examples = [
+    `مثال توضيحي 1: تطبيق سريع على مفهوم الدرس ${idx}.`,
+    `مثال توضيحي 2: نشاط صفّي بسيط يساعد على الفهم.`
+  ];
+  const exercises = [
+    {type:'tf', q:`صح أم خطأ: العبارة المبسطة المتعلقة بالدرس ${idx} صحيحة؟`, answer:true},
+    {type:'mcq', q:`اختر الإجابة الصحيحة حول نقطة في الدرس ${idx}`, options:['خيار أ','خيار ب','خيار ج'], answer:1}
+  ];
+  return { id:`L${levelId}_${subjectName.replace(/\s+/g,'')}_${idx}`, title, content, examples, exercises };
+}
+
+/* بناء الكتالوج */
+const CATALOG = {};
+LEVELS.forEach(l=>{
+  CATALOG[l.id] = {};
+  ['scientific','literary'].forEach(stream=>{
+    SUBJECTS[stream].forEach(sub=>{
+      CATALOG[l.id][sub] = CATALOG[l.id][sub] || [];
+      for(let i=1;i<=LESSONS_PER_SUBJECT;i++){
+        CATALOG[l.id][sub].push(makeLesson(l.id, sub, i));
+      }
+    });
+  });
+});
+
+/* ================== حالة التطبيق ================== */
+let currentLevel = LEVELS[0].id;
+let currentStream = 'scientific';
+let currentSubject = null;
+let currentStudent = localStorage.getItem('ms_student') || null;
+let progress = JSON.parse(localStorage.getItem('ms_progress') || '{}');
+
+const levelsList = document.getElementById('levelsList');
+const subjectsGrid = document.getElementById('subjectsGrid');
+const lessonsGrid = document.getElementById('lessonsGrid');
+const pathLabel = document.getElementById('pathLabel');
+const progressText = document.getElementById('progressText');
+const studentNameInput = document.getElementById('studentName');
+
+studentNameInput.value = currentStudent || '';
+updateProgressUI();
+
+/* ====== رندر المستويات على اليمين ====== */
+function renderLevels(){
+  levelsList.innerHTML = '';
+  LEVELS.forEach(l=>{
+    const el = document.createElement('div');
+    el.className = 'level-btn' + (l.id === currentLevel ? ' active' : '');
+    el.textContent = l.name;
+    el.addEventListener('click', ()=> {
+      currentLevel = l.id;
+      renderLevels();
+      renderSubjects();
+      clearLessons();
+    });
+    levelsList.appendChild(el);
+  });
+}
+renderLevels();
+
+/* ====== شغلتي تبديل الشعبة ====== */
+document.getElementById('streamScientific').addEventListener('click', ()=> { currentStream = 'scientific'; renderSubjects(); clearLessons(); });
+document.getElementById('streamLiterary').addEventListener('click', ()=> { currentStream = 'literary'; renderSubjects(); clearLessons(); });
+
+/* ====== رندر المواد (وسط) ====== */
+function renderSubjects(){
+  subjectsGrid.innerHTML = '';
+  const arr = SUBJECTS[currentStream];
+  arr.forEach(sub=>{
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.innerHTML = `<div style="font-weight:900">${sub}</div><div style="color:var(--muted);font-size:13px;margin-top:6px">${CATALOG[currentLevel][sub].length} درس</div>`;
+    card.addEventListener('click', ()=> {
+      currentSubject = sub;
+      pathLabel.textContent = `${LEVELS.find(l=>l.id===currentLevel).name} › ${sub}`;
+      renderLessons();
+    });
+    subjectsGrid.appendChild(card);
+  });
+}
+renderSubjects();
+
+/* ====== رندر الدروس لمادة محددة ====== */
+function renderLessons(){
+  lessonsGrid.innerHTML = '';
+  if(!currentSubject) return;
+  const arr = CATALOG[currentLevel][currentSubject] || [];
+  arr.forEach(ls=>{
+    const card = document.createElement('div'); card.className = 'lesson-card';
+    card.innerHTML = `<div class="lesson-title">${ls.title}</div><div class="lesson-meta">${ls.content.slice(0,90)}...</div>
+      <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-start">
+        <button class="btn primary" onclick="openLessonPdf('${ls.id}')">عرض PDF</button>
+        <button class="btn ghost" onclick="markRead('${ls.id}')">وضع علامة 'قرأت'</button>
+      </div>`;
+    lessonsGrid.appendChild(card);
+  });
+}
+
+/* clear lessons */
+function clearLessons(){ lessonsGrid.innerHTML = ''; pathLabel.textContent = 'اختر مستوى ثم مادة'; currentSubject = null; }
+
+/* ====== حفظ اسم الطالب وادارة التقدّم ====== */
+document.getElementById('saveStudentBtn').addEventListener('click', ()=>{
+  const name = (studentNameInput.value||'').trim();
+  if(!name){ alert('الرجاء إدخال اسم الطالب'); return; }
+  currentStudent = name;
+  localStorage.setItem('ms_student', currentStudent);
+  if(!progress[currentStudent]) progress[currentStudent] = {read:{}};
+  localStorage.setItem('ms_progress', JSON.stringify(progress));
+  updateProgressUI();
+  alert('تم حفظ اسم الطالب: ' + currentStudent);
+});
+
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const data = { student: currentStudent, progress };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'progress_' + (currentStudent||'guest') + '.json'; a.click(); URL.revokeObjectURL(a.href);
+});
+
+/* import progress (simple) */
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  const txt = prompt('ألصق محتوى JSON للتقدّم الذي تريد استيراده:');
+  if(!txt) return;
+  try{
+    const obj = JSON.parse(txt);
+    if(obj && obj.progress){
+      progress = Object.assign(progress, obj.progress);
+      localStorage.setItem('ms_progress', JSON.stringify(progress));
+      alert('تم استيراد التقدّم');
+      updateProgressUI();
+    } else alert('هيئة الملف غير صحيحة');
+  }catch(e){ alert('خطأ في قراءة JSON: ' + e.message); }
+});
+
+/* mark read */
+function markRead(lessonId){
+  if(!currentStudent){ alert('سجّل اسم الطالب أولًا'); return; }
+  progress[currentStudent] = progress[currentStudent] || {read:{}};
+  progress[currentStudent].read[lessonId] = new Date().toISOString();
+  localStorage.setItem('ms_progress', JSON.stringify(progress));
+  updateProgressUI();
+  alert('تم تسجيل الدرس كمقروء');
+}
+
+/* clear progress */
+document.getElementById('clearProgressBtn').addEventListener('click', ()=>{
+  if(!currentStudent){ alert('سجّل اسم الطالب أولًا'); return; }
+  if(confirm('هل تريد مسح كل التقدّم للطالب الحالي؟')) {
+    progress[currentStudent] = {read:{}};
+    localStorage.setItem('ms_progress', JSON.stringify(progress));
+    updateProgressUI();
+  }
+});
+
+/* open all lessons PDF for current subject (رابط واحد بعد الدمج) */
+document.getElementById('openAllBtn').addEventListener('click', async ()=>{
+  if(!currentSubject){ alert('اختر مادة أولاً'); return; }
+  // نبني PDF يجمع كل دروس المادة
+  const arr = CATALOG[currentLevel][currentSubject];
+  await generatePdfForLessons(arr, `${currentSubject} - ${LEVELS.find(l=>l.id===currentLevel).name}`);
+});
+
+/* update progress UI */
+function updateProgressUI(){
+  if(!currentStudent){ progressText.textContent = 'سجّل اسم الطالب لبدء الحفظ المحلي'; return; }
+  const done = Object.keys(progress[currentStudent] && progress[currentStudent].read ? progress[currentStudent].read : {}).length;
+  progressText.textContent = `الدروس المقروءة: ${done}`;
+}
+
+/* ================= PDF generation & modal viewer ================= */
+const pdfModal = document.getElementById('pdfModal');
+const pdfFrame = document.getElementById('pdfFrame');
+const modalTitle = document.getElementById('modalTitle');
+document.getElementById('closePdfBtn').addEventListener('click', ()=> { pdfModal.style.display='none'; pdfFrame.src=''; });
+document.getElementById('printPdfBtn').addEventListener('click', ()=> { if(pdfFrame.src) window.open(pdfFrame.src); });
+
+/* find lesson object by id */
+function findLessonById(lessonId){
+  for(const lvl of Object.keys(CATALOG)){
+    for(const sub of Object.keys(CATALOG[lvl])){
+      const found = CATALOG[lvl][sub].find(x=>x.id===lessonId);
+      if(found) return found;
+    }
+  }
+  return null;
+}
+
+/* open a single lesson as PDF */
+async function openLessonPdf(lessonId){
+  const lesson = findLessonById(lessonId);
+  if(!lesson){ alert('لم يُعثر على الدرس'); return; }
+  await generatePdfForLessons([lesson], lesson.title);
+}
+
+/* generate PDF for an array of lessons and show in modal */
+async function generatePdfForLessons(lessonsArray, docTitle){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'pt', format:'a4' });
+  const margin = 40;
+  let y = margin;
+
+  doc.setFontSize(18); doc.setFont('Helvetica','bold');
+  doc.text(docTitle, 595 - margin, y, { align: 'right' });
+  y += 28;
+
+  for(const lesson of lessonsArray){
+    doc.setFontSize(14); doc.setFont('Helvetica','bold');
+    const titleLines = doc.splitTextToSize(lesson.title, 595 - 2*margin);
+    doc.text(titleLines, 595 - margin, y, { align: 'right' });
+    y += titleLines.length*16 + 6;
+
+    doc.setFontSize(11); doc.setFont('Helvetica','normal');
+    const contentLines = doc.splitTextToSize(lesson.content, 595 - 2*margin);
+    doc.text(contentLines, 595 - margin, y, { align: 'right' });
+    y += contentLines.length*14 + 8;
+
+    if(lesson.examples && lesson.examples.length){
+      doc.setFont('Helvetica','bold'); doc.text('أمثلة:', 595 - margin, y, { align: 'right' }); y += 16;
+      doc.setFont('Helvetica','normal');
+      lesson.examples.forEach(ex=>{
+        const l = doc.splitTextToSize('• ' + ex, 595 - 2*margin);
+        doc.text(l, 595 - margin, y, { align: 'right' });
+        y += l.length*14 + 6;
+      });
+    }
+
+    if(lesson.exercises && lesson.exercises.length){
+      doc.setFont('Helvetica','bold'); doc.text('تمارين مقترحة:', 595 - margin, y, { align: 'right' }); y += 16;
+      doc.setFont('Helvetica','normal');
+      lesson.exercises.forEach((ex,i)=>{
+        let qtxt = `${i+1}. ${ex.q}`;
+        if(ex.type === 'mcq' && ex.options) {
+          // MCQ structure from makeLesson uses type 'mcq'
+          const lq = doc.splitTextToSize(qtxt, 595 - 2*margin);
+          doc.text(lq, 595 - margin, y, { align: 'right' });
+          y += lq.length*14 + 6;
+          ex.options.forEach((opt,j)=>{
+            const ol = doc.splitTextToSize(`   ${String.fromCharCode(65+j)}. ${opt}`, 595 - 2*margin);
+            doc.text(ol, 595 - margin, y, { align: 'right' });
+            y += ol.length*14 + 4;
+          });
+        } else {
+          const lq = doc.splitTextToSize(qtxt, 595 - 2*margin);
+          doc.text(lq, 595 - margin, y, { align: 'right' });
+          y += lq.length*14 + 6;
+        }
+        if(y > 760){ doc.addPage(); y = margin; }
+      });
+    }
+
+    // page break between lessons
+    y += 10;
+    if(y > 720){ doc.addPage(); y = margin; }
+  }
+
+  const url = doc.output('bloburl');
+  pdfFrame.src = url;
+  modalTitle.textContent = docTitle;
+  pdfModal.style.display = 'flex';
+}
+
+/* ========== init ========= */
+renderLevels();
+renderSubjects();
+updateProgressUI();
+
+</script>
+</body>
+</html>
