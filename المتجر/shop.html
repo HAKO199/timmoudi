@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>متجر </title>
+  <meta name="description" content="متجر إلكتروني ببطاقات شبكية، بحث، فئات، وقنوات شراء عبر WhatsApp — تصميم ألوان شبيه بأمازون." />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --amazon-orange: #FF9900;
+      --amazon-dark:#131921;
+      --accent:#0ea5e9;
+      --muted:#6b7280;
+      --card:#ffffff10;
+      --glass: rgba(255,255,255,0.03);
+      --success:#16a34a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Cairo',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#f6f7fb 0%, #eef2f7 100%); /* subtle light bg */
+      color:#0f1724;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:0;
+    }
+
+    /* Top bar */
+    .topbar{
+      background:var(--amazon-dark);
+      color:white;
+      padding:12px 18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow:0 6px 18px rgba(2,6,23,0.15);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:48px;height:48px;border-radius:10px;background:linear-gradient(90deg,var(--amazon-orange),#f57c00);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--amazon-dark);
+      box-shadow:0 6px 18px rgba(255,153,0,0.12);
+      font-size:18px;
+    }
+    .brand .title{font-weight:800;font-size:18px}
+    .top-right{display:flex;gap:10px;align-items:center}
+
+    .socials{display:flex;gap:8px;align-items:center}
+    .socials a{color:white;text-decoration:none;border-radius:8px;padding:6px 8px;background:rgba(255,255,255,0.04);font-weight:700;font-size:13px}
+
+    .merchant-btn{background:transparent;color:white;border:1px solid rgba(255,255,255,0.08);padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:700}
+
+    /* Merchant card (hidden popover) */
+    .merchant-card{
+      position:absolute;right:18px;top:72px;background:white;color:var(--amazon-dark);border-radius:10px;padding:14px;box-shadow:0 10px 30px rgba(2,6,23,0.12);min-width:260px;display:none;z-index:120;
+    }
+    .merchant-card.open{display:block}
+    .merchant-card .row{display:flex;gap:8px;align-items:center}
+    .merchant-avatar{width:56px;height:56px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--amazon-dark)}
+
+    /* Search bar + categories */
+    .controls-wrap{padding:14px 18px;background:transparent;display:flex;flex-direction:column;gap:12px;position:sticky;top:64px;z-index:90}
+    .search{display:flex;gap:10px;align-items:center}
+    .search input{
+      flex:1;padding:12px 14px;border-radius:10px;border:1px solid #e6eef8;background:white;font-size:14px;
+      box-shadow:0 6px 18px rgba(2,6,23,0.04);
+    }
+    .search .cat-filter-btn{padding:10px 12px;border-radius:10px;border:none;background:var(--amazon-orange);color:var(--amazon-dark);font-weight:800;cursor:pointer}
+
+    .categories{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;background:white;border:1px solid #e6eef8;color:var(--amazon-dark);cursor:pointer;font-weight:700}
+    .chip.active{background:var(--amazon-orange);color:var(--amazon-dark)}
+
+    /* Grid */
+    .container{max-width:1180px;margin:18px auto;padding:0 14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{
+      background:white;border-radius:12px;padding:10px;border:1px solid #e6eef8;
+      box-shadow:0 10px 30px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:10px;
+      transition:transform .18s ease,box-shadow .18s ease;
+    }
+    .card:hover{transform:translateY(-6px);box-shadow:0 22px 40px rgba(2,6,23,0.08)}
+    .thumb{height:160px;border-radius:10px;overflow:hidden;background:#fafafa;display:flex;align-items:center;justify-content:center}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .card .meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .title{font-weight:800;font-size:15px}
+    .price{font-weight:900;color:var(--amazon-orange)}
+    .phone{color:var(--muted);font-size:13px}
+
+    .card .actions{display:flex;gap:8px;align-items:center}
+    .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:800}
+    .btn-wa{background:linear-gradient(90deg,#25D366,#1DA851);color:white}
+    .btn-view{background:transparent;border:1px solid rgba(15,23,36,0.06);color:var(--muted)}
+
+    /* Modal product details */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:200;padding:20px}
+    .modal.open{display:flex}
+    .modal-card{width:100%;max-width:920px;background:white;border-radius:12px;overflow:hidden}
+    .modal-body{display:flex;gap:12px;padding:14px}
+    .gallery{width:48%;display:flex;flex-direction:column;gap:8px}
+    .main-img{height:360px;border-radius:10px;overflow:hidden;background:#f8fafc}
+    .main-img img{width:100%;height:100%;object-fit:contain}
+    .thumbs{display:flex;gap:8px;overflow:auto;padding-top:6px}
+    .thumbs img{width:72px;height:56px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent}
+    .thumbs img.active{border-color:var(--amazon-orange)}
+
+    .details{flex:1;display:flex;flex-direction:column;gap:8px;padding:6px}
+    .details .h{font-weight:900;font-size:20px}
+    .details .desc{color:var(--muted);font-size:14px}
+    .buy-area{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+    .buy-instructions{background:#fff7ed;border-left:4px solid var(--amazon-orange);padding:8px;border-radius:8px;color:#92400e;font-size:14px}
+
+    /* footer */
+    footer{padding:20px 0;text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+
+    @media (max-width:900px){
+      .modal-body{flex-direction:column}
+      .gallery{width:100%}
+      .main-img{height:300px}
+      .thumbs img{width:56px;height:40px}
+      .topbar{flex-direction:column;align-items:flex-start;gap:8px}
+      .merchant-card{right:12px;top:120px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">🛒</div>
+      <div>
+        <div class="title">متجر </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.75)">تسوّق الأن </div>
+      </div>
+    </div>
+
+    <div class="top-right">
+      <div class="socials" aria-hidden="false">
+        <a href="https://web.facebook.com/abdelmalek.chop.abdelmalek.chop" title="فيسبوك">فيسبوك</a>
+        <a href="https://www.tiktok.com/@abdelmalek.shop" title="تيك توك">تيك توك</a>
+        <a href="https://www.instagram.com/abdelmalek_azz" title="إنستغرام">إنستغرام</a>
+        <a href="https://top4top.io/downloadf-3564i8zj81-apk.html" title="تحميل تطبيق المتجر">تحميل التطبيق</a>
+      </div>
+
+      <button class="merchant-btn" id="merchantToggle">بطاقة التاجر</button>
+
+      <!-- merchant popover -->
+      <div class="merchant-card" id="merchantCard" role="dialog" aria-hidden="true">
+        <div class="row">
+          <div class="merchant-avatar">🛒</div>
+          <div>
+            <div style="font-weight:800">التاجر: عبدالمالك عزوزي  </div>
+            <div style="color:var(--muted);font-size:13px">تاجر ملابس — مع توصيل  </div>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid #f1f5f9;margin:8px 0">
+        <div style="font-size:13px"><strong>الهاتف:</strong> <span style="color:var(--amazon-orange)">+213660457979</span></div>
+        <div style="font-size:13px;margin-top:6px"><strong>العنوان:</strong>بشار تيمودي</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- controls: search + categories -->
+  <div class="controls-wrap">
+    <div class="container" style="padding-top:0">
+      <div class="search">
+        <input id="searchInput" placeholder="ابحث عن منتج أو كلمة..." aria-label="بحث" />
+        <button class="cat-filter-btn" id="clearFilters">مسح  </button>
+      </div>
+
+      <div class="categories" id="categories">
+        <!-- chips injected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- product grid -->
+  <div class="container">
+    <main>
+      <div id="grid" class="grid" aria-live="polite"></div>
+      <footer>© جميع الحقوق محفوظة - متجرك | تصميم جاهز للتخصيص</footer>
+    </main>
+  </div>
+
+  <!-- Product modal -->
+  <div class="modal" id="productModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f1f5f9">
+        <div style="font-weight:900" id="modalTitle"></div>
+        <div><button class="btn btn-view" id="closeModal">إغلاق</button></div>
+      </div>
+
+      <div class="modal-body">
+        <div class="gallery">
+          <div class="main-img" id="mainImgWrap"><img id="mainImg" src="" alt=""></div>
+          <div class="thumbs" id="thumbs"></div>
+        </div>
+
+        <div class="details">
+          <div class="h" id="modalName"></div>
+          <div class="desc" id="modalDesc"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="price" id="modalPrice"></div>
+            <div class="phone small" id="modalPhone"></div>
+          </div>
+
+          <div class="buy-area">
+            <div class="buy-instructions">
+              <strong>ملاحظة مهمة:</strong> عند النقر على "اشتري عبر WhatsApp"  سيتم فتح محادثة مع البائع. يرجى تضمين اسمك ورقم هاتفك في رسالة الطلب.
+            </div>
+
+            <div style="display:flex;gap:8px">
+              <button id="buyWaBtn" class="btn btn-wa">اشتري عبر WhatsApp</button>
+              <button id="copyPhoneBtn" class="btn btn-view">نسخ رقم البائع</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* --------------------------
+   عدّل هنا إلى رقم واتساب متجرك (بدون +)
+   مثال للجزائر: "2136XXXXXXXX"
+   -------------------------- */
+const SHOP_WA_NUMBER = "+213660457979";
+
+/* عيّنة منتجات — عدّل أو أضف عناصر حسب الحاجة */
+const PRODUCTS = [
+  {
+    id: 'p1',
+    name: 'بيجامة فنة 😍😍',
+    desc: '   قماش قطني ناعم، مريح، ومثالي للنوم والاسترخاء في المنزل.ستوندار تلبسعلى حسب الاختيار تريكو كوبي ',
+    price: 2600,
+    phone: '+213660457979',
+    category: 'أزياء',
+    images: [
+      'WhatsApp Image 2025-10-08 à 10.29.58_dbf17a9cبيجامة.jpg',
+      'WhatsApp Image 2025-10-08 à 10.29.59_9b513be6بيجامة.jpg',
+      'WhatsApp Image 2025-10-08 à 10.29.59_c551301cبيجامة.jpg',
+      'WhatsApp Image 2025-10-08 à 10.29.59_84bc3251بيجامة.jpg'
+    ]
+  },
+  {
+    id: 'p2',
+    name: 'بيجامة اكارو 😍😍',
+    desc: '  قماش قطني ناعم، مريح، ومثالي للنوم والاسترخاء في المنزل.ستوندار تلبس على حسب الاختيار تريكو كوبي ',
+    price: 2600,
+    phone: '+213660457979',
+    category: 'أزياء',
+    images: [
+      'WhatsApp Image 2025-10-08 à 10.30.20_91966f3d.jpg',
+      'WhatsApp Image 2025-10-08 à 10.30.21_d7e9ac8c.jpg',
+      'WhatsApp Image 2025-10-08 à 10.30.20_21f5b37c.jpg'
+    ]
+  },
+  {
+    id: 'p3',
+    name: 'بيجامة كيمينو 3بياس 😍😍',
+    desc: 'تيسي بولار حنين ❤❤ قماش قطني ناعم، مريح، ومثالي  في المنزل.ستوندار تلبس على حسب الاختيار   ',
+    price: 3500,
+    phone: '+213660457979',
+    category: 'أزياء',
+    images: [
+      'WhatsApp Image 2025-10-08 à 10.31.36_c4afa011.jpg',
+      'WhatsApp Image 2025-10-08 à 10.31.37_82abcc0eff.jpg',
+      'WhatsApp Image 2025-10-08 à 10.31.37_396309ab.jpg',
+      'WhatsApp Image 2025-10-08 à 10.31.37_b55d9205.jpg'
+    ]
+  },
+  {
+    id: 'p4',
+    name: 'بيجامة 2بياس ❤❤',
+    desc: ' تيسي بولار حنين 🌹🌹 قماش قطني ناعم، مريح،. ',
+    price: 3000,
+    phone: '+213660457979',
+    category: 'أزياء',
+    images: [
+      'WhatsApp Image 2025-10-08 à 10.43.33_948849fc.jpg',
+      'WhatsApp Image 2025-10-08 à 10.43.33_4ac833fcVV.jpg',
+      'WhatsApp Image 2025-10-08 à 10.43.33_9481766a.jpg',
+      'WhatsApp Image 2025-10-08 à 10.43.33_350de3cb.jpg'
+    ]
+  },
+];
+
+/* ------------ وظيفة الواجهة ------------ */
+const grid = document.getElementById('grid');
+const categoriesEl = document.getElementById('categories');
+const searchInput = document.getElementById('searchInput');
+const merchantToggle = document.getElementById('merchantToggle');
+const merchantCard = document.getElementById('merchantCard');
+
+let activeCategory = null;
+let filtered = [...PRODUCTS];
+
+/* توليد قائمة الفئات */
+function getCategories(){
+  const cats = new Set(PRODUCTS.map(p=>p.category));
+  return Array.from(cats);
+}
+
+function renderCategories(){
+  const cats = getCategories();
+  categoriesEl.innerHTML = '';
+  const allChip = document.createElement('div');
+  allChip.className = 'chip' + (activeCategory===null ? ' active' : '');
+  allChip.textContent = 'الكل';
+  allChip.onclick = ()=>{ activeCategory=null; applyFilters(); renderCategories(); };
+  categoriesEl.appendChild(allChip);
+  cats.forEach(c=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (activeCategory===c ? ' active' : '');
+    chip.textContent = c;
+    chip.onclick = ()=>{ activeCategory = (activeCategory===c ? null : c); applyFilters(); renderCategories(); };
+    categoriesEl.appendChild(chip);
+  });
+}
+
+/* تطبيق البحث وفلترة الفئة */
+function applyFilters(){
+  const q = searchInput.value.trim().toLowerCase();
+  filtered = PRODUCTS.filter(p=>{
+    const inCat = activeCategory ? p.category === activeCategory : true;
+    const inQuery = q ? (p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)) : true;
+    return inCat && inQuery;
+  });
+  renderGrid();
+}
+
+/* render grid */
+function renderGrid(){
+  grid.innerHTML = '';
+  if(filtered.length===0){
+    grid.innerHTML = '<div style="padding:20px;color:var(--muted)">لا توجد منتجات تطابق بحثك.</div>';
+    return;
+  }
+  filtered.forEach(p=>{
+    const el = document.createElement('article'); el.className = 'card';
+    el.innerHTML = `
+      <div class="thumb"><img src="${p.images[0]}" alt="${escapeHtml(p.name)}"></div>
+      <div class="meta"><div class="title">${escapeHtml(p.name)}</div><div class="price">${p.price.toLocaleString()} د.ج</div></div>
+      <div class="desc">${escapeHtml(p.desc)}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="phone">${escapeHtml(p.phone)}</div>
+        <div class="actions">
+          <button class="btn btn-view" data-id="${p.id}" data-action="view">عرض</button>
+          <button class="btn btn-wa" data-id="${p.id}" data-action="buy">اشتري عبر WhatsApp</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(el);
+  });
+
+  // attach events
+  grid.querySelectorAll('button[data-action]').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const id = btn.getAttribute('data-id');
+      const act = btn.getAttribute('data-action');
+      const prod = PRODUCTS.find(x=>x.id===id);
+      if(act==='view') openProductModal(prod);
+      if(act==='buy') openWhatsAppPurchase(prod);
+    });
+  });
+}
+
+/* merchant popover */
+merchantToggle.addEventListener('click', (e)=>{
+  merchantCard.classList.toggle('open');
+  merchantCard.setAttribute('aria-hidden', !merchantCard.classList.contains('open'));
+});
+document.addEventListener('click', (e)=>{
+  if(!merchantCard.contains(e.target) && !merchantToggle.contains(e.target)){
+    merchantCard.classList.remove('open');
+    merchantCard.setAttribute('aria-hidden','true');
+  }
+});
+
+/* clear filters */
+document.getElementById('clearFilters').addEventListener('click', ()=>{
+  searchInput.value=''; activeCategory=null; applyFilters(); renderCategories();
+});
+
+/* search input */
+searchInput.addEventListener('input', ()=> applyFilters());
+
+/* ---------------- Modal product ---------------- */
+const modal = document.getElementById('productModal');
+const closeModalBtn = document.getElementById('closeModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalName = document.getElementById('modalName');
+const modalDesc = document.getElementById('modalDesc');
+const modalPrice = document.getElementById('modalPrice');
+const modalPhone = document.getElementById('modalPhone');
+const mainImg = document.getElementById('mainImg');
+const thumbs = document.getElementById('thumbs');
+const buyWaBtn = document.getElementById('buyWaBtn');
+const copyPhoneBtn = document.getElementById('copyPhoneBtn');
+
+let currentProduct = null;
+
+function openProductModal(prod){
+  currentProduct = prod;
+  modalTitle.textContent = prod.name;
+  modalName.textContent = prod.name;
+  modalDesc.textContent = prod.desc;
+  modalPrice.textContent = prod.price.toLocaleString() + ' د.ج';
+  modalPhone.textContent = prod.phone;
+  // gallery
+  mainImg.src = prod.images[0] || '';
+  thumbs.innerHTML = '';
+  prod.images.forEach((src, idx)=>{
+    const t = document.createElement('img');
+    t.src = src; t.alt = prod.name; if(idx===0) t.classList.add('active');
+    t.addEventListener('click', ()=>{ setMainImage(src); thumbs.querySelectorAll('img').forEach(im=>im.classList.remove('active')); t.classList.add('active'); });
+    thumbs.appendChild(t);
+  });
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+
+function setMainImage(src){ mainImg.src = src; }
+
+/* close modal */
+closeModalBtn.addEventListener('click', ()=>{ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+modal.addEventListener('click', (e)=>{ if(e.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } });
+
+/* buy via WhatsApp from modal */
+buyWaBtn.addEventListener('click', ()=> {
+  if(!currentProduct) return;
+  openWhatsAppPurchase(currentProduct);
+});
+
+/* copy phone */
+copyPhoneBtn.addEventListener('click', ()=>{
+  if(!currentProduct) return;
+  navigator.clipboard.writeText(currentProduct.phone).then(()=> {
+    alert('تم نسخ رقم البائع: ' + currentProduct.phone);
+  }).catch(()=> alert('تعذر النسخ'));
+});
+
+/* open whatsapp function */
+function openWhatsAppPurchase(prod){
+  // message: product, price, order id, buyer will fill name when chat starts if desired
+  const orderId = 'ORD' + Date.now().toString().slice(-6);
+  const message = `طلب%0Aرقم الطلب: ${orderId}%0Aالمنتج: ${encodeURIComponent(prod.name)}%0Aالسعر: ${prod.price} د.ج%0Aالمرسل: (ضع اسمك هنا)%0Aالهاتف: (ضع رقمك هنا)`;
+  // use shop number if set, otherwise open chat to seller phone
+  const to = (SHOP_WA_NUMBER && SHOP_WA_NUMBER !== 'YOUR_WA_NUMBER_NO_PLUS') ? SHOP_WA_NUMBER : prod.phone.replace(/[^0-9]/g,'');
+  if(!to){ alert('رقم واتساب غير مكوّن. حدّث قيمة SHOP_WA_NUMBER في الكود أو أدخل رقم المنتج.'); return; }
+  const url = `https://wa.me/${to}?text=${message}`;
+  window.open(url, '_blank');
+}
+
+/* helpers */
+function escapeHtml(unsafe){ return String(unsafe||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+/* --- init render --- */
+renderCategories();
+applyFilters();
+renderGrid();
+
+</script>
+</body>
+</html>
