@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الدردشة الفاخرة</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #3b2f2f, #2a1f1f);
+      color: #f7e6c4;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      background: rgba(50, 40, 30, 0.95);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      width: 400px;
+      height: 550px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 20px #d4af37aa;
+    }
+
+    .login {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      gap: 10px;
+      padding: 20px;
+    }
+
+    .login input {
+      width: 80%;
+      padding: 10px;
+      border: 1px solid #d4af37;
+      border-radius: 8px;
+      background-color: #2b1f1f;
+      color: #f7e6c4;
+    }
+
+    .login button {
+      background: linear-gradient(135deg, #b8860b, #ffd700);
+      color: #2a1f1f;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background-color: #2a1f1f;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      padding: 10px 15px;
+      border-radius: 12px;
+      max-width: 70%;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s;
+    }
+
+    .message.self {
+      align-self: flex-end;
+      background-color: #d4af37;
+      color: #2a1f1f;
+    }
+
+    .message.other {
+      align-self: flex-start;
+      background-color: #5a4233;
+      color: #f7e6c4;
+    }
+
+    form {
+      display: flex;
+      border-top: 1px solid #d4af37;
+      background-color: #3b2f2f;
+    }
+
+    form input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background-color: #2a1f1f;
+      color: #f7e6c4;
+      outline: none;
+    }
+
+    form button {
+      background: linear-gradient(135deg, #b8860b, #ffd700);
+      color: #2a1f1f;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="login" id="login">
+      <h2>تسجيل الدخول</h2>
+      <input type="text" id="username" placeholder="اسم المستخدم" />
+      <input type="email" id="email" placeholder="البريد الإلكتروني" />
+      <button id="loginBtn">دخول</button>
+    </div>
+
+    <div class="chat-box" id="chatBox">
+      <div class="chat-messages" id="chatMessages"></div>
+      <form id="chatForm">
+        <input id="chatInput" placeholder="اكتب رسالتك..." autocomplete="off" />
+        <button type="submit">إرسال</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const login = document.getElementById('login');
+    const chatBox = document.getElementById('chatBox');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    let username = '';
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const name = usernameInput.value.trim();
+      const email = emailInput.value.trim();
+      if (!name || !email) return alert('يرجى إدخال الاسم والبريد الإلكتروني');
+      username = name;
+      login.style.display = 'none';
+      chatBox.style.display = 'flex';
+    });
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      socket.emit('chat message', { user: username, text: msg });
+      chatInput.value = '';
+    });
+
+    socket.on('chat message', (data) => {
+      const div = document.createElement('div');
+      div.classList.add('message');
+      div.classList.add(data.user === username ? 'self' : 'other');
+      div.textContent = `${data.user}: ${data.text}`;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  </script>
+</body>
+</html>
