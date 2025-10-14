@@ -1,185 +1,669 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>الدردشة الفاخرة</title>
-  <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #3b2f2f, #2a1f1f);
-      color: #f7e6c4;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .chat-container {
-      background: rgba(50, 40, 30, 0.95);
-      border: 2px solid #d4af37;
-      border-radius: 16px;
-      width: 400px;
-      height: 550px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 0 20px #d4af37aa;
-    }
-
-    .login {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      gap: 10px;
-      padding: 20px;
-    }
-
-    .login input {
-      width: 80%;
-      padding: 10px;
-      border: 1px solid #d4af37;
-      border-radius: 8px;
-      background-color: #2b1f1f;
-      color: #f7e6c4;
-    }
-
-    .login button {
-      background: linear-gradient(135deg, #b8860b, #ffd700);
-      color: #2a1f1f;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .chat-box {
-      display: none;
-      flex: 1;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-      background-color: #2a1f1f;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .message {
-      padding: 10px 15px;
-      border-radius: 12px;
-      max-width: 70%;
-      word-wrap: break-word;
-      animation: fadeIn 0.3s;
-    }
-
-    .message.self {
-      align-self: flex-end;
-      background-color: #d4af37;
-      color: #2a1f1f;
-    }
-
-    .message.other {
-      align-self: flex-start;
-      background-color: #5a4233;
-      color: #f7e6c4;
-    }
-
-    form {
-      display: flex;
-      border-top: 1px solid #d4af37;
-      background-color: #3b2f2f;
-    }
-
-    form input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background-color: #2a1f1f;
-      color: #f7e6c4;
-      outline: none;
-    }
-
-    form button {
-      background: linear-gradient(135deg, #b8860b, #ffd700);
-      color: #2a1f1f;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>دردشة جميلة — صفحة جاهزة</title>
+<style>
+  :root{
+    --bg:#fda000;
+    --card:#7c4702;
+    --accent:#b8860b; /* بني ذهبي */
+    --accent-2:#d1a24a;
+    --muted:#0054fc;
+    --msg-me:#fff8e6;
+    --msg-you:#ffffff;
+    --radius:14px;
+    --shadow: 0 8px 30px rgba(11,15,30,.07);
+    --shadow-light: 0 4px 12px rgba(11,15,30,.05);
+    --transition: all 0.3s ease;
+    font-family: "Tajawal", "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#fbfbfc,var(--bg));color:#111}
+  .wrap{max-width:980px;margin:28px auto;padding:18px;display:grid;grid-template-columns:360px 1fr;gap:18px}
+  .panel{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  /* قائمة المستخدمين / المحادثات */
+  .sidebar{display:flex;flex-direction:column;height:720px}
+  .brand{padding:18px 16px;border-bottom:1px solid #f0f2f5;display:flex;align-items:center;gap:12px}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+  .brand h3{margin:0;font-size:16px}
+  .search{padding:12px;border-bottom:1px solid #f0f2f5}
+  .search input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #eef3f7;background:#fbfdff;transition:var(--transition)}
+  .search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(184,134,11,0.1)}
+  .conversations{padding:12px;overflow:auto;flex:1}
+  .conv{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;cursor:pointer;transition:var(--transition)}
+  .conv:hover{background:#fbf7ef;transform:translateY(-1px);box-shadow:var(--shadow-light)}
+  .conv.active{background:#fbf7ef;border-right:3px solid var(--accent)}
+  .avatar{width:46px;height:46px;border-radius:10px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-weight:700;color:#6b4b10;transition:var(--transition)}
+  .meta{flex:1}
+  .meta h4{margin:0;font-size:14px}
+  .meta p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+  /* منطقة المحادثة */
+  .chat{display:flex;flex-direction:column;height:720px}
+  .chat-header{padding:12px 16px;border-bottom:1px solid #f0f2f5;display:flex;align-items:center;gap:12px}
+  .chat-title{display:flex;flex-direction:column}
+  .chat-title h3{margin:0;font-size:16px}
+  .chat-title p{margin:2px 0 0;color:var(--muted);font-size:13px}
+  .messages{padding:18px;flex:1;overflow:auto;background:
+    linear-gradient(180deg, rgba(255,248,230,.4), transparent 40%);position:relative}
+  .messages .day-sep{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;margin:8px 0}
+  .msg{max-width:74%;margin:8px 0;padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(11,15,30,.04);display:inline-block;line-height:1.35;transition:var(--transition);animation:fadeIn 0.3s ease}
+  .msg.me{margin-left:auto;background:var(--msg-me);border:1px solid rgba(180,130,20,.08);border-top-right-radius:4px}
+  .msg.you{background:var(--msg-you);border:1px solid rgba(15,23,42,.03)}
+  .msg .time{display:block;text-align:left;color:var(--muted);font-size:11px;margin-top:6px}
+  .msg .status{display:inline-block;margin-right:4px;font-size:10px}
+  .msg .status.read{color:var(--accent)}
+  .msg .status.sent{color:var(--muted)}
+  .typing{font-size:13px;color:var(--muted);padding:6px 10px;border-radius:999px;background:#fff;border:1px dashed #f0e6cf;display:inline-block;animation:pulse 1.5s infinite}
+  .chat-input{padding:12px;border-top:1px solid #f0f2f5;display:flex;gap:10px;align-items:center}
+  .input-box{flex:1;display:flex;gap:8px;background:linear-gradient(180deg,#fff,#fff);padding:10px;border-radius:12px;border:1px solid #eef3f7;transition:var(--transition)}
+  .input-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px rgba(184,134,11,0.1)}
+  .input-box textarea{flex:1;border:0;outline:none;resize:none;font-size:15px;padding:4px;background:transparent;font-family:inherit;direction:rtl;max-height:120px}
+  .btn{background:var(--accent);border:0;color:white;padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(181,132,32,.18);transition:var(--transition)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(181,132,32,.25)}
+  .btn.secondary{background:#fff;border:1px solid #eee;color:#111;padding:9px 12px;box-shadow:none}
+  .btn.secondary:hover{background:#f9f9f9;transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,0.05)}
+  .actions{display:flex;gap:8px;align-items:center}
+  .emoji-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:6px;border-radius:8px;transition:var(--transition)}
+  .emoji-btn:hover{background:#f5f5f5}
+  .emoji-picker{position:absolute;bottom:70px;right:12px;background:white;border-radius:12px;box-shadow:var(--shadow);padding:12px;width:300px;z-index:10;display:none;grid-template-columns:repeat(8, 1fr);gap:6px}
+  .emoji-picker.show{display:grid;animation:slideUp 0.2s ease}
+  .emoji{font-size:18px;cursor:pointer;padding:4px;text-align:center;border-radius:6px;transition:var(--transition)}
+  .emoji:hover{background:#f5f5f5;transform:scale(1.2)}
+  .file-input{display:none}
+  .file-preview{display:flex;align-items:center;gap:8px;padding:8px;background:#f9f9f9;border-radius:8px;margin-bottom:8px;font-size:13px}
+  .file-preview .remove-file{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px}
+  .context-menu{position:absolute;background:white;border-radius:8px;box-shadow:var(--shadow);padding:8px 0;z-index:100;display:none;min-width:150px}
+  .context-menu.show{display:block;animation:fadeIn 0.2s ease}
+  .context-menu button{width:100%;background:none;border:none;padding:8px 16px;text-align:right;cursor:pointer;transition:var(--transition)}
+  .context-menu button:hover{background:#f5f5f5}
+  /* أنيميشن */
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  @keyframes pulse{
+    0%{opacity:0.6}
+    50%{opacity:1}
+    100%{opacity:0.6}
+  }
+  @keyframes slideUp{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  /* mobile */
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr;gap:10px;padding:12px}
+    .sidebar{display:none}
+    .chat{height:calc(100vh - 110px)}
+    .msg{max-width:88%}
+    .emoji-picker{width:280px;right:8px}
+  }
+  /* تحسينات إضافية للواجهة */
+  .online-indicator{width:10px;height:10px;border-radius:50%;background:#10b981;margin-left:8px}
+  .offline-indicator{width:10px;height:10px;border-radius:50%;background:#ef4444;margin-left:8px}
+  .typing-indicator{display:flex;align-items:center;gap:4px;margin-bottom:8px}
+  .typing-dots{display:flex;gap:2px}
+  .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typing 1.4s infinite ease-in-out}
+  .typing-dot:nth-child(1){animation-delay:-0.32s}
+  .typing-dot:nth-child(2){animation-delay:-0.16s}
+  @keyframes typing{
+    0%, 80%, 100%{transform:scale(0.8);opacity:0.5}
+    40%{transform:scale(1);opacity:1}
+  }
+</style>
 </head>
 <body>
-  <div class="chat-container">
-    <div class="login" id="login">
-      <h2>تسجيل الدخول</h2>
-      <input type="text" id="username" placeholder="اسم المستخدم" />
-      <input type="email" id="email" placeholder="البريد الإلكتروني" />
-      <button id="loginBtn">دخول</button>
+
+<div class="wrap">
+  <!-- الشريط الجانبي (قائمة محادثات) -->
+  <aside class="panel sidebar" aria-label="قائمة المحادثات">
+    <div class="brand">
+      <div class="logo">دش</div>
+      <div>
+        <h3>دردشة </h3>
+        <div style="font-size:12px;color:var(--muted)">جاهزة للاستخدام</div>
+      </div>
     </div>
 
-    <div class="chat-box" id="chatBox">
-      <div class="chat-messages" id="chatMessages"></div>
-      <form id="chatForm">
-        <input id="chatInput" placeholder="اكتب رسالتك..." autocomplete="off" />
-        <button type="submit">إرسال</button>
-      </form>
+    <div class="search">
+      <input id="searchInput" placeholder="ابحث عن محادثة أو اسم..." />
     </div>
-  </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const login = document.getElementById('login');
-    const chatBox = document.getElementById('chatBox');
-    const usernameInput = document.getElementById('username');
-    const emailInput = document.getElementById('email');
-    const chatForm = document.getElementById('chatForm');
-    const chatInput = document.getElementById('chatInput');
-    const chatMessages = document.getElementById('chatMessages');
+    <div class="conversations" id="convList" tabindex="0" aria-live="polite">
+      <!-- قوائم المحادثات تُملأ ديناميكياً -->
+    </div>
+  </aside>
 
-    let username = '';
+  <!-- لوحة المحادثة -->
+  <main class="panel chat" aria-label="منطقة المحادثة">
+    <div class="chat-header">
+      <div class="avatar" id="chatAvatar">ج</div>
+      <div class="chat-title">
+        <h3 id="chatName">المحادثة العامة</h3>
+        <p id="chatStatus"><span class="online-indicator"></span> نشط الآن</p>
+      </div>
+      <div style="margin-inline-start:auto" class="actions">
+        <button class="btn secondary" id="clearBtn" title="مسح المحادثة">مسح</button>
+        <button class="btn" id="exportBtn" title="حفظ المحادثة">تصدير</button>
+      </div>
+    </div>
 
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      const name = usernameInput.value.trim();
-      const email = emailInput.value.trim();
-      if (!name || !email) return alert('يرجى إدخال الاسم والبريد الإلكتروني');
-      username = name;
-      login.style.display = 'none';
-      chatBox.style.display = 'flex';
+    <div class="messages" id="messages" role="log" aria-live="polite">
+      <!-- الرسائل ستظهر هنا -->
+    </div>
+
+    <div class="chat-input">
+      <div class="input-box" role="textbox" aria-multiline="true">
+        <div id="filePreviews"></div>
+        <textarea id="messageInput" rows="2" placeholder="اكتب رسالة... (Enter للإرسال, Shift+Enter لسطر جديد)"></textarea>
+        <button class="emoji-btn" id="emojiBtn" title="إضافة رمز تعبيري">😊</button>
+        <input type="file" id="fileInput" class="file-input" multiple accept="image/*,.pdf,.doc,.docx,.txt">
+        <button class="btn secondary" id="attachBtn" title="إرفاق (صورة/ملف)">📎</button>
+      </div>
+      <div class="actions">
+        <button class="btn" id="sendBtn" title="إرسال">إرسال</button>
+      </div>
+    </div>
+    
+    <!-- منتقي الرموز التعبيرية -->
+    <div class="emoji-picker" id="emojiPicker"></div>
+    
+    <!-- قائمة السياق للرسائل -->
+    <div class="context-menu" id="contextMenu">
+      <button id="replyMsgBtn">الرد على الرسالة</button>
+      <button id="editMsgBtn">تعديل الرسالة</button>
+      <button id="deleteMsgBtn">حذف الرسالة</button>
+    </div>
+  </main>
+</div>
+
+<script>
+/*
+  Simple Chat Widget (Frontend only)
+  - يحفظ الرسائل في localStorage
+  - يدعم الإرسال بالـ Enter (Shift+Enter لسطر جديد)
+  - دوال جاهزة للربط بخادم عبر WebSocket أو REST
+*/
+
+// عناصر DOM
+const convListEl = document.getElementById('convList');
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const clearBtn = document.getElementById('clearBtn');
+const exportBtn = document.getElementById('exportBtn');
+const searchInput = document.getElementById('searchInput');
+const emojiBtn = document.getElementById('emojiBtn');
+const emojiPicker = document.getElementById('emojiPicker');
+const fileInput = document.getElementById('fileInput');
+const attachBtn = document.getElementById('attachBtn');
+const filePreviews = document.getElementById('filePreviews');
+const contextMenu = document.getElementById('contextMenu');
+const replyMsgBtn = document.getElementById('replyMsgBtn');
+const editMsgBtn = document.getElementById('editMsgBtn');
+const deleteMsgBtn = document.getElementById('deleteMsgBtn');
+
+// إعدادات
+const STORAGE_KEY = 'site_chat_messages_v2';
+const currentConversationId = 'global'; // قابل للتبديل لو أردت محادثات متعددة
+let selectedFiles = [];
+let selectedMessageId = null;
+let isEditing = false;
+
+// مجموعة رموز تعبيرية أساسية
+const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'];
+
+// تهيئة منتقي الرموز التعبيرية
+function initEmojiPicker() {
+  emojis.forEach(emoji => {
+    const emojiEl = document.createElement('div');
+    emojiEl.className = 'emoji';
+    emojiEl.textContent = emoji;
+    emojiEl.addEventListener('click', () => {
+      inputEl.value += emoji;
+      inputEl.focus();
     });
+    emojiPicker.appendChild(emojiEl);
+  });
+}
 
-    chatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const msg = chatInput.value.trim();
-      if (!msg) return;
-      socket.emit('chat message', { user: username, text: msg });
-      chatInput.value = '';
-    });
+// تهيئة قائمة السياق
+function initContextMenu() {
+  // إخفاء قائمة السياق عند النقر في أي مكان
+  document.addEventListener('click', () => {
+    contextMenu.classList.remove('show');
+  });
+  
+  // منع إخفاء قائمة السياق عند النقر عليها
+  contextMenu.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+  
+  // إعداد أحداث الأزرار
+  replyMsgBtn.addEventListener('click', () => {
+    if (selectedMessageId) {
+      const msg = findMessageById(selectedMessageId);
+      if (msg) {
+        inputEl.value = `رد على "${msg.text.substring(0, 30)}${msg.text.length > 30 ? '...' : ''}": `;
+        inputEl.focus();
+      }
+      contextMenu.classList.remove('show');
+    }
+  });
+  
+  editMsgBtn.addEventListener('click', () => {
+    if (selectedMessageId) {
+      const msg = findMessageById(selectedMessageId);
+      if (msg && msg.from === 'me') {
+        inputEl.value = msg.text;
+        inputEl.focus();
+        isEditing = true;
+        sendBtn.textContent = 'تحديث';
+      }
+      contextMenu.classList.remove('show');
+    }
+  });
+  
+  deleteMsgBtn.addEventListener('click', () => {
+    if (selectedMessageId && confirm('هل تريد حذف هذه الرسالة؟')) {
+      deleteMessage(selectedMessageId);
+      contextMenu.classList.remove('show');
+    }
+  });
+}
 
-    socket.on('chat message', (data) => {
-      const div = document.createElement('div');
-      div.classList.add('message');
-      div.classList.add(data.user === username ? 'self' : 'other');
-      div.textContent = `${data.user}: ${data.text}`;
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+// نموذج رسالة
+function makeMsg(text, from='me', files=[]){
+  return {
+    id: 'm_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+    from,
+    text,
+    files: [...files],
+    ts: new Date().toISOString(),
+    status: from === 'me' ? 'sent' : 'delivered'
+  };
+}
+
+// تحميل الرسائل من التخزين
+function loadMessages(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY) || '{}';
+    const all = JSON.parse(raw);
+    return all[currentConversationId] || [];
+  }catch(e){
+    console.error(e);
+    return [];
+  }
+}
+
+// حفظ الرسائل
+function saveMessages(arr){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY) || '{}';
+    const all = JSON.parse(raw);
+    all[currentConversationId] = arr;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  }catch(e){
+    console.error(e);
+  }
+}
+
+// العثور على رسالة بواسطة المعرف
+function findMessageById(id) {
+  const messages = loadMessages();
+  return messages.find(msg => msg.id === id);
+}
+
+// حذف رسالة
+function deleteMessage(id) {
+  const messages = loadMessages();
+  const updatedMessages = messages.filter(msg => msg.id !== id);
+  saveMessages(updatedMessages);
+  renderAll();
+}
+
+// عرض رسالة واحدة
+function renderMessage(msg){
+  const div = document.createElement('div');
+  div.className = 'msg ' + (msg.from === 'me' ? 'me' : 'you');
+  div.dataset.id = msg.id;
+  
+  // إضافة حدث النقر بزر الماوس الأيمن
+  div.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    selectedMessageId = msg.id;
+    contextMenu.style.top = `${e.clientY}px`;
+    contextMenu.style.left = `${e.clientX}px`;
+    contextMenu.classList.add('show');
+    
+    // إخفاء زر التعديل إذا لم تكن الرسالة خاصة بالمستخدم
+    editMsgBtn.style.display = msg.from === 'me' ? 'block' : 'none';
+  });
+  
+  // نص الرسالة
+  const content = document.createElement('div');
+  content.innerHTML = escapeHtml(msg.text).replace(/\\n/g,'<br>');
+  div.appendChild(content);
+  
+  // عرض الملفات المرفقة إن وجدت
+  if (msg.files && msg.files.length > 0) {
+    msg.files.forEach(file => {
+      const fileEl = document.createElement('div');
+      fileEl.className = 'file-preview';
+      fileEl.innerHTML = `
+        <span>📎 ${file.name}</span>
+        <button class="remove-file" onclick="downloadFile('${file.data}', '${file.name}')">📥</button>
+      `;
+      div.appendChild(fileEl);
     });
-  </script>
+  }
+  
+  // الطابع الزمني وحالة الرسالة
+  const footer = document.createElement('div');
+  footer.style.display = 'flex';
+  footer.style.justifyContent = 'space-between';
+  footer.style.alignItems = 'center';
+  footer.style.marginTop = '6px';
+  
+  const t = document.createElement('span');
+  t.className = 'time';
+  t.textContent = formatTime(msg.ts);
+  footer.appendChild(t);
+  
+  if (msg.from === 'me') {
+    const status = document.createElement('span');
+    status.className = `status ${msg.status}`;
+    status.textContent = msg.status === 'read' ? '✓✓' : '✓';
+    footer.appendChild(status);
+  }
+  
+  div.appendChild(footer);
+  return div;
+}
+
+// تحميل ملف
+function downloadFile(data, filename) {
+  const link = document.createElement('a');
+  link.href = data;
+  link.download = filename;
+  link.click();
+}
+
+// استخراج الوقت بصيغة جميلة
+function formatTime(iso){
+  const d = new Date(iso);
+  const hh = d.getHours().toString().padStart(2,'0');
+  const mm = d.getMinutes().toString().padStart(2,'0');
+  return hh + ':' + mm;
+}
+
+// ترميز محتوى HTML لمنع XSS
+function escapeHtml(unsafe) {
+  return unsafe
+       .replace(/&/g, "&amp;")
+       .replace(/</g, "&lt;")
+       .replace(/>/g, "&gt;")
+       .replace(/\"/g, "&quot;")
+       .replace(/'/g, "&#039;");
+}
+
+// إعادة تحميل كل الرسائل إلى الواجهة
+function renderAll(){
+  messagesEl.innerHTML = '';
+  const arr = loadMessages();
+  if(arr.length === 0){
+    const n = document.createElement('div');
+    n.className = 'day-sep';
+    n.textContent = 'لا توجد رسائل — ابدأ المحادثة الآن ✨';
+    messagesEl.appendChild(n);
+    return;
+  }
+  
+  // إضافة فواصل زمنية بين الرسائل
+  let lastDate = null;
+  arr.forEach(m => {
+    const msgDate = new Date(m.ts).toDateString();
+    if (lastDate !== msgDate) {
+      const dateSep = document.createElement('div');
+      dateSep.className = 'day-sep';
+      dateSep.textContent = formatDate(m.ts);
+      messagesEl.appendChild(dateSep);
+      lastDate = msgDate;
+    }
+    messagesEl.appendChild(renderMessage(m));
+  });
+  
+  // أذهب لأسفل
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+// تنسيق التاريخ
+function formatDate(iso) {
+  const d = new Date(iso);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  if (d.toDateString() === today.toDateString()) {
+    return 'اليوم';
+  } else if (d.toDateString() === yesterday.toDateString()) {
+    return 'أمس';
+  } else {
+    return d.toLocaleDateString('ar-SA');
+  }
+}
+
+// إرسال رسالة محلية
+function sendLocal(text, files = []){
+  if((!text || !text.trim()) && files.length === 0) return;
+  
+  const arr = loadMessages();
+  
+  if (isEditing && selectedMessageId) {
+    // تحديث الرسالة الحالية
+    const msgIndex = arr.findIndex(msg => msg.id === selectedMessageId);
+    if (msgIndex !== -1) {
+      arr[msgIndex].text = text.trim();
+      arr[msgIndex].ts = new Date().toISOString();
+      saveMessages(arr);
+      renderAll();
+      resetInput();
+    }
+  } else {
+    // إضافة رسالة جديدة
+    const msg = makeMsg(text.trim(),'me', files);
+    arr.push(msg);
+    saveMessages(arr);
+    renderAll();
+    resetInput();
+
+    // مثال: محاكاة رد تلقائي بسيط بعد ثانية (يمكن حذفها أو ربط API)
+    fakeReplySim(text, files);
+  }
+}
+
+// محاكاة رد (للتجربة فقط)
+function fakeReplySim(userText, userFiles){
+  // إذا أردت تعطيل المحاكاة، أعد return
+  setTimeout(()=>{
+    const reply = userFiles.length > 0 
+      ? `تم استلام ${userFiles.length} ملف(ملفات)`
+      : `تم الاستلام: "${userText.slice(0,60)}"`;
+    
+    const arr = loadMessages();
+    arr.push(makeMsg(reply,'you'));
+    saveMessages(arr);
+    renderAll();
+  }, 900);
+}
+
+// مسح المحادثة
+function clearConversation(){
+  if(!confirm('هل تريد مسح جميع الرسائل في هذه المحادثة؟')) return;
+  const raw = localStorage.getItem(STORAGE_KEY) || '{}';
+  const all = JSON.parse(raw);
+  all[currentConversationId] = [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  renderAll();
+}
+
+// تحميل قائمة محادثات تجريبية (يمكن ربطها ببيانات حقيقية)
+function loadConversationsList(){
+  const demo = [
+    {id:'global', name:'المحادثة العامة', preview:'مرحبًا — ابدأ المحادثة', unread: 0, online: true},
+    {id:'team', name:'فريق الدعم', preview:'آخر رسالة: جاهز للمساعدة', unread: 2, online: true},
+    {id:'sales', name:'المبيعات', preview:'استفسار حول المنتج', unread: 0, online: false}
+  ];
+  convListEl.innerHTML = '';
+  demo.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'conv' + (c.id === currentConversationId ? ' active' : '');
+    el.onclick = ()=> selectConversation(c.id, c.name);
+    el.innerHTML = `
+      <div class="avatar">${c.name.charAt(0)}</div>
+      <div class="meta">
+        <h4>${c.name} ${c.unread > 0 ? `<span style="background:var(--accent);color:white;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;margin-right:4px">${c.unread}</span>` : ''}</h4>
+        <p>${c.preview}</p>
+      </div>
+      <div class="${c.online ? 'online-indicator' : 'offline-indicator'}"></div>
+    `;
+    convListEl.appendChild(el);
+  });
+}
+
+// تبديل إلى محادثة (القائمة الآن تجريبية — لتوسيعها تحتاج تخزين المحادثات)
+function selectConversation(id,name){
+  // في هذه النسخة نقوم فقط بتغيير العنوان (المحادثة الفعلية مخزنة في currentConversationId الثابت)
+  document.getElementById('chatName').textContent = name || 'محادثة';
+  document.getElementById('chatAvatar').textContent = (name||'م').charAt(0);
+  
+  // تحديث القائمة النشطة
+  Array.from(convListEl.children).forEach(child => {
+    child.classList.remove('active');
+    if (child.querySelector('h4').textContent.includes(name)) {
+      child.classList.add('active');
+    }
+  });
+  
+  // لو أردت تغيير currentConversationId ديناميكيًا: إعادة ربط التخزين والتحميل
+  // (ليس مفعّل في الشيفرة البسيطة هذه)
+}
+
+// إعادة تعيين حقل الإدخال
+function resetInput() {
+  inputEl.value = '';
+  selectedFiles = [];
+  filePreviews.innerHTML = '';
+  isEditing = false;
+  selectedMessageId = null;
+  sendBtn.textContent = 'إرسال';
+  inputEl.focus();
+}
+
+// معالجة الملفات المرفقة
+function handleFileSelect(e) {
+  const files = Array.from(e.target.files);
+  selectedFiles = [...selectedFiles, ...files];
+  
+  // عرض معاينات الملفات
+  filePreviews.innerHTML = '';
+  selectedFiles.forEach((file, index) => {
+    const preview = document.createElement('div');
+    preview.className = 'file-preview';
+    preview.innerHTML = `
+      <span>📎 ${file.name}</span>
+      <button class="remove-file" onclick="removeFile(${index})">✕</button>
+    `;
+    filePreviews.appendChild(preview);
+  });
+}
+
+// إزالة ملف من القائمة
+function removeFile(index) {
+  selectedFiles.splice(index, 1);
+  handleFileSelect({target: {files: []}}); // إعادة عرض القائمة المحدثة
+}
+
+// تعريب لوحة مفاتيح: Enter للإرسال, Shift+Enter لسطر جديد
+inputEl.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendBtn.click();
+  }
+});
+
+// زر الإرسال
+sendBtn.addEventListener('click', ()=>{
+  const text = inputEl.value;
+  sendLocal(text, selectedFiles);
+});
+
+// زر المسح
+clearBtn.addEventListener('click', clearConversation);
+
+// زر التصدير (يحفظ المحادثة كملف نصي)
+exportBtn.addEventListener('click', ()=>{
+  const arr = loadMessages();
+  const content = arr.map(m => {
+    const date = new Date(m.ts).toLocaleString('ar-SA');
+    return `[${date}] ${m.from === 'me' ? 'أنا' : 'الطرف الآخر'}: ${m.text}${m.files.length > 0 ? ` [${m.files.length} ملف(ملفات)]` : ''}`;
+  }).join('\n');
+  
+  const blob = new Blob([content], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'chat_export.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// زر الرموز التعبيرية
+emojiBtn.addEventListener('click', () => {
+  emojiPicker.classList.toggle('show');
+});
+
+// زر الإرفاق
+attachBtn.addEventListener('click', () => {
+  fileInput.click();
+});
+
+// معالجة اختيار الملفات
+fileInput.addEventListener('change', handleFileSelect);
+
+// بحث بسيط في المحادثات التجريبية
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  Array.from(convListEl.children).forEach(item=>{
+    const txt = item.textContent.toLowerCase();
+    item.style.display = txt.includes(q) ? '' : 'none';
+  });
+});
+
+// إخفاء منتقي الرموز التعبيرية عند النقر خارجها
+document.addEventListener('click', (e) => {
+  if (!emojiBtn.contains(e.target) && !emojiPicker.contains(e.target)) {
+    emojiPicker.classList.remove('show');
+  }
+});
+
+// دوال جاهزة للربط بخادوم
+// sendToServer(messageObject) { ... }  // مثال: POST /api/messages
+// connectSocket() { ... }  // مثال: WebSocket لوظيفة دردشة فعلية بالزمن الحقيقي
+
+// بدء العمل
+initEmojiPicker();
+initContextMenu();
+loadConversationsList();
+renderAll();
+
+// Optional: مراقبة تغيّر الـ localStorage من تبويبات أخرى لعمل تحديث فوري
+window.addEventListener('storage', (e)=>{
+  if(e.key === STORAGE_KEY) renderAll();
+});
+</script>
 </body>
 </html>
+
