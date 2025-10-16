@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# منع محركات البحث من فهرسة مجلدات غير ضرورية (إن وجدت)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+
+# رابط خريطة الموقع
+Sitemap: https://hako199.github.io/timmoudi/sitemap.xml
