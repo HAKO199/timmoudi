@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التعليم المتوسط</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* شريط العلوي */
+        .top-bar {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .top-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-actions a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        /* شريط البحث */
+        .search-bar {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-input:focus {
+            border-color: #3498db;
+        }
+        
+        .search-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* مسار التنقل */
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .breadcrumb ul {
+            display: flex;
+            list-style: none;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .breadcrumb ul li {
+            color: #666;
+        }
+        
+        .breadcrumb ul li a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .breadcrumb ul li.separator {
+            color: #999;
+        }
+        
+        .breadcrumb ul li.current {
+            color: #333;
+            font-weight: bold;
+        }
+        
+        /* شريط الصفوف */
+        .grades-bar {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .grades-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #444;
+            border-right: 4px solid #3498db;
+            padding-right: 10px;
+        }
+        
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .grade-card {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .grade-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .grade-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .grade-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .grade-card p {
+            opacity: 0.9;
+        }
+        
+        /* المواد الدراسية */
+        .subjects-section {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+        }
+        
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .subject-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .subject-icon {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
+        }
+        
+        .math { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+        .arabic { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
+        .science { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+        .english { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+        .french { background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); }
+        .history { background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); }
+        .geography { background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%); }
+        .islamic { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); }
+        .technology { background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%); }
+        
+        .subject-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .subject-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        
+        .subject-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        /* المحتوى التعليمي */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+        
+        .content-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .content-tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .content-tab.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .content-thumbnail {
+            height: 160px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #3498db;
+        }
+        
+        .content-info {
+            padding: 20px;
+        }
+        
+        .content-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        
+        .content-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .content-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 18px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+        
+        /* أقسام مخفية */
+        .hidden {
+            display: none;
+        }
+        
+        /* التذييل */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #e2e8f0;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #4a5568;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        /* التجاوب */
+        @media (max-width: 992px) {
+            .grades-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .subjects-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .grades-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .subjects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-tabs {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .grades-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط العلوي -->
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <div class="logo">
+                <img src="https://cdn-icons-png.flaticon.com/512/3710/3710274.png" alt="شعار النظام">
+                <div class="logo-text">نظام التعليم المتوسط</div>
+            </div>
+            
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            
+            <div class="user-actions">
+                <a href="#"><i class="fas fa-user"></i> تسجيل الدخول</a>
+                <a href="#"><i class="fas fa-user-plus"></i> إنشاء حساب</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شريط البحث -->
+    <div class="search-bar">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="ابحث عن الدروس، الاختبارات، الموارد...">
+            <button class="search-btn"><i class="fas fa-search"></i> بحث</button>
+        </div>
+    </div>
+    
+    <!-- مسار التنقل -->
+    <div class="breadcrumb">
+        <ul>
+            <li><a href="#" id="home-link">الرئيسية</a></li>
+            <li class="separator">/</li>
+            <li class="current" id="current-page">جميع صفوف المتوسط</li>
+        </ul>
+    </div>
+    
+    <!-- شريط الصفوف -->
+    <div class="grades-bar" id="grades-section">
+        <div class="grades-container">
+            <h2 class="section-title">صفوف التعليم المتوسط</h2>
+            <div class="grades-grid">
+                <div class="grade-card" data-grade="الأول متوسط">
+                    <i class="fas fa-book-reader"></i>
+                    <h3>الأول متوسط</h3>
+                    <p>المرحلة التأسيسية</p>
+                </div>
+                <div class="grade-card" data-grade="الثاني متوسط">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>الثاني متوسط</h3>
+                    <p>مرحلة التطوير</p>
+                </div>
+                <div class="grade-card" data-grade="الثالث متوسط">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>الثالث متوسط</h3>
+                    <p>مرحلة التعمق</p>
+                </div>
+                <div class="grade-card" data-grade="الرابع متوسط">
+                    <i class="fas fa-award"></i>
+                    <h3>الرابع متوسط</h3>
+                    <p>مرحلة الإعداد للثانوي</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- المواد الدراسية -->
+    <div class="subjects-section hidden" id="subjects-section">
+        <h2 class="section-title">المواد الدراسية للصف <span id="selected-grade"></span></h2>
+        <div class="subjects-grid" id="subjects-grid">
+            <!-- سيتم تعبئة المواد ديناميكياً -->
+        </div>
+    </div>
+    
+    <!-- المحتوى التعليمي -->
+    <div class="content-section hidden" id="content-section">
+        <h2 class="section-title">المحتوى التعليمي لمادة <span id="selected-subject"></span></h2>
+        
+        <div class="content-tabs">
+            <div class="content-tab active">جميع المحتويات</div>
+            <div class="content-tab">الدروس النظرية</div>
+            <div class="content-tab">التمارين والتطبيقات</div>
+            <div class="content-tab">الاختبارات</div>
+            <div class="content-tab">الفيديوهات</div>
+        </div>
+        
+        <div class="content-grid" id="content-grid">
+            <!-- سيتم تعبئة المحتوى ديناميكياً -->
+        </div>
+    </div>
+    
+    <!-- التذييل -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>عن النظام</h3>
+                <ul>
+                    <li><a href="#">من نحن</a></li>
+                    <li><a href="#">رؤيتنا ورسالتنا</a></li>
+                    <li><a href="#">فريق العمل</a></li>
+                    <li><a href="#">اتصل بنا</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>المصادر التعليمية</h3>
+                <ul>
+                    <li><a href="#">جميع الدروس</a></li>
+                    <li><a href="#">الاختبارات الإلكترونية</a></li>
+                    <li><a href="#">التمارين التفاعلية</a></li>
+                    <li><a href="#">الفيديوهات التعليمية</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>الدعم والمساعدة</h3>
+                <ul>
+                    <li><a href="#">الأسئلة الشائعة</a></li>
+                    <li><a href="#">سياسة الاستخدام</a></li>
+                    <li><a href="#">سياسة الخصوصية</a></li>
+                    <li><a href="#">الدعم الفني</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>تابعنا على</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook"></i> فيسبوك</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> تويتر</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> انستغرام</a></li>
+                    <li><a href="#"><i class="fab fa-youtube"></i> يوتيوب</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 نظام التعليم المتوسط. جميع الحقوق محفوظة.
+        </div>
+    </footer>
+
+    <script>
+        // بيانات المواد لكل صف في المتوسط
+        const gradeSubjects = {
+            "الأول متوسط": [
+                { name: "الرياضيات", icon: "calculator", description: "جبر، هندسة، إحصاء" },
+                { name: "اللغة العربية", icon: "book-open", description: "نصوص، قواعد، بلاغة" },
+                { name: "العلوم الطبيعية", icon: "flask", description: "فيزياء، كيمياء، أحياء" },
+                { name: "اللغة الإنجليزية", icon: "language", description: "قواعد، محادثة، كتابة" },
+                { name: "اللغة الفرنسية", icon: "globe-europe", description: "قواعد، مفردات، محادثة" },
+                { name: "التاريخ والجغرافيا", icon: "monument", description: "تاريخ، جغرافيا، مدنيات" },
+                { name: "التربية الإسلامية", icon: "mosque", description: "قرآن، حديث، فقه" },
+                { name: "التكنولوجيا", icon: "laptop-code", description: "برمجة، تقنية، إبداع" }
+            ],
+            "الثاني متوسط": [
+                { name: "الرياضيات", icon: "calculator", description: "جبر متقدم، هندسة، إحصاء" },
+                { name: "اللغة العربية", icon: "book-open", description: "أدب، نقد، بلاغة" },
+                { name: "العلوم الطبيعية", icon: "flask", description: "تجارب، نظريات، تطبيقات" },
+                { name: "اللغة الإنجليزية", icon: "language", description: "قواعد متقدمة، كتابة" },
+                { name: "اللغة الفرنسية", icon: "globe-europe", description: "قواعد متقدمة، محادثة" },
+                { name: "التاريخ والجغرافيا", icon: "monument", description: "حضارات، دول، أنظمة" },
+                { name: "التربية الإسلامية", icon: "mosque", description: "عقيدة، سيرة، فقه" },
+                { name: "التكنولوجيا", icon: "laptop-code", description: "تطبيقات، مشاريع" }
+            ],
+            "الثالث متوسط": [
+                { name: "الرياضيات", icon: "calculator", description: "تفاضل، تكامل، هندسة" },
+                { name: "اللغة العربية", icon: "book-open", description: "نصوص، أدب، نقد" },
+                { name: "العلوم الطبيعية", icon: "flask", description: "فيزياء متقدمة، كيمياء" },
+                { name: "اللغة الإنجليزية", icon: "language", description: "أدب، كتابة، تحليل" },
+                { name: "اللغة الفرنسية", icon: "globe-europe", description: "أدب، كتابة، تحليل" },
+                { name: "التاريخ والجغرافيا", icon: "monument", description: "تاريخ عالمي، جغرافيا" },
+                { name: "التربية الإسلامية", icon: "mosque", description: "تفسير، حديث، فقه" },
+                { name: "التكنولوجيا", icon: "laptop-code", description: "برمجة متقدمة، مشاريع" }
+            ],
+            "الرابع متوسط": [
+                { name: "الرياضيات", icon: "calculator", description: "جبر، هندسة، إحصاء متقدم" },
+                { name: "اللغة العربية", icon: "book-open", description: "تحليل نصوص، بلاغة" },
+                { name: "العلوم الطبيعية", icon: "flask", description: "تجارب متقدمة، نظريات" },
+                { name: "اللغة الإنجليزية", icon: "language", description: "تحليل، كتابة، أدب" },
+                { name: "اللغة الفرنسية", icon: "globe-europe", description: "تحليل، كتابة، أدب" },
+                { name: "التاريخ والجغرافيا", icon: "monument", description: "تحليل أحداث، خرائط" },
+                { name: "التربية الإسلامية", icon: "mosque", description: "فقه معاصر، قضايا" },
+                { name: "التكنولوجيا", icon: "laptop-code", description: "مشاريع، تطبيقات عملية" }
+            ]
+        };
+
+        // بيانات الدروس والاختبارات لكل مادة
+        const subjectContent = {
+            "الرياضيات": [
+                { title: "المعادلات من الدرجة الأولى", type: "pdf", grade: "الأول متوسط" },
+                { title: "الهندسة التحليلية", type: "pdf", grade: "الثاني متوسط" },
+                { title: "التمارين التفاعلية - الجبر", type: "exercise", grade: "الثالث متوسط" },
+                { title: "اختبار الفصل الأول", type: "test", grade: "الرابع متوسط" },
+                { title: "شرح النهايات والاتصال", type: "video", grade: "الثالث متوسط" }
+            ],
+            "اللغة العربية": [
+                { title: "النصوص الأدبية وتحليلها", type: "pdf", grade: "الأول متوسط" },
+                { title: "قواعد النحو المتقدم", type: "pdf", grade: "الثاني متوسط" },
+                { title: "البلاغة والعروض", type: "pdf", grade: "الثالث متوسط" },
+                { title: "اختبار التعبير الكتابي", type: "test", grade: "الرابع متوسط" },
+                { title: "تحليل النصوص الشعرية", type: "video", grade: "الثاني متوسط" }
+            ],
+            "العلوم الطبيعية": [
+                { title: "تجارب التفاعلات الكيميائية", type: "pdf", grade: "الأول متوسط" },
+                { title: "قوانين الحركة في الفيزياء", type: "pdf", grade: "الثاني متوسط" },
+                { title: "التمارين التفاعلية - الأحياء", type: "exercise", grade: "الثالث متوسط" },
+                { title: "اختبار العمليات الحيوية", type: "test", grade: "الرابع متوسط" },
+                { title: "شرح الجدول الدوري", type: "video", grade: "الأول متوسط" }
+            ],
+            "اللغة الإنجليزية": [
+                { title: "قواعد الزمن الماضي", type: "pdf", grade: "الأول متوسط" },
+                { title: "الكتابة الإنشائية", type: "pdf", grade: "الثاني متوسط" },
+                { title: "تمارين المحادثة", type: "exercise", grade: "الثالث متوسط" },
+                { title: "اختبار الفهم القرائي", type: "test", grade: "الرابع متوسط" },
+                { title: "قواعد الصفات والظروف", type: "video", grade: "الثاني متوسط" }
+            ],
+            "اللغة الفرنسية": [
+                { title: "قواعد النحو الأساسية", type: "pdf", grade: "الأول متوسط" },
+                { title: "المفردات المتقدمة", type: "pdf", grade: "الثاني متوسط" },
+                { title: "تمارين المحادثة", type: "exercise", grade: "الثالث متوسط" },
+                { title: "اختبار التعبير الكتابي", type: "test", grade: "الرابع متوسط" },
+                { title: "شرح قواعد الصرف", type: "video", grade: "الأول متوسط" }
+            ],
+            "التاريخ والجغرافيا": [
+                { title: "الحضارات القديمة", type: "pdf", grade: "الأول متوسط" },
+                { title: "الخريطة السياسية للعالم", type: "pdf", grade: "الثاني متوسط" },
+                { title: "تمارين الخرائط", type: "exercise", grade: "الثالث متوسط" },
+                { title: "اختبار التاريخ الحديث", type: "test", grade: "الرابع متوسط" },
+                { title: "شرح العولمة وتأثيراتها", type: "video", grade: "الرابع متوسط" }
+            ],
+            "التربية الإسلامية": [
+                { title: "تفسير سورة الكهف", type: "pdf", grade: "الأول متوسط" },
+                { title: "أحاديث الأخلاق", type: "pdf", grade: "الثاني متوسط" },
+                { title: "فقه المعاملات", type: "pdf", grade: "الثالث متوسط" },
+                { title: "اختبار العقيدة", type: "test", grade: "الرابع متوسط" },
+                { title: "شرح أركان الإيمان", type: "video", grade: "الأول متوسط" }
+            ],
+            "التكنولوجيا": [
+                { title: "مقدمة في البرمجة", type: "pdf", grade: "الأول متوسط" },
+                { title: "تصميم المواقع الإلكترونية", type: "pdf", grade: "الثاني متوسط" },
+                { title: "تمارين البرمجة", type: "exercise", grade: "الثالث متوسط" },
+                { title: "مشروع التخرج", type: "project", grade: "الرابع متوسط" },
+                { title: "شرح قواعد البيانات", type: "video", grade: "الثالث متوسط" }
+            ]
+        };
+
+        // عناصر DOM
+        const gradesSection = document.getElementById('grades-section');
+        const subjectsSection = document.getElementById('subjects-section');
+        const contentSection = document.getElementById('content-section');
+        const subjectsGrid = document.getElementById('subjects-grid');
+        const contentGrid = document.getElementById('content-grid');
+        const selectedGradeElement = document.getElementById('selected-grade');
+        const selectedSubjectElement = document.getElementById('selected-subject');
+        const currentPageElement = document.getElementById('current-page');
+        const homeLink = document.getElementById('home-link');
+
+        let currentGrade = '';
+        let currentSubject = '';
+
+        // تفعيل التبويبات
+        document.querySelectorAll('.content-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.content-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                tab.classList.add('active');
+            });
+        });
+
+        // تفعيل بطاقات الصفوف
+        document.querySelectorAll('.grade-card').forEach(card => {
+            card.addEventListener('click', () => {
+                currentGrade = card.getAttribute('data-grade');
+                showSubjects(currentGrade);
+            });
+        });
+
+        // عرض المواد الدراسية للصف المحدد
+        function showSubjects(grade) {
+            selectedGradeElement.textContent = grade;
+            currentPageElement.textContent = `مواد ${grade}`;
+            
+            // إخفاء أقسام وإظهار قسم المواد
+            gradesSection.classList.add('hidden');
+            subjectsSection.classList.remove('hidden');
+            contentSection.classList.add('hidden');
+            
+            // تفريغ شبكة المواد
+            subjectsGrid.innerHTML = '';
+            
+            // إضافة المواد الخاصة بالصف
+            if (gradeSubjects[grade]) {
+                gradeSubjects[grade].forEach(subject => {
+                    const subjectCard = document.createElement('div');
+                    subjectCard.className = 'subject-card';
+                    subjectCard.setAttribute('data-subject', subject.name);
+                    
+                    // تحديد لون الخلفية بناءً على المادة
+                    let bgClass = '';
+                    switch(subject.name) {
+                        case 'الرياضيات': bgClass = 'math'; break;
+                        case 'اللغة العربية': bgClass = 'arabic'; break;
+                        case 'العلوم الطبيعية': bgClass = 'science'; break;
+                        case 'اللغة الإنجليزية': bgClass = 'english'; break;
+                        case 'اللغة الفرنسية': bgClass = 'french'; break;
+                        case 'التاريخ والجغرافيا': bgClass = 'history'; break;
+                        case 'التربية الإسلامية': bgClass = 'islamic'; break;
+                        case 'التكنولوجيا': bgClass = 'technology'; break;
+                    }
+                    
+                    subjectCard.innerHTML = `
+                        <div class="subject-icon ${bgClass}">
+                            <i class="fas fa-${subject.icon}"></i>
+                        </div>
+                        <div class="subject-info">
+                            <h3>${subject.name}</h3>
+                            <p>${subject.description}</p>
+                        </div>
+                    `;
+                    
+                    subjectCard.addEventListener('click', () => {
+                        currentSubject = subject.name;
+                        showContent(subject.name);
+                    });
+                    
+                    subjectsGrid.appendChild(subjectCard);
+                });
+            }
+        }
+
+        // عرض المحتوى التعليمي للمادة المحددة
+        function showContent(subject) {
+            selectedSubjectElement.textContent = subject;
+            currentPageElement.textContent = `محتوى ${subject} - ${currentGrade}`;
+            
+            // إخفاء أقسام وإظهار قسم المحتوى
+            subjectsSection.classList.add('hidden');
+            contentSection.classList.remove('hidden');
+            
+            // تفريغ شبكة المحتوى
+            contentGrid.innerHTML = '';
+            
+            // إضافة المحتوى الخاص بالمادة
+            if (subjectContent[subject]) {
+                subjectContent[subject].forEach(item => {
+                    const contentCard = document.createElement('div');
+                    contentCard.className = 'content-card';
+                    
+                    // تحديد الأيقونة بناءً على نوع المحتوى
+                    let icon = '';
+                    let buttonText = '';
+                    let buttonIcon = '';
+                    
+                    if (item.type === 'pdf') {
+                        icon = 'file-pdf';
+                        buttonText = 'معاينة';
+                        buttonIcon = 'eye';
+                    } else if (item.type === 'test') {
+                        icon = 'clipboard-check';
+                        buttonText = 'بدء الاختبار';
+                        buttonIcon = 'play-circle';
+                    } else if (item.type === 'video') {
+                        icon = 'video';
+                        buttonText = 'مشاهدة';
+                        buttonIcon = 'play';
+                    } else if (item.type === 'exercise') {
+                        icon = 'dumbbell';
+                        buttonText = 'حل التمارين';
+                        buttonIcon = 'pen';
+                    } else if (item.type === 'project') {
+                        icon = 'project-diagram';
+                        buttonText = 'عرض المشروع';
+                        buttonIcon = 'folder-open';
+                    }
+                    
+                    contentCard.innerHTML = `
+                        <div class="content-thumbnail">
+                            <i class="fas fa-${icon}"></i>
+                        </div>
+                        <div class="content-info">
+                            <h4>${item.title}</h4>
+                            <div class="content-meta">
+                                <span>${subject}</span>
+                                <span>${item.grade}</span>
+                            </div>
+                            <div class="content-actions">
+                                <button class="btn btn-primary"><i class="fas fa-${buttonIcon}"></i> ${buttonText}</button>
+                                <button class="btn btn-outline"><i class="fas fa-download"></i> تحميل</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    contentGrid.appendChild(contentCard);
+                });
+            }
+        }
+
+        // العودة للرئيسية
+        homeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetToHome();
+        });
+
+        // إعادة العرض للصفحة الرئيسية
+        function resetToHome() {
+            currentGrade = '';
+            currentSubject = '';
+            currentPageElement.textContent = 'جميع صفوف المتوسط';
+            
+            gradesSection.classList.remove('hidden');
+            subjectsSection.classList.add('hidden');
+            contentSection.classList.add('hidden');
+        }
+
+        // تفعيل أزرار التحميل والمعاينة
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn') || e.target.parentElement.classList.contains('btn')) {
+                const button = e.target.classList.contains('btn') ? e.target : e.target.parentElement;
+                if (button.classList.contains('btn-primary')) {
+                    alert('جاري فتح المحتوى...');
+                } else if (button.classList.contains('btn-outline')) {
+                    alert('جاري تحميل الملف...');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

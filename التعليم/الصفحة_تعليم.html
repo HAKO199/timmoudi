@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنظومة التعليمية الشاملة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* شريط العلوي */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .top-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-actions a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .user-actions a:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .welcome-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        /* شريط المراحل التعليمية */
+        .stages-section {
+            margin-top: 50px;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .stage-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+        
+        .stage-card.primary::before {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stage-card.middle::before {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        }
+        
+        .stage-card.secondary::before {
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+        }
+        
+        .stage-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .stage-card.primary:hover {
+            border-color: #667eea;
+        }
+        
+        .stage-card.middle:hover {
+            border-color: #3498db;
+        }
+        
+        .stage-card.secondary:hover {
+            border-color: #8B0000;
+        }
+        
+        .stage-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .stage-card.primary .stage-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stage-card.middle .stage-icon {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        }
+        
+        .stage-card.secondary .stage-icon {
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+        }
+        
+        .stage-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .stage-card p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .stage-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+            color: #333;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .stage-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .stage-card.primary .stage-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stage-card.middle .stage-link {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        }
+        
+        .stage-card.secondary .stage-link {
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+        }
+        
+        .stage-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* المميزات */
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin-top: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* التذييل */
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin-top: 50px;
+            padding: 30px 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            color: #667eea;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* التجاوب */
+        @media (max-width: 992px) {
+            .stages-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stage-card {
+                padding: 30px 20px;
+            }
+            
+            .features-section {
+                padding: 30px 20px;
+            }
+            
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- شريط العلوي -->
+        <div class="top-bar">
+            <div class="top-bar-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3710/3710274.png" alt="شعار النظام">
+                    <div class="logo-text">المنظومة التعليمية الشاملة</div>
+                </div>
+                
+                <div class="user-actions">
+                    <a href="#"><i class="fas fa-user"></i> تسجيل الدخول</a>
+                    <a href="#"><i class="fas fa-user-plus"></i> إنشاء حساب</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <h1 class="welcome-title">مرحباً بكم في المنظومة التعليمية الشاملة</h1>
+            <p class="welcome-subtitle">
+                منصة تعليمية متكاملة تقدم محتوى تعليمي مميز لجميع المراحل الدراسية، 
+                من الابتدائية إلى الثانوية، مع أدوات تفاعلية وموارد تعليمية غنية
+            </p>
+            
+            <!-- شريط المراحل التعليمية -->
+            <div class="stages-section">
+                <h2 class="section-title">اختر مرحلتك التعليمية</h2>
+                
+                <div class="stages-grid">
+                    <!-- المرحلة الابتدائية -->
+                    <div class="stage-card primary">
+                        <div class="stage-icon">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <h3>المرحلة الابتدائية</h3>
+                        <p>
+                            مرحلة التأسيس والتعلم الأساسي من الصف الأول إلى السادس الابتدائي. 
+                            نركز على بناء المهارات الأساسية وتنمية حب التعلم
+                        </p>
+                        <div class="stage-stats">
+                            <div class="stat">
+                                <span class="stat-number">6</span>
+                                <span class="stat-label">صفوف</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">5</span>
+                                <span class="stat-label">مواد</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">500+</span>
+                                <span class="stat-label">درس</span>
+                            </div>
+                        </div>
+                        <a href="التعليم_الابتدائي.html" class="stage-link">
+                            <i class="fas fa-arrow-left"></i>
+                            الدخول للمرحلة
+                        </a>
+                    </div>
+                    
+                    <!-- المرحلة المتوسطة -->
+                    <div class="stage-card middle">
+                        <div class="stage-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3>المرحلة المتوسطة</h3>
+                        <p>
+                            مرحلة البناء والتطوير من الأول متوسط إلى الرابع متوسط. 
+                            نعمل على تطوير المهارات وبناء الشخصية العلمية
+                        </p>
+                        <div class="stage-stats">
+                            <div class="stat">
+                                <span class="stat-number">4</span>
+                                <span class="stat-label">صفوف</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">8</span>
+                                <span class="stat-label">مواد</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">800+</span>
+                                <span class="stat-label">درس</span>
+                            </div>
+                        </div>
+                        <a href="التعليم_المتوسط.html" class="stage-link">
+                            <i class="fas fa-arrow-left"></i>
+                            الدخول للمرحلة
+                        </a>
+                    </div>
+                    
+                    <!-- المرحلة الثانوية -->
+                    <div class="stage-card secondary">
+                        <div class="stage-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>المرحلة الثانوية</h3>
+                        <p>
+                            مرحلة التخصص والتحضير للجامعة مع مسارات علمية وأدبية وتقنية. 
+                            إعداد الطلاب للمرحلة الجامعية والمستقبل المهني
+                        </p>
+                        <div class="stage-stats">
+                            <div class="stat">
+                                <span class="stat-number">3</span>
+                                <span class="stat-label">مسارات</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">12+</span>
+                                <span class="stat-label">مواد</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">1000+</span>
+                                <span class="stat-label">درس</span>
+                            </div>
+                        </div>
+                        <a href="التعليم_الثالنوي.html" class="stage-link">
+                            <i class="fas fa-arrow-left"></i>
+                            الدخول للمرحلة
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- المميزات -->
+            <div class="features-section">
+                <h2 class="section-title" style="color: #333;">مميزات المنظومة</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h4>محتوى تعليمي شامل</h4>
+                        <p>مناهج كاملة تغطي جميع المواد والصفوف الدراسية</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h4>دروس فيديو تفاعلية</h4>
+                        <p>شرح مفصل عبر فيديوهات تعليمية عالية الجودة</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <h4>اختبارات وتقييم</h4>
+                        <p>نظام تقييم متكامل لمتابعة التقدم التعليمي</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>تتبع التقدم</h4>
+                        <p>تقارير تفصيلية لمتابعة تقدم الطلاب</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- التذييل -->
+        <footer>
+            <div class="footer-content">
+                <div class="copyright">
+                    &copy; 2023 المنظومة التعليمية الشاملة. جميع الحقوق محفوظة.
+                </div>
+                
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // تأثيرات تفاعلية للبطاقات
+        document.querySelectorAll('.stage-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // تأثيرات للأزرار
+        document.querySelectorAll('.stage-link').forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                link.style.transform = 'translateY(-2px)';
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = 'translateY(0)';
+            });
+        });
+
+        // رسالة ترحيب عند الدخول للمراحل
+        document.querySelectorAll('.stage-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const stage = link.closest('.stage-card').querySelector('h3').textContent;
+                console.log(`جارٍ التوجه إلى ${stage}...`);
+                // يمكن إضافة تحليلات أو متابعة هنا
+            });
+        });
+    </script>
+</body>
+</html>

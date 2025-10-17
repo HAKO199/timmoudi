@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>لعبة صح أم خطأ — استوديو</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#071026; --card:#0f1724; --muted:#9aa7bf; --accent:#7c5cff;
+    --correct:#16a34a; --wrong:#ef4444; --timer:#ffd460; --text:#e9eef8;
+    --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; font-family:'Tajawal',sans-serif;
+    background:
+      radial-gradient(800px 300px at 10% 10%, rgba(124,92,255,0.06), transparent 6%),
+      linear-gradient(180deg,var(--bg), #04111f 70%);
+    color:var(--text); display:flex; align-items:center; justify-content:center;
+    padding:20px;
+  }
+
+  /* layout */
+  .wrap{ width:100%; max-width:980px; display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start; }
+  header{ grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:6px; }
+  h1{ margin:0; font-size:20px }
+  .top-info{ color:var(--muted); font-size:14px }
+
+  /* main card */
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+    padding:18px; border-radius:12px; box-shadow:0 20px 60px rgba(2,6,23,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+
+  .qbox{
+    padding:24px; border-radius:12px; background:linear-gradient(180deg,#071428,#07243a);
+    min-height:140px; display:flex; align-items:center; justify-content:center;
+    font-size:20px; font-weight:700; text-align:center; color:var(--text);
+    position:relative; overflow:hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  }
+
+  /* timer */
+  .timer-wrap{ display:flex; align-items:center; gap:14px; margin-bottom:12px }
+  .timer-circle{ width:92px; height:92px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background: conic-gradient(var(--timer) 0deg, rgba(255,255,255,0.04) 0deg);
+    box-shadow: 0 10px 30px rgba(255,200,60,0.04), inset 0 -8px 18px rgba(0,0,0,0.3);
+    transition: transform .12s;
+  }
+  .timer-inner{ width:74px; height:74px; border-radius:50%;
+    background: linear-gradient(180deg,#021d2d,#063547); display:flex; align-items:center; justify-content:center;
+    color:var(--timer); font-weight:900; font-size:20px; border:2px solid rgba(255,255,255,0.03); }
+  .timer-inner.warn{ color:#ff6b6b; transform:scale(1.06); box-shadow:0 8px 30px rgba(255,80,80,0.12) }
+
+  /* buttons */
+  .buttons{ display:flex; gap:12px; margin-top:14px }
+  .btn{ flex:1; padding:12px; border-radius:10px; border:0; font-weight:800; cursor:pointer; font-size:16px; }
+  .btn.true{ background: linear-gradient(90deg,var(--correct),#34d399); color:#042016; box-shadow:0 10px 30px rgba(20,200,100,0.06) }
+  .btn.false{ background: linear-gradient(90deg,var(--wrong),#fb7185); color:#380606; box-shadow:0 10px 30px rgba(240,60,60,0.06) }
+
+  .feedback{ margin-top:12px; height:30px; font-weight:800; text-align:center; font-size:18px }
+  .feedback.correct { color:var(--correct); text-shadow:0 6px 24px rgba(20,200,100,0.08) }
+  .feedback.wrong { color:var(--wrong); text-shadow:0 6px 24px rgba(240,60,60,0.08) }
+
+  /* right column - stats */
+  .side { display:flex; flex-direction:column; gap:12px; align-items:stretch; position:sticky; top:20px; }
+  .panel { background: linear-gradient(180deg,#051628,#082a43); padding:14px; border-radius:10px; border:1px solid var(--glass); box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+  .stat { font-weight:800; color:var(--muted); display:flex; justify-content:space-between; gap:8px; align-items:center; }
+  .stat strong{ color:var(--text); font-size:18px }
+
+  /* glow animations */
+  .glow-correct { animation: glowGreen 900ms ease both; }
+  .glow-wrong { animation: glowRed 900ms ease both; }
+  @keyframes glowGreen { 0%{ box-shadow:0 0 0 rgba(20,200,100,0) } 50%{ box-shadow:0 0 40px rgba(20,200,100,0.18) } 100%{ box-shadow:0 0 0 rgba(20,200,100,0) } }
+  @keyframes glowRed { 0%{ box-shadow:0 0 0 rgba(240,60,60,0) } 50%{ box-shadow:0 0 40px rgba(240,60,60,0.18) } 100%{ box-shadow:0 0 0 rgba(240,60,60,0) } }
+
+  /* start / end overlays */
+  .overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(1,6,20,0.6), rgba(0,0,0,0.7)); z-index:999; }
+  .menu { background:linear-gradient(180deg,#081428,#0b2a4a); padding:26px; border-radius:14px; width:90%; max-width:720px; text-align:center; border:1px solid rgba(255,255,255,0.04); box-shadow:0 20px 80px rgba(0,0,0,0.7) }
+  .menu h2{ margin:0 0 14px 0 }
+  .menu p{ color:var(--muted); margin-bottom:18px }
+  .bigbtn{ padding:14px 28px; font-size:18px; border-radius:12px; border:0; cursor:pointer; font-weight:800; background:linear-gradient(90deg,var(--accent),#ff9a60); color:#031; box-shadow:0 12px 40px rgba(124,92,255,0.12) }
+
+  /* responsive */
+  @media(max-width:980px){ .wrap{ grid-template-columns:1fr } .side{ position:static } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>✅ لعبة صح أم خطأ — تحدّي المعلومات</h1>
+      <div class="top-info">اختبر معلوماتك مع عدّاد زمني ومؤثرات ممتعة</div>
+    </div>
+    <div class="top-info" id="bestNow">أعلى نتيجة محفوظة: 0</div>
+  </header>
+
+  <!-- main -->
+  <div class="card" id="mainCard">
+    <div class="timer-wrap">
+      <div style="flex:1">
+        <div style="color:var(--muted); font-weight:700; margin-bottom:6px">السؤال <span id="qIndex">0</span> / <span id="qTotal">0</span></div>
+        <div id="qProgress" style="height:8px;background:rgba(255,255,255,0.03);border-radius:6px;overflow:hidden">
+          <div id="qProgressBar" style="height:100%; width:0%; background:linear-gradient(90deg,var(--accent),#ffd36b)"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;">
+        <div class="timer-circle" id="timerCircle">
+          <div class="timer-inner" id="timerInner">15</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qbox" id="qbox">اضغط ابدأ لبدء اللعبة</div>
+
+    <div class="buttons">
+      <button class="btn true" id="btnTrue">✔️ صح</button>
+      <button class="btn false" id="btnFalse">✖️ خطأ</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- side stats -->
+  <aside class="side">
+    <div class="panel">
+      <div class="stat">النقاط: <strong id="score">0</strong></div>
+      <div class="stat">الأسئلة المتبقية: <strong id="remaining">0</strong></div>
+      <div style="height:12px"></div>
+      <div style="display:flex; gap:8px;">
+        <button class="bigbtn" id="startBtn" style="flex:1">ابدأ اللعبة</button>
+        <button class="bigbtn" id="resetBest" style="flex:1; background:linear-gradient(90deg,#ff7b7b,#ffb2b2); color:#3a0202">مسح أفضل نتيجة</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="font-weight:800; color:var(--muted); margin-bottom:8px">معلومات</div>
+      <div style="color:var(--muted); line-height:1.6; font-size:14px">
+        • كل سؤال 15 ثانية<br>
+        • صحيح +10 نقاط، خطأ -5 نقاط<br>
+        • تحفظ أعلى نتيجة محلياً
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- overlays -->
+<div class="overlay" id="startOverlay">
+  <div class="menu">
+    <h2>🎉 أهلاً بك في لعبة الصح أم الخطأ!</h2>
+    <p>هل أنت جاهز؟ لديك 15 ثانية لكل سؤال. جمع أكبر عدد من النقاط — واهزم أفضل نتيجة!</p>
+    <button class="bigbtn" id="overlayStart">ابدأ الآن</button>
+  </div>
+</div>
+
+<div class="overlay" id="endOverlay" style="display:none">
+  <div class="menu" id="endMenu">
+    <h2 id="endTitle">انتهت اللعبة</h2>
+    <p id="endText" style="color:var(--muted)"></p>
+    <div style="display:flex; gap:12px; justify-content:center; margin-top:16px">
+      <button class="bigbtn" id="playAgain">العب مرة أخرى</button>
+      <button class="bigbtn" id="closeEnd" style="background:linear-gradient(90deg,#9aa4ff,#d3d6ff); color:#031">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- sounds -->
+<audio id="soundCorrect" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="soundWrong" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+<audio id="soundTimeout" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="soundEnd" src="https://actions.google.com/sounds/v1/cartoon/clang.ogg"></audio>
+
+<script>
+/* ---------------------------
+   بنك الأسئلة — 100 سؤال (صح/خطأ)
+   كل عنصر: { q: 'النص', a: true/false }
+   --------------------------- */
+const questionsBank = [
+  { q:'الشمس نجمة وليست كوكباً', a:true },
+  { q:'القمر يصدِر ضوءاً من نفسه', a:false },
+  { q:'الماء يغلي عند 100 درجة مئوية (على مستوى سطح البحر)', a:true },
+  { q:'الزرافة أقصر من القطة', a:false },
+  { q:'النحلة قادرة على صنع العسل', a:true },
+  { q:'التمساح طائر', a:false },
+  { q:'الأرض مسطحة', a:false },
+  { q:'الذهب معدن ثمين', a:true },
+  { q:'الإنسان لديه خمسة حواس أساسية', a:true },
+  { q:'الثلج يسخن فوق درجة الغليان', a:false },
+  { q:'الكتاب يستخدم للقراءة', a:true },
+  { q:'الفيل أصغر من الفأر', a:false },
+  { q:'البرق يسبق الرعد دائما', a:true },
+  { q:'الرينغتون الصوتي هو جهاز طبي', a:false },
+  { q:'الصوت ينتقل أسرع في الهواء منه في الماء', a:false },
+  { q:'المحمول يخزن بيانات', a:true },
+  { q:'البحر مالح', a:true },
+  { q:'العسل لزج وحلو المذاق', a:true },
+  { q:'السمك يتنفس الهواء كالإنسان', a:false },
+  { q:'الطيور تطير باستخدام الأجنحة', a:true },
+  { q:'الثلج نوع من الصخور', a:false },
+  { q:'اللغة العربية تكتب من اليمين إلى اليسار', a:true },
+  { q:'الأقمار الصناعية تطير في الفضاء', a:true },
+  { q:'الشجرة تنتج الأكسجين', a:true },
+  { q:'السيارة تتحرك بدون وقود أبداً', a:false },
+  { q:'القمح يستخدم لصنع الخبز', a:true },
+  { q:'الملح حلو المذاق', a:false },
+  { q:'الطيور تلد صغاراً أحياءً مثل القطط', a:false },
+  { q:'العسل يمكن أن يفسد سريعا إذا خزّن بشكل مناسب', a:false },
+  { q:'الكرة الأرضية تدور حول محورها', a:true },
+  { q:'الموز فاكهة', a:true },
+  { q:'الزجاج مرن جداً', a:false },
+  { q:'الطاقة لا تفنى ولا تستحدث من عدم', a:true },
+  { q:'الطائرة تطير باستخدام الدفع ورفع الأجنحة', a:true },
+  { q:'البحرية لا تتطلب مياه للسباحة', a:false },
+  { q:'البرتقال يحتوي على فيتامين سي', a:true },
+  { q:'الروبوتات لا تحتاج لبرمجة', a:false },
+  { q:'الأوكسجين ضروري للتنفس لدى معظم الكائنات', a:true },
+  { q:'الدب قط صغير', a:false },
+  { q:'الثلج يتكون من ماء متجمد', a:true },
+  { q:'اللغة الإنجليزية تُكتب من اليمين إلى اليسار', a:false },
+  { q:'الشوكولاتة مصنوعة من حبوب الكاكاو', a:true },
+  { q:'القمح ينمو في الماء فقط', a:false },
+  { q:'الكتاب الإلكتروني خفيف وسهل الحمل', a:true },
+  { q:'النجوم تشبه الشمس لكن في مسافات بعيدة', a:true },
+  { q:'النجوم لا تحتوي على غازات', a:false },
+  { q:'السيارة الكهربائية تعمل بالبطارية', a:true },
+  { q:'النمل حيوان كبير الحجم', a:false },
+  { q:'الفواكه مصدر للفيتامينات', a:true },
+  { q:'البركان لا يطلق حمَم عند النشاط', a:false },
+  { q:'السمك يعيش في الماء فقط', a:true },
+  { q:'الصحراء عادة تكون خصبة وممطرة', a:false },
+  { q:'الشتاء أبرد من الصيف في معظم المناطق', a:true },
+  { q:'الثلج ساخن', a:false },
+  { q:'الهواء يتكون من غازات مختلفة', a:true },
+  { q:'الذبابة كبيرة كحجم الطائر', a:false },
+  { q:'القهوة تحتوي على مادة الكافيين', a:true },
+  { q:'الإنترنت يعود إلى القرن التاسع عشر', a:false },
+  { q:'البيانو آلة موسيقية', a:true },
+  { q:'الكمبيوتر يملك قدرة على التفكير بذاته بدون برمجة', a:false },
+  { q:'الماء يتبخر عند تسخينه', a:true },
+  { q:'الذهب قابل للتآكل بسهولة بالماء', a:false },
+  { q:'النحل يساعد النباتات بالتلقيح', a:true },
+  { q:'الزيت يطفو على سطح الماء', a:true },
+  { q:'الثلوج تتساقط في الصيف عادة', a:false },
+  { q:'الكتب تحوي معلومات معرفة', a:true },
+  { q:'السمك يمشي على الأرض', a:false },
+  { q:'المدرسة مكان للتعلم', a:true },
+  { q:'الصخور تذوب عند درجة حرارة الغرفة', a:false },
+  { q:'الأسد حيوان مفترس', a:true },
+  { q:'الخضروات غير مفيدة للجسم', a:false },
+  { q:'الرياح تتحرك بسبب اختلافات الضغط الجوي', a:true },
+  { q:'الجبن حلو بطبيعته', a:false },
+  { q:'القمر يدور حول الأرض', a:true },
+  { q:'الشمبانزي من الثدييات', a:true },
+  { q:'الحديد طري كالمطاط', a:false },
+  { q:'الشمعة تضيء بوجود الاكسجين', a:true },
+  { q:'الزرافة لا تملك رقبة', a:false },
+  { q:'الأسنان تساعد على مضغ الطعام', a:true },
+  { q:'الوردة زهرة', a:true },
+  { q:'الطيور لا تبني أعشاشا', a:false }
+];
+
+/* ---------- إعداد الحالة والمتغيرات ---------- */
+let questions = []; // سيتم خلطها
+let current = 0;
+let score = 0;
+const TOTAL = questionsBank.length;
+const TIME_PER_QUESTION = 15; // ثواني
+let timeLeft = TIME_PER_QUESTION;
+let timerInterval = null;
+
+/* ---------- عناصر DOM ---------- */
+const qbox = document.getElementById('qbox');
+const btnTrue = document.getElementById('btnTrue');
+const btnFalse = document.getElementById('btnFalse');
+const feedback = document.getElementById('feedback');
+const scoreEl = document.getElementById('score');
+const remainingEl = document.getElementById('remaining');
+const qIndexEl = document.getElementById('qIndex');
+const qTotalEl = document.getElementById('qTotal');
+const timerInner = document.getElementById('timerInner');
+const timerCircle = document.getElementById('timerCircle');
+const qProgressBar = document.getElementById('qProgressBar');
+const bestNow = document.getElementById('bestNow');
+
+const startOverlay = document.getElementById('startOverlay');
+const overlayStart = document.getElementById('overlayStart');
+const startBtn = document.getElementById('startBtn');
+
+const endOverlay = document.getElementById('endOverlay');
+const endTitle = document.getElementById('endTitle');
+const endText = document.getElementById('endText');
+const playAgain = document.getElementById('playAgain');
+const closeEnd = document.getElementById('closeEnd');
+
+const resetBest = document.getElementById('resetBest');
+
+const sndCorrect = document.getElementById('soundCorrect');
+const sndWrong = document.getElementById('soundWrong');
+const sndTimeout = document.getElementById('soundTimeout');
+const sndEnd = document.getElementById('soundEnd');
+
+/* ---------- وظائف مساعدة ---------- */
+function shuffle(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
+function updateBestDisplay(){
+  const b = Number(localStorage.getItem('tf_best') || 0);
+  bestNow.textContent = 'أعلى نتيجة محفوظة: ' + b;
+}
+function saveBestIfNeeded(){
+  const best = Number(localStorage.getItem('tf_best') || 0);
+  if(score > best){
+    localStorage.setItem('tf_best', score);
+    updateBestDisplay();
+  }
+}
+
+/* ---------- عرض سؤال ---------- */
+function showQuestion(){
+  if(current >= questions.length){
+    endGame();
+    return;
+  }
+  const item = questions[current];
+  qbox.textContent = item.q;
+  feedback.textContent = '';
+  qIndexEl.textContent = current + 1;
+  qTotalEl.textContent = questions.length;
+  remainingEl.textContent = questions.length - (current + 1);
+  updateScore();
+  resetTimer();
+  updateProgressBar();
+  // remove glow classes
+  qbox.classList.remove('glow-correct','glow-wrong');
+}
+
+/* ---------- المؤقّت ---------- */
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft = TIME_PER_QUESTION;
+  updateTimerUI();
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft <= 5 && timeLeft > 0){
+      timerInner.classList.add('warn');
+      // صوت تنبيه خفيف في آخر 5 ثواني (مرات متعاقبة) — يمكن أن يكون مزعجا لذا في بعض المتصفحات يمنع
+      sndTimeout.currentTime = 0;
+      sndTimeout.play().catch(()=>{});
+    } else {
+      timerInner.classList.remove('warn');
+    }
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      onTimeout();
+    }
+  }, 1000);
+}
+function resetTimer(){ startTimer(); }
+function updateTimerUI(){
+  const pct = (TIME_PER_QUESTION - timeLeft) / TIME_PER_QUESTION;
+  const deg = Math.round(pct * 360);
+  timerCircle.style.background = `conic-gradient(var(--timer) ${deg}deg, rgba(255,255,255,0.04) ${deg}deg)`;
+  timerInner.textContent = timeLeft;
+}
+
+/* ---------- التحقق من الإجابة ---------- */
+function giveFeedback(correct){
+  if(correct){
+    feedback.textContent = '✔️ إجابة صحيحة';
+    feedback.className = 'feedback correct';
+    qbox.classList.add('glow-correct');
+    sndCorrect.currentTime = 0; sndCorrect.play().catch(()=>{});
+  } else {
+    feedback.textContent = '❌ إجابة خاطئة';
+    feedback.className = 'feedback wrong';
+    qbox.classList.add('glow-wrong');
+    sndWrong.currentTime = 0; sndWrong.play().catch(()=>{});
+  }
+}
+
+function answerSelected(val){
+  if(current >= questions.length) return;
+  clearInterval(timerInterval);
+  const correct = questions[current].a;
+  if(val === correct){
+    score += 10;
+    giveFeedback(true);
+  } else {
+    score = Math.max(0, score - 5);
+    giveFeedback(false);
+  }
+  updateScore();
+  current++;
+  // عرض التأثير ثم الانتقال للسؤال التالي
+  setTimeout(()=> showQuestion(), 900);
+}
+
+/* ---------- وقت انتهاء السؤال ---------- */
+function onTimeout(){
+  giveFeedback(false);
+  sndTimeout.currentTime = 0; sndTimeout.play().catch(()=>{});
+  // خصم نقاط على نفاد الوقت
+  score = Math.max(0, score - 5);
+  updateScore();
+  current++;
+  setTimeout(()=> showQuestion(), 900);
+}
+
+/* ---------- التقدم و النقاط ---------- */
+function updateScore(){ scoreEl.textContent = score; }
+function updateProgressBar(){
+  const progress = ((current) / questions.length) * 100;
+  qProgressBar.style.width = progress + '%';
+}
+
+/* ---------- نهاية اللعبة ---------- */
+function endGame(){
+  clearInterval(timerInterval);
+  saveBestIfNeeded();
+  sndEnd.currentTime = 0; sndEnd.play().catch(()=>{});
+  endTitle.textContent = 'انتهت اللعبة';
+  const best = Number(localStorage.getItem('tf_best') || 0);
+  endText.innerHTML = `نتيجتك: <strong style="color:var(--accent)">${score}</strong> نقطة<br>أعلى نتيجة محلية: <strong style="color:var(--accent)">${best}</strong>`;
+  endOverlay.style.display = 'flex';
+}
+
+/* ---------- بدء / إعادة التشغيل ---------- */
+function startGame(){
+  // خلط الأسئلة ومباشرة البدء
+  questions = shuffle(questionsBank);
+  current = 0;
+  score = 0;
+  updateScore();
+  updateBestDisplay();
+  startOverlay.style.display = 'none';
+  endOverlay.style.display = 'none';
+  showQuestion();
+}
+
+/* ---------- أحداث الأزرار ---------- */
+btnTrue.addEventListener('click', ()=> answerSelected(true));
+btnFalse.addEventListener('click', ()=> answerSelected(false));
+overlayStart.addEventListener('click', ()=> startGame());
+startBtn.addEventListener('click', ()=> startOverlay.style.display = 'flex'); // same overlay
+playAgain.addEventListener('click', ()=> { endOverlay.style.display='none'; startGame(); });
+closeEnd.addEventListener('click', ()=> { endOverlay.style.display='none'; startOverlay.style.display='flex'; });
+resetBest.addEventListener('click', ()=> { localStorage.removeItem('tf_best'); updateBestDisplay(); });
+
+/* ---------- تهيئة العرض ---------- */
+function init(){
+  qTotalEl.textContent = questionsBank.length;
+  qIndexEl.textContent = 0;
+  remainingEl.textContent = questionsBank.length;
+  timerInner.textContent = TIME_PER_QUESTION;
+  updateBestDisplay();
+  // افتح شاشة البداية
+  startOverlay.style.display = 'flex';
+}
+init();
+
+</script>
+</body>
+</html>
