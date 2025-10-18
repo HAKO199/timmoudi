@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://hako199.github.io/timmoudi/sitemap.xml
+google-site-verification=bPrqziazJOlylmVaIFXu2EREzMJoz39loTdzOMJacac
