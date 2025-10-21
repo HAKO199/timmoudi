@@ -1,104 +1,1014 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🎵 موقع سماع صوتيات</title>
-<style>
-  body{margin:0;font-family:'Tajawal',sans-serif;background:#0b1220;color:#fff}
-  header{background:#111;padding:14px;text-align:center;font-size:20px;font-weight:bold}
-  .audio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;padding:20px}
-  .card{background:#1a2238;border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,0.4);cursor:pointer;transition:.2s}
-  .card:hover{transform:translateY(-4px)}
-  .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-  .card h4{margin:10px 0 6px;font-size:16px}
-  /* نافذة منبثقة */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:999}
-  .modal.open{display:flex}
-  .modal-box{background:#1a2238;padding:20px;border-radius:12px;text-align:center;max-width:400px;width:90%}
-  .modal-box h3{margin-top:0}
-  .modal-box button{background:#333;border:none;color:#fff;padding:10px 14px;border-radius:6px;cursor:pointer;font-size:16px;margin:6px}
-  .modal-box button:hover{background:#555}
-  .close{position:absolute;top:20px;left:20px;font-size:20px;cursor:pointer}
-  audio{width:100%;margin-top:12px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سماع - مشغل المديح والإنشاد</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1DB954;
+            --secondary: #191414;
+            --accent: #1ED760;
+            --background: #121212;
+            --surface: #181818;
+            --text: #FFFFFF;
+            --text-secondary: #B3B3B3;
+            --card: #282828;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* التخطيط الرئيسي */
+        .app-container {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            height: 100vh;
+        }
+        
+        /* الشريط الجانبي */
+        .sidebar {
+            background: var(--secondary);
+            padding: 20px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #282828;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .nav-links {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--surface);
+            color: var(--text);
+        }
+        
+        .nav-links i {
+            font-size: 1.2rem;
+            width: 20px;
+        }
+        
+        .playlists h3 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .playlist-item:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            margin-right: 250px;
+            padding: 20px;
+            overflow-y: auto;
+            height: calc(100vh - 90px);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        /* شريط البحث المحسن */
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border-radius: 25px;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .search-bar:focus-within {
+            border-color: var(--primary);
+            background: #242424;
+        }
+        
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 8px;
+            width: 100%;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        
+        .search-bar i {
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .search-bar:focus-within i {
+            color: var(--primary);
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            background: var(--surface);
+            border-radius: 8px;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+        
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #333;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-item:hover {
+            background: var(--card);
+        }
+        
+        .search-result-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-left: 12px;
+        }
+        
+        .search-result-info {
+            flex: 1;
+        }
+        
+        .search-result-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .search-result-artist {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .search-result-type {
+            font-size: 0.7rem;
+            color: var(--primary);
+            background: rgba(29, 185, 84, 0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* شبكة الصوتيات */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .track-card {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .track-card:hover {
+            background: var(--surface);
+            transform: translateY(-5px);
+        }
+        
+        .track-card.playing {
+            background: var(--surface);
+            border: 1px solid var(--primary);
+        }
+        
+        .track-image {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+        
+        .track-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .track-artist {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .track-duration {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .track-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        /* مشغل الصوت */
+        .player {
+            background: var(--secondary);
+            border-top: 1px solid #282828;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            height: 90px;
+        }
+        
+        .now-playing {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 30%;
+        }
+        
+        .now-playing-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        
+        .track-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .track-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .like-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .like-btn:hover {
+            color: var(--primary);
+        }
+        
+        .like-btn.liked {
+            color: var(--primary);
+        }
+        
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+        
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            color: var(--text);
+        }
+        
+        .play-btn {
+            background: var(--text);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 40px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #5e5e5e;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--text-secondary);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .progress-bar:hover .progress {
+            background: var(--primary);
+        }
+        
+        .player-options {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 30%;
+            justify-content: flex-end;
+        }
+        
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-bar {
+            width: 80px;
+            height: 4px;
+            background: #5e5e5e;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .volume-level {
+            height: 100%;
+            background: var(--text-secondary);
+            border-radius: 2px;
+            width: 70%;
+        }
+        
+        /* التجاوب */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                z-index: 100;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .tracks-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .search-container {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .player {
+                flex-direction: column;
+                height: auto;
+                padding: 10px;
+            }
+            
+            .now-playing,
+            .player-controls,
+            .player-options {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+        }
+        
+        /* تأثيرات */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--card);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
 </head>
 <body>
+    <div class="app-container">
+        <!-- الشريط الجانبي -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                <h1>سماع</h1>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> الرئيسية</a></li>
+            </ul>
+        </div>
 
-<header>🎧 استمع إلى مقاطع الصوت</header>
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="header">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="ابحث في المديح والإنشاد...">
+                    </div>
+                    <div class="search-results" id="searchResults">
+                        <!-- سيتم تعبئة نتائج البحث هنا ديناميكياً -->
+                    </div>
+                </div>
+                <div class="user-menu">
+                    <div class="user-avatar">م</div>
+                </div>
+            </div>
 
-<main class="audio-grid" id="audioGrid"></main>
+            <!-- المديح والإنشاد -->
+            <section>
+                <h2 class="section-title">المديح والإنشاد</h2>
+                <div class="tracks-grid" id="tracksGrid">
+                    <!-- سيتم تعبئة المقاطع ديناميكياً -->
+                </div>
+            </section>
+        </div>
 
-<!-- النافذة المنبثقة -->
-<div id="playerModal" class="modal">
-  <div class="modal-box">
-    <span class="close" onclick="closeModal()">✖</span>
-    <h3 id="trackTitle">المقطع</h3>
-    <audio id="audio" controls></audio>
-    <div style="margin-top:10px">
-      <button onclick="prev()">⏮️ السابق</button>
-      <button onclick="togglePlay()">▶️ / ⏸️</button>
-      <button onclick="next()">⏭️ التالي</button>
+        <!-- مشغل الصوت -->
+        <div class="player">
+            <div class="now-playing">
+                <img id="nowPlayingImage" src="https://tec.med.sa/storage/2023/10/M_doctor-1.png" class="now-playing-image">
+                <div class="track-info">
+                    <h4 id="nowPlayingTitle">لم يتم اختيار مقطع</h4>
+                    <p id="nowPlayingArtist">منشد</p>
+                </div>
+                <button class="like-btn" id="likeBtn">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+
+            <div class="player-controls">
+                <div class="control-buttons">
+                    <button class="control-btn" id="shuffleBtn">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="control-btn" id="prevBtn">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="play-btn" id="playBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn" id="nextBtn">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="control-btn" id="repeatBtn">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                <div class="progress-container">
+                    <span class="time" id="currentTime">0:00</span>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <span class="time" id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="player-options">
+                <div class="volume-container">
+                    <button class="control-btn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="volume-bar">
+                        <div class="volume-level"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-  // قائمة الصوتيات
-  const tracks = [
-    {title:"مدح المرحوم الشيخ بن أحمد عبدالرحمان",image:"https://tec.med.sa/storage/2023/10/M_doctor-1.png",src:"mp3/بن_أحمد_عبدالرحمان.mp3"},
-    {title:" مدح المرحوم الشيخ بن أحمد عبدالرحمان",image:"https://tec.med.sa/storage/2023/10/M_doctor-1.png",src:'mp3/بسم_الله_بديت.mp3'},
-    {title:" مولايا صالي ",image:"https://tec.med.sa/storage/2023/10/M_doctor-1.png",src:'mp3/مولايا صلي.mp3'},
-    {title:" فرقة المديح الديني كرزاز ",image:"https://tec.med.sa/storage/2023/10/M_doctor-1.png",src:'mp3/فرقة_المديح_الديني_بكرزاز_اللهم_صل_عليك_يا_محمدMP3_70K.mp3'},                            
-    {title:"السلام عليك يا رسول الله ",image:"https://image.alkawthartv.ir//855x495/2018/11/07/636771793876538558.jpg",src:"https://dn721903.ca.archive.org/0/items/Maher_Zean_www.suratmp3.com/Assalamu_Alaika_ar.mp3"},
-    {title:"إلا صلاتي ",image:"https://i.ytimg.com/vi/9zGNL4dBigQ/maxresdefault.jpg",src:'https://ia800202.us.archive.org/29/items/hnein/Hni4.mp3'},
-    {title:" أمي ",image:"https://www.arabcont.com/magala/Img/13-2-2023-10.jpg",src:'https://dn721609.ca.archive.org/0/items/Islamic_Tape-760_uP_bY_mUSLEm/040-.mp3'},
-    {title:"أنا العبد ",image:"https://i.ytimg.com/vi/KfGrOn4qPvA/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGGUgYyhPMA8=&rs=AOn4CLBwJslJTW3NV4rnp8AMqHJD5_fptQ",src:'https://ia600209.us.archive.org/26/items/afassy_qalby_sghir/ana_l3abd.mp3'},
-  ];
+    <!-- عنصر الصوت -->
+    <audio id="audioPlayer"></audio>
 
-  let currentIndex = 0;
-  const audio = document.getElementById('audio');
-  const grid = document.getElementById('audioGrid');
-  const modal = document.getElementById('playerModal');
-  const trackTitle = document.getElementById('trackTitle');
+    <script>
+        // بيانات مقاطع المديح والإنشاد
+        const tracks = [
+            {
+                id: 1,
+                title: "مدح المرحوم الشيخ بن أحمد عبدالرحمان",
+                artist: "فرقة كرزاز",
+                image: "https://tec.med.sa/storage/2023/10/M_doctor-1.png",
+                duration: "4:32",
+                audio: "mp3/بن_أحمد_عبدالرحمان.mp3",
+                liked: false
+            },
+            {
+                id: 2,
+                title: "بسم الله بديت",
+                artist: "فرقة كرزاز",
+                image: "https://tec.med.sa/storage/2023/10/M_doctor-1.png",
+                duration: "3:45",
+                audio: "mp3/بسم_الله_بديت.mp3",
+                liked: true
+            },
+            {
+                id: 3,
+                title: "مولايا صلي",
+                artist: "فرقة كرزاز",
+                image: "https://tec.med.sa/storage/2023/10/M_doctor-1.png",
+                duration: "5:20",
+                audio: "mp3/مولايا صلي.mp3",
+                liked: false
+            },
+            {
+                id: 4,
+                title: "اللهم صل عليك يا محمد",
+                artist: "فرقة المديح الديني كرزاز",
+                image: "https://tec.med.sa/storage/2023/10/M_doctor-1.png",
+                duration: "6:15",
+                audio: "mp3/فرقة_المديح_الديني_بكرزاز_اللهم_صل_عليك_يا_محمدMP3_70K.mp3",
+                liked: false
+            },
+            {
+                id: 5,
+                title: "السلام عليك يا رسول الله",
+                artist: "ما زمع",
+                image: "https://image.alkawthartv.ir//855x495/2018/11/07/636771793876538558.jpg",
+                duration: "4:50",
+                audio: "https://dn721903.ca.archive.org/0/items/Maher_Zean_www.suratmp3.com/Assalamu_Alaika_ar.mp3",
+                liked: true
+            },
+            {
+                id: 6,
+                title: "إلا صلاتي",
+                artist: "الحنين",
+                image: "https://i.ytimg.com/vi/9zGNL4dBigQ/maxresdefault.jpg",
+                duration: "3:30",
+                audio: "https://ia800202.us.archive.org/29/items/hnein/Hni4.mp3",
+                liked: false
+            },
+            {
+                id: 7,
+                title: "أمي",
+                artist: "مجهول",
+                image: "https://www.arabcont.com/magala/Img/13-2-2023-10.jpg",
+                duration: "4:15",
+                audio: "https://dn721609.ca.archive.org/0/items/Islamic_Tape-760_uP_bY_mUSLEm/040-.mp3",
+                liked: false
+            },
+            {
+                id: 8,
+                title: "أنا العبد",
+                artist: "أصفي",
+                image: "https://i.ytimg.com/vi/KfGrOn4qPvA/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGGUgYyhPMA8=&rs=AOn4CLBwJslJTW3NV4rnp8AMqHJD5_fptQ",
+                duration: "3:55",
+                audio: "https://ia600209.us.archive.org/26/items/afassy_qalby_sghir/ana_l3abd.mp3",
+                liked: true
+            }
+        ];
 
-  // عرض البطاقات
-  tracks.forEach((t,i)=>{
-    const card = document.createElement('div');
-    card.className = "card";
-    card.innerHTML = `<img src="${t.image}"><h4>${t.title}</h4>`;
-    card.onclick = ()=> openModal(i);
-    grid.appendChild(card);
-  });
+        // العناصر
+        const audioPlayer = document.getElementById('audioPlayer');
+        const tracksGrid = document.getElementById('tracksGrid');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const likeBtn = document.getElementById('likeBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const nowPlayingImage = document.getElementById('nowPlayingImage');
+        const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+        const nowPlayingArtist = document.getElementById('nowPlayingArtist');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
 
-  function openModal(i){
-    currentIndex = i;
-    audio.src = tracks[i].src;
-    trackTitle.innerText = tracks[i].title;
-    modal.classList.add('open');
-    audio.play();
-  }
+        // حالة المشغل
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isShuffled = false;
+        let isRepeating = false;
 
-  function closeModal(){
-    modal.classList.remove('open');
-    audio.pause();
-  }
+        // عرض المقاطع
+        function displayTracks(tracksToDisplay = tracks) {
+            tracksGrid.innerHTML = '';
+            
+            tracksToDisplay.forEach((track, index) => {
+                const trackCard = document.createElement('div');
+                trackCard.className = 'track-card';
+                trackCard.innerHTML = `
+                    <img src="${track.image}" alt="${track.title}" class="track-image">
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <h3 class="track-title">${track.title}</h3>
+                    <p class="track-artist">${track.artist}</p>
+                    <p class="track-duration">${track.duration}</p>
+                `;
+                
+                trackCard.addEventListener('click', () => playTrack(index));
+                tracksGrid.appendChild(trackCard);
+            });
+        }
 
-  function togglePlay(){
-    if(audio.paused) audio.play();
-    else audio.pause();
-  }
+        // البحث في المقاطع
+        function searchTracks(query) {
+            if (!query.trim()) {
+                searchResults.classList.remove('active');
+                return;
+            }
+            
+            const filteredTracks = tracks.filter(track => 
+                track.title.toLowerCase().includes(query.toLowerCase()) || 
+                track.artist.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            displaySearchResults(filteredTracks);
+        }
 
-  function next(){
-    currentIndex = (currentIndex+1)%tracks.length;
-    openModal(currentIndex);
-  }
+        // عرض نتائج البحث
+        function displaySearchResults(results) {
+            searchResults.innerHTML = '';
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="no-results">لم يتم العثور على نتائج</div>';
+            } else {
+                results.forEach((track, index) => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = `
+                        <img src="${track.image}" alt="${track.title}" class="search-result-image">
+                        <div class="search-result-info">
+                            <div class="search-result-title">${track.title}</div>
+                            <div class="search-result-artist">${track.artist}</div>
+                        </div>
+                        <div class="search-result-type">مقطع</div>
+                    `;
+                    
+                    resultItem.addEventListener('click', () => {
+                        const trackIndex = tracks.findIndex(t => t.id === track.id);
+                        playTrack(trackIndex);
+                        searchResults.classList.remove('active');
+                        searchInput.value = '';
+                    });
+                    
+                    searchResults.appendChild(resultItem);
+                });
+            }
+            
+            searchResults.classList.add('active');
+        }
 
-  function prev(){
-    currentIndex = (currentIndex-1+tracks.length)%tracks.length;
-    openModal(currentIndex);
-  }
-</script>
+        // تشغيل مقطع
+        function playTrack(index) {
+            currentTrackIndex = index;
+            const track = tracks[currentTrackIndex];
+            
+            // تحديث واجهة المستخدم
+            nowPlayingImage.src = track.image;
+            nowPlayingTitle.textContent = track.title;
+            nowPlayingArtist.textContent = track.artist;
+            updateLikeButton();
+            
+            // تعيين مصدر الصوت
+            audioPlayer.src = track.audio;
+            audioPlayer.load();
+            
+            // تشغيل الصوت
+            playAudio();
+            
+            // تحديث البطاقات
+            updateTrackCards();
+        }
 
+        // التحكم في مستوى الصوت
+        const volumeBar = document.querySelector('.volume-bar');
+        const volumeLevel = document.querySelector('.volume-level');
+
+        volumeBar.addEventListener('click', (e) => {
+            const rect = volumeBar.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const volumePercent = x / rect.width;
+            audioPlayer.volume = volumePercent;
+            volumeLevel.style.width = `${volumePercent * 100}%`;
+        });
+
+        // تشغيل/إيقاف الصوت
+        function togglePlay() {
+            if (audioPlayer.paused) {
+                playAudio();
+            } else {
+                pauseAudio();
+            }
+        }
+
+        function playAudio() {
+            audioPlayer.play();
+            isPlaying = true;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playBtn.classList.add('pulse');
+        }
+
+        function pauseAudio() {
+            audioPlayer.pause();
+            isPlaying = false;
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.classList.remove('pulse');
+        }
+
+        // المقطع التالي
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            playTrack(currentTrackIndex);
+        }
+
+        // المقطع السابق
+        function prevTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+            playTrack(currentTrackIndex);
+        }
+
+        // تبديل الإعجاب
+        function toggleLike() {
+            tracks[currentTrackIndex].liked = !tracks[currentTrackIndex].liked;
+            updateLikeButton();
+        }
+
+        function updateLikeButton() {
+            const track = tracks[currentTrackIndex];
+            if (track.liked) {
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.innerHTML = '<i class="far fa-heart"></i>';
+                likeBtn.classList.remove('liked');
+            }
+        }
+
+        // تحديث البطاقات
+        function updateTrackCards() {
+            const trackCards = document.querySelectorAll('.track-card');
+            trackCards.forEach((card, index) => {
+                card.classList.remove('playing');
+                if (index === currentTrackIndex) {
+                    card.classList.add('playing');
+                }
+            });
+        }
+
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            
+            // تحديث الوقت
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            durationEl.textContent = formatTime(audioPlayer.duration);
+        }
+
+        // تنسيق الوقت
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // النقر على شريط التقدم
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audioPlayer.duration;
+            
+            audioPlayer.currentTime = (clickX / width) * duration;
+        }
+
+        // الأحداث
+        playBtn.addEventListener('click', togglePlay);
+        prevBtn.addEventListener('click', prevTrack);
+        nextBtn.addEventListener('click', nextTrack);
+        likeBtn.addEventListener('click', toggleLike);
+        progressBar.addEventListener('click', setProgress);
+
+        // أحداث البحث
+        searchInput.addEventListener('input', (e) => {
+            searchTracks(e.target.value);
+        });
+
+        // إغلاق نتائج البحث عند النقر خارجها
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('ended', nextTrack);
+
+        // التهيئة
+        displayTracks();
+        
+        // تشغيل أول مقطع تلقائياً
+        setTimeout(() => {
+            playTrack(0);
+        }, 1000);
+    </script>
 </body>
 </html>
