@@ -1,246 +1,661 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>موسوعة - بطاقات شبكية مع عرض PDF</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0f1724; /* dark navy */
-      --card:#0b1220;
-      --accent:#0ea5e9; /* sky blue */
-      --muted:#9ca3af;
-      --glass: rgba(255,255,255,0.03);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: 'Cairo', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,var(--bg),#071026 120%);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:24px;
-    }
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-    h1{font-size:20px;margin:0}
-    p.lead{margin:0;color:var(--muted);font-size:14px}
-
-    /* grid */
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-      gap:18px;
-      align-items:start;
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:12px;
-      border-radius:12px;
-      box-shadow: 0 6px 18px rgba(3,7,18,0.6);
-      transition:transform .18s ease,box-shadow .18s ease;
-      display:flex;flex-direction:column;gap:10px;
-    }
-    .card:hover{transform:translateY(-6px);box-shadow:0 14px 32px rgba(2,6,16,0.7)}
-    .thumb{height:150px;border-radius:10px;overflow:hidden;background:var(--glass);display:flex;align-items:center;justify-content:center}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .title{font-weight:600;font-size:15px}
-    .desc{color:var(--muted);font-size:13px;line-height:1.3}
-
-    /* buttons */
-    .row{display:flex;gap:8px;margin-top:auto}
-    .btn{border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:600}
-    .btn-pdf{background:linear-gradient(90deg,var(--accent),#0284c7);color:#022133}
-    .btn-view{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-
-    /* modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:1000;padding:20px}
-    .modal.open{display:flex}
-    .modal-content{width:100%;max-width:1000px;height:85vh;background:#021024;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04)}
-    .modal-title{font-weight:700}
-    .modal-body{flex:1;background:#091423}
-    .pdf-frame{width:100%;height:100%;border:0;display:block}
-    .modal-actions{padding:10px 14px;border-top:1px solid rgba(255,255,255,0.03);display:flex;gap:8px;justify-content:flex-start}
-    .small{font-size:13px;color:var(--muted)}
-
-    /* responsive */
-    @media (max-width:520px){
-      .thumb{height:120px}
-      .modal-content{height:92vh}
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موسوعة المعرفة - بطاقات تفاعلية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --accent-color: #ff6b6b;
+            --text-color: #333;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 20px;
+            color: white;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .search-filter {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            background: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .card:hover .card-image img {
+            transform: scale(1.1);
+        }
+        
+        .card-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            line-height: 1.4;
+        }
+        
+        .card-description {
+            color: #666;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            line-height: 1.7;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        
+        .card-date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .card-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .card-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
+        }
+        
+        .load-more {
+            text-align: center;
+            margin: 50px 0 30px;
+        }
+        
+        .load-more-btn {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .load-more-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            color: #666;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            grid-column: 1 / -1;
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-results h3 {
+            font-size: 1.5rem;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            header p {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+        
+        /* تأثيرات إضافية */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(78, 84, 200, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(78, 84, 200, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(78, 84, 200, 0);
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>موسوعة </h1>
-      <p class="lead">  - اضغط على زر (عرض PDF) لقراءة الملف داخل نافذة منبثقة</p>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> موسوعة المعرفة</h1>
+            <p>استكشف عالم المعرفة من خلال مجموعة متنوعة من المواضيع المثيرة للاهتمام</p>
+        </header>
+        
+        <div class="search-filter">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="ابحث في الموسوعة...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="science">العلوم</button>
+                <button class="filter-btn" data-filter="history">التاريخ</button>
+                <button class="filter-btn" data-filter="technology">التكنولوجيا</button>
+                <button class="filter-btn" data-filter="art">الفنون</button>
+                <button class="filter-btn" data-filter="nature">الطبيعة</button>
+            </div>
+        </div>
+        
+        <div class="cards-container" id="cards-container">
+            <!-- سيتم تعبئة البطاقات بالجافاسكريبت -->
+        </div>
+        
+        <div class="load-more">
+            <button class="load-more-btn pulse" id="load-more">
+                <i class="fas fa-plus"></i> تحميل المزيد
+            </button>
+        </div>
+        
+        <footer>
+            <p>© 2023 موسوعة المعرفة التفاعلية. جميع الحقوق محفوظة.</p>
+            <p style="margin-top: 10px;">صمم بشغف لتوسيع آفاق المعرفة</p>
+        </footer>
     </div>
-    <div class="small">عدد المواضيع: <span id="count">0</span></div>
-  </header>
 
-  <main>
-    <div class="grid" id="grid"></div>
-  </main>
+    <script>
+        // بيانات البطاقات
+        const cardsData = [
+            {
+                id: 1,
+                title: "تاريخ الجزائر",
+                description: "نظرة شاملة على تاريخ الجزائر من العصور القديمة إلى العصر الحديث، مع التركيز على الأحداث الرئيسية والشخصيات التي شكلت الأمة.",
+                image: "1-21.png",
+                category: "history",
+                date: "15 اكتوبر 2025",
+                link: "الجزائر.html"
+            },
+            {
+                id: 2,
+                title: "عجائب النظام الشمسي",
+                description: "رحلة استكشافية عبر نظامنا الشمسي تبرز الكواكب والأقمار والميزات الفلكية الرائعة التي تجعل كوننا مكانًا مذهلاً.",
+                image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "science",
+                date: "22 فبراير 2023",
+                link: "solar-system.html"
+            },
+            {
+                id: 3,
+                title: "ثورة الذكاء الاصطناعي",
+                description: "كيف يغير الذكاء الاصطناعي Industries والمجتمع، من السيارات ذاتية القيادة إلى المساعدين الافتراضيين والتشخيص الطبي.",
+                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "technology",
+                date: "10 أبريل 2023",
+                link: "ai-revolution.html"
+            },
+            {
+                id: 4,
+                title: "روائع عصر النهضة",
+                description: "استكشاف الإبداع الفني غير المسبوق خلال عصر النهضة، من لوحات دافنشي إلى منحوتات مايكل أنجلو المعمارية.",
+                image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "art",
+                date: "5 يناير 2023",
+                link: "renaissance-art.html"
+            },
+            {
+                id: 5,
+                title: "عالم تحت الماء",
+                description: "الغطس في أعماق المحيط لاكتشاف النظم البيئية البحرية المتنوعة والمخلوقات الرائعة التي تسكن عالمنا تحت الماء.",
+                image: "https://images.unsplash.com/photo-1439405326854-014607f694d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "nature",
+                date: "18 مايو 2023",
+                link: "underwater-world.html"
+            },
+            {
+                id: 6,
+                title: "أسرار الحضارة المصرية",
+                description: "كشف النقاب عن إنجازات وعجائب الحضارة المصرية القديمة، من الأهرامات إلى الهيروغليفية والمعتقدات الدينية.",
+                image: "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "history",
+                date: "30 مارس 2023",
+                link: "egyptian-civilization.html"
+            },
+            {
+                id: 7,
+                title: "ثورة الطاقة المتجددة",
+                description: "كيف تقود الطاقة الشمسية وطاقة الرياح وغيرها من مصادر الطاقة المتجددة الطريق نحو مستقبل مستدام.",
+                image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "science",
+                date: "12 فبراير 2023",
+                link: "renewable-energy.html"
+            },
+            {
+                id: 8,
+                title: "عالم الروبوتات",
+                description: "استكشاف التقدم المذهل في مجال الروبوتات، من التصنيع إلى الجراحة وحتى استكشاف الفضاء.",
+                image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "technology",
+                date: "8 أبريل 2023",
+                link: "robotics-world.html"
+            },
+            {
+                id: 9,
+                title: "جمال العمارة الإسلامية",
+                description: "تقدير الروعة المعمارية للعالم الإسلامي، من المساجد ذات القباب إلى القصور المزخرفة بأنماط هندسية معقدة.",
+                image: "https://images.unsplash.com/photo-1547981609-4b6bf67b7d12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "art",
+                date: "25 يناير 2023",
+                link: "islamic-architecture.html"
+            },
+            {
+                id: 10,
+                title: "تنوع الغابات المطيرة",
+                description: "اكتشاف النظم البيئية الغنية والتنوع البيولوجي المذهل للغابات المطيرة، رئة كوكبنا.",
+                image: "https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "nature",
+                date: "3 يونيو 2023",
+                link: "rainforest-diversity.html"
+            },
+            {
+                id: 11,
+                title: "الثورة الفرنسية",
+                description: "تحليل للأحداث والآثار المترتبة على الثورة الفرنسية، وهي فترة من التغيير الجذري أعادت تشكيل أوروبا.",
+                image: "https://images.unsplash.com/photo-1594736797933-d0d69e2e811b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "history",
+                date: "19 أبريل 2023",
+                link: "french-revolution.html"
+            },
+            {
+                id: 12,
+                title: "علم الوراثة والحمض النووي",
+                description: "فهم الأساس الجيني للحياة وكيف يشكل الحمض النووي من نحن، من الأمراض الوراثية إلى التعديل الجيني.",
+                image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "science",
+                date: "7 مايو 2023",
+                link: "genetics-dna.html"
+            }
+        ];
 
-  <!-- Modal -->
-  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title" id="modalTitle">عرض الـ PDF</div>
-          <div class="small" id="modalSub">تحميل / تكبير / إغلاق</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn btn-view" id="openNew" title="افتح في نافذة جديدة">افتح في تاب جديد</button>
-          <button class="btn btn-view" id="downloadPdf" title="تحميل الملف">تحميل</button>
-          <button class="btn" id="closeModal" style="background:transparent;color:var(--muted)">✕</button>
-        </div>
-      </div>
-      <div class="modal-body">
-        <!-- use iframe to show pdf. Some browsers show native PDF viewer -->
-        <iframe id="pdfFrame" class="pdf-frame" src="" sandbox></iframe>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-pdf" id="zoomIn">تكبير</button>
-        <button class="btn btn-view" id="zoomOut">تصغير</button>
-      </div>
-    </div>
-  </div>
+        // العناصر الرئيسية في DOM
+        const cardsContainer = document.getElementById('cards-container');
+        const searchInput = document.querySelector('.search-input');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const loadMoreButton = document.getElementById('load-more');
 
-  <script>
-    // بيانات العيّنات - غيّرها إلى روابط الصور والـPDF الخاصة بك
-    const items = [
-      {
-        id:1,
-        title: ' تاريخ الجزائر  ',
-        desc:  'مقال شامل عن تاريخ الجزائر.',
-        img: '1-21.png',
-        pdf: 'تاريخ الجزائر .pdf'
-      },
-      {
-        id:2,
-        title: 'اطباق متعددة  ',
-        desc: '  مجموعة من وصفات الطبخ المتنوعة.',
-        img: 'Tajinee-e1727700994239-560x315.jpg',
-        pdf: 'Noor-Book.com  موسوعة الطبخ الشاملة 3 .pdf'
-      },
-      {
-        id:3,
-        title: 'نصائح طبية  ',
-        desc: '  مجموعة من النصائح الطبية المفيدة.',
-        img: 'MyIC_Inline_79300.jpg',
-        pdf: 'Noor-Book.com  الموسوعة الطبية الشاملة 2 .pdf'
-      },
-    ];
+        // متغيرات الحالة
+        let currentFilter = 'all';
+        let currentSearch = '';
+        let displayedCards = 6;
 
-    const grid = document.getElementById('grid');
-    const count = document.getElementById('count');
-    const modal = document.getElementById('modal');
-    const pdfFrame = document.getElementById('pdfFrame');
-    const modalTitle = document.getElementById('modalTitle');
-    const openNew = document.getElementById('openNew');
-    const downloadPdf = document.getElementById('downloadPdf');
-    const closeModal = document.getElementById('closeModal');
-    const zoomIn = document.getElementById('zoomIn');
-    const zoomOut = document.getElementById('zoomOut');
+        // تهيئة الصفحة
+        function initializePage() {
+            renderCards();
+            setupEventListeners();
+        }
 
-    let currentPdf = null;
-    let scale = 1;
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // البحث
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value.toLowerCase();
+                renderCards();
+            });
 
-    function createCard(item){
-      const el = document.createElement('article');
-      el.className = 'card';
-      el.innerHTML = `
-        <div class="thumb"><img alt="${escapeHtml(item.title)}" src="${item.img}" loading="lazy"></div>
-        <div>
-          <div class="meta"><div class="title">${escapeHtml(item.title)}</div></div>
-          <p class="desc">${escapeHtml(item.desc)}</p>
-        </div>
-        <div class="row">
-          <button class="btn btn-pdf" data-pdf="${item.pdf}" data-title="${escapeHtml(item.title)}">عرض PDF</button>
-          <button class="btn btn-view" onclick="location.href='#'">اقرأ المقال</button>
-        </div>
-      `;
-      return el;
-    }
+            // تصفية الأزرار
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // تحديث الأزرار النشطة
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // تحديث التصفية الحالية
+                    currentFilter = filter;
+                    renderCards();
+                });
+            });
 
-    // عرض جميع البطاقات
-    function render(){
-      grid.innerHTML = '';
-      items.forEach(i=>grid.appendChild(createCard(i)));
-      count.textContent = items.length;
+            // تحميل المزيد
+            loadMoreButton.addEventListener('click', function() {
+                displayedCards += 6;
+                renderCards();
+                
+                // إخفاء زر "تحميل المزيد" إذا تم عرض جميع البطاقات
+                if (displayedCards >= getFilteredCards().length) {
+                    this.style.display = 'none';
+                }
+            });
+        }
 
-      // ربط أزرار PDF
-      document.querySelectorAll('.btn-pdf').forEach(btn=>{
-        btn.addEventListener('click', (e)=>{
-          const pdf = btn.getAttribute('data-pdf');
-          const title = btn.getAttribute('data-title') || 'عرض PDF';
-          openPdf(pdf,title);
-        })
-      });
-    }
+        // الحصول على البطاقات المصفاة
+        function getFilteredCards() {
+            return cardsData.filter(card => {
+                const matchesFilter = currentFilter === 'all' || card.category === currentFilter;
+                const matchesSearch = card.title.toLowerCase().includes(currentSearch) || 
+                                     card.description.toLowerCase().includes(currentSearch);
+                return matchesFilter && matchesSearch;
+            });
+        }
 
-    function openPdf(url,title){
-      currentPdf = url;
-      modalTitle.textContent = title;
-      pdfFrame.src = url;
-      pdfFrame.removeAttribute('style');
-      scale = 1;
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-    }
+        // عرض البطاقات
+        function renderCards() {
+            const filteredCards = getFilteredCards();
+            const cardsToShow = filteredCards.slice(0, displayedCards);
+            
+            cardsContainer.innerHTML = '';
+            
+            if (cardsToShow.length === 0) {
+                cardsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>لا توجد نتائج</h3>
+                        <p>جرب استخدام كلمات بحث مختلفة أو تغيير التصفية</p>
+                    </div>
+                `;
+                loadMoreButton.style.display = 'none';
+                return;
+            }
+            
+            cardsToShow.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.innerHTML = `
+                    <div class="card-image">
+                        <img src="${card.image}" alt="${card.title}">
+                        <div class="card-category">${getCategoryName(card.category)}</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${card.title}</h3>
+                        <p class="card-description">${card.description}</p>
+                        <div class="card-footer">
+                            <span class="card-date">${card.date}</span>
+                            <button class="card-btn" data-link="${card.link}">
+                                <i class="fas fa-external-link-alt"></i> اقرأ المزيد
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                cardsContainer.appendChild(cardElement);
+            });
+            
+            // إضافة مستمعي الأحداث لأزرار "اقرأ المزيد"
+            document.querySelectorAll('.card-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const link = this.getAttribute('data-link');
+                    openExternalPage(link);
+                });
+            });
+            
+            // إظهار أو إخفاء زر "تحميل المزيد"
+            loadMoreButton.style.display = displayedCards < filteredCards.length ? 'block' : 'none';
+        }
 
-    function close(){
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden','true');
-      // نظف src لمنع استمرار التنزيل أو الصوت
-      pdfFrame.src = '';
-      currentPdf = null;
-    }
+        // الحصول على اسم التصنيف بالعربية
+        function getCategoryName(category) {
+            const categories = {
+                'science': 'العلوم',
+                'history': 'التاريخ',
+                'technology': 'التكنولوجيا',
+                'art': 'الفنون',
+                'nature': 'الطبيعة'
+            };
+            return categories[category] || category;
+        }
 
-    // أحداث الأزرار
-    closeModal.addEventListener('click', close);
-    openNew.addEventListener('click', ()=>{ if(currentPdf) window.open(currentPdf,'_blank'); });
-    downloadPdf.addEventListener('click', ()=>{ if(currentPdf) window.open(currentPdf,'_blank'); });
+        // فتح صفحة خارجية
+        function openExternalPage(link) {
+            // في التطبيق الحقيقي، يمكن فتح الصفحة في نافذة جديدة أو نفس النافذة
+            // هنا سنقوم بمحاكاة فتح صفحة جديدة
+            alert(`سيتم فتح صفحة: ${link}\n\nفي التطبيق الحقيقي، سيتم توجيهك إلى الصفحة المطلوبة.`);
+            
+            // في التطبيق الحقيقي، يمكن استخدام:
+            // window.open(link, '_blank');
+            // أو
+            // window.location.href = link;
+        }
 
-    zoomIn.addEventListener('click', ()=>{
-      // تلاعب بسيط: نغيّر ارتفاع iframe عبر CSS transform
-      scale = Math.min(scale + 0.1, 2.5);
-      pdfFrame.style.transform = `scale(${scale})`;
-      pdfFrame.style.transformOrigin = 'top right';
-    });
-    zoomOut.addEventListener('click', ()=>{
-      scale = Math.max(scale - 0.1, 0.6);
-      pdfFrame.style.transform = `scale(${scale})`;
-      pdfFrame.style.transformOrigin = 'top right';
-    });
-
-    // أغلق بالضغط على خلفية المودال
-    modal.addEventListener('click', (e)=>{
-      if(e.target === modal) close();
-    });
-
-    // هروب لإغلاق
-    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') close(); });
-
-    // مساعدة: فرّغ النص لإدراج آمن
-    function escapeHtml(unsafe) {
-      return String(unsafe)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    // تشغيل
-    render();
-  </script>
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>
