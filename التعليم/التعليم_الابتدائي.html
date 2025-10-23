@@ -265,7 +265,7 @@
             font-size: 0.9rem;
         }
         
-        /* المحتوى التعليمي */
+        /* المحتوى التعليمي - البطاقات الشبكية */
         .content-section {
             max-width: 1200px;
             margin: 0 auto 40px;
@@ -294,70 +294,104 @@
         
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
         
-        .content-card {
+        .lesson-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .content-card:hover {
-            transform: translateY(-5px);
+        .lesson-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
         
-        .content-thumbnail {
-            height: 160px;
-            background: #f0f0f0;
+        .lesson-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .lesson-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: #667eea;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
-        .content-info {
-            padding: 15px;
+        .lesson-card:hover .lesson-overlay {
+            opacity: 1;
         }
         
-        .content-info h4 {
-            font-size: 1.1rem;
+        .lesson-info {
+            padding: 20px;
+        }
+        
+        .lesson-info h4 {
+            font-size: 1.2rem;
             margin-bottom: 10px;
-            color: #444;
+            color: #333;
+            line-height: 1.4;
         }
         
-        .content-meta {
+        .lesson-meta {
             display: flex;
             justify-content: space-between;
             color: #666;
             font-size: 0.85rem;
             margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
         
-        .content-actions {
+        .lesson-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .lesson-actions {
             display: flex;
             gap: 10px;
         }
         
         .btn {
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 0.85rem;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
             border: none;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            text-decoration: none;
+            flex: 1;
+            justify-content: center;
         }
         
         .btn-primary {
             background: #667eea;
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
         }
         
         .btn-outline {
@@ -366,9 +400,38 @@
             color: #667eea;
         }
         
+        .btn-outline:hover {
+            background: #f0f4ff;
+        }
+        
         /* أقسام مخفية */
         .hidden {
             display: none;
+        }
+        
+        /* رسالة عدم وجود محتوى */
+        .no-content {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin: 20px 0;
+        }
+        
+        .no-content i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-content h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .no-content p {
+            color: #888;
         }
         
         /* التذييل */
@@ -474,6 +537,10 @@
             .content-tab {
                 text-align: center;
             }
+            
+            .lesson-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -566,14 +633,14 @@
     
     <!-- المحتوى التعليمي -->
     <div class="content-section hidden" id="content-section">
-        <h2 class="section-title">المحتوى التعليمي لمادة <span id="selected-subject"></span></h2>
+        <h2 class="section-title">المحتوى التعليمي لمادة <span id="selected-subject"></span> - الصف <span id="content-grade"></span></h2>
         
         <div class="content-tabs">
-            <div class="content-tab active">جميع الدروس</div>
-            <div class="content-tab">الدروس التفاعلية</div>
-            <div class="content-tab">الاختبارات</div>
-            <div class="content-tab">الملفات PDF</div>
-            <div class="content-tab">الفيديوهات</div>
+            <div class="content-tab active" data-filter="all">جميع الدروس</div>
+            <div class="content-tab" data-filter="interactive">الدروس التفاعلية</div>
+            <div class="content-tab" data-filter="test">الاختبارات</div>
+            <div class="content-tab" data-filter="activity">الأنشطة</div>
+            <div class="content-tab" data-filter="video">الفيديوهات</div>
         </div>
         
         <div class="content-grid" id="content-grid">
@@ -599,7 +666,7 @@
                 <ul>
                     <li><a href="#">جميع الدروس</a></li>
                     <li><a href="#">الاختبارات الإلكترونية</a></li>
-                    <li><a href="#">الملفات PDF</a></li>
+                    <li><a href="#">الأنشطة التفاعلية</a></li>
                     <li><a href="#">الفيديوهات التعليمية</a></li>
                 </ul>
             </div>
@@ -677,37 +744,197 @@
             ]
         };
 
-        // بيانات الدروس والاختبارات لكل مادة
-        const subjectContent = {
+        // بيانات الدروس لكل مادة مع تحديد الصف المناسب لكل درس
+        const subjectLessons = {
             "الرياضيات": [
-                { title: "جدول الضرب من 1 إلى 5", type: "pdf", grade: "الصف الثاني" },
-                { title: "الكسور البسيطة", type: "pdf", grade: "الصف الثالث" },
-                { title: "اختبار الفصل الأول", type: "test", grade: "الصف الخامس" },
-                { title: "الهندسة الأساسية", type: "video", grade: "الصف الرابع" }
+                { 
+                    title: "تعلم الاعداد ", 
+                    image: "https://cdn-blog.lamsaworld.com/2020/11/shutterstock_492349744-1130x580.jpg",
+                    grade: "تحضيري",
+                    description: "تعلم الأعداد العربية بطريقة تفاعلية مع صور وفيديوهات وتمارين تطبيقية",
+                    duration: "45 دقيقة",
+                    type: "interactive",
+                    link: "الابتدائي/الاعداد.html"
+                },
+                { 
+                    title: "الكسور البسيطة", 
+                    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثالث ابتدائي",
+                    description: "تعرف على الكسور البسيطة وكيفية تمثيلها وقراءتها",
+                    duration: "60 دقيقة",
+                    type: "interactive",
+                    link: "math_lesson2.html"
+                },
+                { 
+                    title: "الهندسة الأساسية", 
+                    image: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                    grade: "الرابع ابتدائي",
+                    description: "تعلم الأشكال الهندسية الأساسية وخصائصها",
+                    duration: "50 دقيقة",
+                    type: "interactive",
+                    link: "math_lesson3.html"
+                },
+                { 
+                    title: "تمارين الجمع والطرح", 
+                    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80",
+                    grade: "الأول ابتدائي",
+                    description: "تمارين تفاعلية في الجمع والطرح للأعداد من 1 إلى 20",
+                    duration: "40 دقيقة",
+                    type: "activity",
+                    link: "math_activity1.html"
+                },
+                { 
+                    title: "اختبار الرياضيات الشهري", 
+                    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الخامس ابتدائي",
+                    description: "اختبار شامل لقياس مستوى الطالب في الرياضيات",
+                    duration: "60 دقيقة",
+                    type: "test",
+                    link: "math_test1.html"
+                }
             ],
             "اللغة العربية": [
-                { title: "الحروف العربية مع الحركات", type: "pdf", grade: "الصف الأول" },
-                { title: "قواعد النحو الأساسية", type: "pdf", grade: "الصف الثالث" },
-                { title: "اختبار الإملاء", type: "test", grade: "الصف الثاني" },
-                { title: "القراءة والتعبير", type: "video", grade: "الصف الرابع" }
+                {
+                    title:"الحروف العربية " , 
+                    image: "https://www.edarabia.com/ar/wp-content/uploads/2020/03/alphabets-alphabetical-alphabetical-order.jpg"  ,  
+                    grade: "تحضيري" , 
+                    description:"تعلم الحروف العربية مع الحركات المختلفة ونطقها الصحيح",  
+                    duration: "55 دقيقة", 
+                    type:"", 
+                    link:"الابتدائي/الحروف.html" ,  
+                    },
+                { 
+                    title: "الحروف العربية  ", 
+                    image: "https://www.edarabia.com/ar/wp-content/uploads/2020/03/alphabets-alphabetical-alphabetical-order.jpg",
+                    grade: "تحضيري ",
+                    description: "تعلم الحروف العربية مع الحركات المختلفة ونطقها الصحيح",
+                    duration: "55 دقيقة",
+                    type: "test",
+                    link: "arabic_lesson1.html"
+                },
+                { 
+                    title: "قواعد النحو الأساسية", 
+                    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=928&q=80",
+                    grade: "الثالث ابتدائي",
+                    description: "تعلم أساسيات النحو العربي من خلال أمثلة مبسطة",
+                    duration: "60 دقيقة",
+                    type: "interactive",
+                    link: "arabic_lesson2.html"
+                },
+                { 
+                    title: "القراءة والتعبير", 
+                    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1073&q=80",
+                    grade: "الرابع ابتدائي",
+                    description: "تدريبات على القراءة الصحيحة والتعبير عن الأفكار",
+                    duration: "45 دقيقة",
+                    type: "interactive",
+                    link: "arabic_lesson3.html"
+                },
+                { 
+                    title: "قصص الأطفال المصورة", 
+                    image: "https://images.unsplash.com/photo-1488998527040-85054a85150e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثاني ابتدائي",
+                    description: "مجموعة من القصص المصورة لتنمية مهارات القراءة",
+                    duration: "30 دقيقة",
+                    type: "activity",
+                    link: "arabic_activity1.html"
+                },
+                { 
+                    title: "اختبار الإملاء", 
+                    image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الخامس ابتدائي",
+                    description: "اختبار شامل في الإملاء العربي",
+                    duration: "40 دقيقة",
+                    type: "test",
+                    link: "arabic_test1.html"
+                }
             ],
             "التربية الإسلامية": [
-                { title: "سورة الفاتحة مع التفسير", type: "pdf", grade: "الصف الثالث" },
-                { title: "أركان الإسلام", type: "pdf", grade: "الصف الثاني" },
-                { title: "اختبار الفقه", type: "test", grade: "الصف الرابع" },
-                { title: "قصة النبي محمد", type: "video", grade: "الصف الخامس" }
+                { 
+                    title: "سورة الفاتحة مع التفسير", 
+                    image: "https://media.elbalad.news/2024/10/large/917/4/247.jpg",
+                    grade: "تحضيري",
+                    description: "تعلم سورة الفاتحة مع تفسير مبسط لمعانيها",
+                    duration: "40 دقيقة",
+                    type: "interactive",
+                    link: "الابتدائي/الفاتحة.html"
+                },
+                { 
+                    title: "أركان الإسلام", 
+                    image: "https://images.unsplash.com/photo-1560421683-258635f7a58a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&q=80",
+                    grade: "الثاني ابتدائي",
+                    description: "تعرف على أركان الإسلام الخمسة بأسلوب مبسط وشيق",
+                    duration: "50 دقيقة",
+                    type: "interactive",
+                    link: "islamic_lesson2.html"
+                },
+                { 
+                    title: "قصة النبي محمد", 
+                    image: "https://images.unsplash.com/photo-1542385157-aa1e6be5b4c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الخامس ابتدائي",
+                    description: "قصة حياة النبي محمد صلى الله عليه وسلم بأسلوب قصصي شيق",
+                    duration: "60 دقيقة",
+                    type: "video",
+                    link: "islamic_lesson3.html"
+                }
             ],
             "التربية المدنية": [
-                { title: "القيم الوطنية", type: "pdf", grade: "الصف الأول" },
-                { title: "الواجبات والحقوق", type: "pdf", grade: "الصف الثالث" },
-                { title: "اختبار القيم", type: "test", grade: "الصف الرابع" },
-                { title: "الانتماء للوطن", type: "video", grade: "الصف الخامس" }
+                { 
+                    title: "القيم الوطنية", 
+                    image: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+                    grade: "الأول ابتدائي",
+                    description: "تعلم القيم الوطنية وأهمية الانتماء للوطن",
+                    duration: "45 دقيقة",
+                    type: "interactive",
+                    link: "civic_lesson1.html"
+                },
+                { 
+                    title: "الواجبات والحقوق", 
+                    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثالث ابتدائي",
+                    description: "تعرف على واجباتك وحقوقك في المجتمع",
+                    duration: "50 دقيقة",
+                    type: "interactive",
+                    link: "civic_lesson2.html"
+                },
+                { 
+                    title: "الانتماء للوطن", 
+                    image: "https://images.unsplash.com/photo-1527838832700-5059252407fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=998&q=80",
+                    grade: "الخامس ابتدائي",
+                    description: "تعلم معنى الانتماء للوطن وكيفية التعبير عنه",
+                    duration: "55 دقيقة",
+                    type: "interactive",
+                    link: "civic_lesson3.html"
+                }
             ],
             "اللغة الإنجليزية": [
-                { title: "الضمائر في اللغة الإنجليزية", type: "pdf", grade: "الصف الرابع" },
-                { title: "المفردات الأساسية", type: "pdf", grade: "الصف الثاني" },
-                { title: "اختبار القواعد", type: "test", grade: "الصف الخامس" },
-                { title: "المحادثة اليومية", type: "video", grade: "الصف الثالث" }
+                { 
+                    title: "الضمائر في اللغة الإنجليزية", 
+                    image: "https://images.unsplash.com/photo-1529338296731-c4280a44fc48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الرابع ابتدائي",
+                    description: "تعلم الضمائر الشخصية في اللغة الإنجليزية واستخداماتها",
+                    duration: "40 دقيقة",
+                    type: "interactive",
+                    link: "english_lesson1.html"
+                },
+                { 
+                    title: "المفردات الأساسية", 
+                    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثاني ابتدائي",
+                    description: "تعلم المفردات الإنجليزية الأساسية في الحياة اليومية",
+                    duration: "45 دقيقة",
+                    type: "interactive",
+                    link: "english_lesson2.html"
+                },
+                { 
+                    title: "المحادثة اليومية", 
+                    image: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+                    grade: "الثالث ابتدائي",
+                    description: "جمل وعبارات للمحادثة اليومية باللغة الإنجليزية",
+                    duration: "50 دقيقة",
+                    type: "video",
+                    link: "english_lesson3.html"
+                }
             ]
         };
 
@@ -719,11 +946,13 @@
         const contentGrid = document.getElementById('content-grid');
         const selectedGradeElement = document.getElementById('selected-grade');
         const selectedSubjectElement = document.getElementById('selected-subject');
+        const contentGradeElement = document.getElementById('content-grade');
         const currentPageElement = document.getElementById('current-page');
         const homeLink = document.getElementById('home-link');
 
         let currentGrade = '';
         let currentSubject = '';
+        let currentFilter = 'all';
 
         // تفعيل التبويبات
         document.querySelectorAll('.content-tab').forEach(tab => {
@@ -732,6 +961,9 @@
                     t.classList.remove('active');
                 });
                 tab.classList.add('active');
+                
+                currentFilter = tab.getAttribute('data-filter');
+                filterContent(currentFilter);
             });
         });
 
@@ -796,6 +1028,7 @@
         // عرض المحتوى التعليمي للمادة المحددة
         function showContent(subject) {
             selectedSubjectElement.textContent = subject;
+            contentGradeElement.textContent = currentGrade;
             currentPageElement.textContent = `محتوى ${subject} - ${currentGrade}`;
             
             // إخفاء أقسام وإظهار قسم المحتوى
@@ -805,50 +1038,77 @@
             // تفريغ شبكة المحتوى
             contentGrid.innerHTML = '';
             
-            // إضافة المحتوى الخاص بالمادة
-            if (subjectContent[subject]) {
-                subjectContent[subject].forEach(item => {
-                    const contentCard = document.createElement('div');
-                    contentCard.className = 'content-card';
-                    
-                    // تحديد الأيقونة بناءً على نوع المحتوى
-                    let icon = '';
-                    let buttonText = '';
-                    let buttonIcon = '';
-                    
-                    if (item.type === 'pdf') {
-                        icon = 'file-pdf';
-                        buttonText = 'معاينة';
-                        buttonIcon = 'eye';
-                    } else if (item.type === 'test') {
-                        icon = 'clipboard-check';
-                        buttonText = 'بدء الاختبار';
-                        buttonIcon = 'play-circle';
-                    } else if (item.type === 'video') {
-                        icon = 'video';
-                        buttonText = 'مشاهدة';
-                        buttonIcon = 'play';
-                    }
-                    
-                    contentCard.innerHTML = `
-                        <div class="content-thumbnail">
-                            <i class="fas fa-${icon}"></i>
-                        </div>
-                        <div class="content-info">
-                            <h4>${item.title}</h4>
-                            <div class="content-meta">
-                                <span>${subject}</span>
-                                <span>${item.grade}</span>
+            // إضافة المحتوى الخاص بالمادة والصف المحدد
+            if (subjectLessons[subject]) {
+                const filteredLessons = subjectLessons[subject].filter(lesson => lesson.grade === currentGrade);
+                
+                if (filteredLessons.length > 0) {
+                    filteredLessons.forEach(lesson => {
+                        // تطبيق الفلترة حسب النوع إذا كان محدداً
+                        if (currentFilter !== 'all' && lesson.type !== currentFilter) {
+                            return;
+                        }
+                        
+                        const lessonCard = document.createElement('div');
+                        lessonCard.className = 'lesson-card';
+                        
+                        lessonCard.innerHTML = `
+                            <div class="lesson-image" style="background-image: url('${lesson.image}')">
+                                <div class="lesson-overlay">
+                                    <i class="fas fa-play-circle" style="color: white; font-size: 3rem;"></i>
+                                </div>
                             </div>
-                            <div class="content-actions">
-                                <button class="btn btn-primary"><i class="fas fa-${buttonIcon}"></i> ${buttonText}</button>
-                                <button class="btn btn-outline"><i class="fas fa-download"></i> تحميل</button>
+                            <div class="lesson-info">
+                                <h4>${lesson.title}</h4>
+                                <div class="lesson-meta">
+                                    <span>${lesson.grade}</span>
+                                    <span>${lesson.duration}</span>
+                                </div>
+                                <p class="lesson-desc">${lesson.description}</p>
+                                <div class="lesson-actions">
+                                    <a href="${lesson.link}" class="btn btn-primary">
+                                        <i class="fas fa-book-open"></i> ابدأ الدرس
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-star"></i> إضافة للمفضلة
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        `;
+                        
+                        contentGrid.appendChild(lessonCard);
+                    });
+                } else {
+                    // عرض رسالة عدم وجود محتوى
+                    const noContent = document.createElement('div');
+                    noContent.className = 'no-content';
+                    noContent.innerHTML = `
+                        <i class="fas fa-book-open"></i>
+                        <h3>لا يوجد محتوى متاح حالياً</h3>
+                        <p>لا توجد دروس متاحة لمادة ${subject} للصف ${currentGrade} في الوقت الحالي.</p>
                     `;
-                    
-                    contentGrid.appendChild(contentCard);
-                });
+                    contentGrid.appendChild(noContent);
+                }
+            } else {
+                // عرض رسالة عدم وجود محتوى
+                const noContent = document.createElement('div');
+                noContent.className = 'no-content';
+                noContent.innerHTML = `
+                    <i class="fas fa-book-open"></i>
+                    <h3>لا يوجد محتوى متاح حالياً</h3>
+                    <p>لا توجد دروس متاحة لمادة ${subject} للصف ${currentGrade} في الوقت الحالي.</p>
+                `;
+                contentGrid.appendChild(noContent);
+            }
+        }
+
+        // فلترة المحتوى حسب النوع
+        function filterContent(type) {
+            currentFilter = type;
+            
+            // إعادة عرض المحتوى مع التصفية الجديدة
+            if (currentSubject) {
+                showContent(currentSubject);
             }
         }
 
@@ -862,24 +1122,22 @@
         function resetToHome() {
             currentGrade = '';
             currentSubject = '';
+            currentFilter = 'all';
             currentPageElement.textContent = 'جميع الصفوف';
+            
+            // إعادة تعيين التبويب النشط
+            document.querySelectorAll('.content-tab').forEach(tab => {
+                if (tab.getAttribute('data-filter') === 'all') {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
             
             gradesSection.classList.remove('hidden');
             subjectsSection.classList.add('hidden');
             contentSection.classList.add('hidden');
         }
-
-        // تفعيل أزرار التحميل والمعاينة
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn') || e.target.parentElement.classList.contains('btn')) {
-                const button = e.target.classList.contains('btn') ? e.target : e.target.parentElement;
-                if (button.classList.contains('btn-primary')) {
-                    alert('جاري فتح المحتوى...');
-                } else if (button.classList.contains('btn-outline')) {
-                    alert('جاري تحميل الملف...');
-                }
-            }
-        });
     </script>
 </body>
 </html>

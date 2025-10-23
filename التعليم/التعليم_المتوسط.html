@@ -273,7 +273,7 @@
             font-size: 0.95rem;
         }
         
-        /* المحتوى التعليمي */
+        /* المحتوى التعليمي - البطاقات الشبكية */
         .content-section {
             max-width: 1200px;
             margin: 0 auto 40px;
@@ -307,47 +307,73 @@
             gap: 25px;
         }
         
-        .content-card {
+        .lesson-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .content-card:hover {
-            transform: translateY(-5px);
+        .lesson-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
         
-        .content-thumbnail {
-            height: 160px;
-            background: #f0f0f0;
+        .lesson-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .lesson-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: #3498db;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
-        .content-info {
+        .lesson-card:hover .lesson-overlay {
+            opacity: 1;
+        }
+        
+        .lesson-info {
             padding: 20px;
         }
         
-        .content-info h4 {
+        .lesson-info h4 {
             font-size: 1.2rem;
             margin-bottom: 10px;
-            color: #444;
+            color: #333;
+            line-height: 1.4;
         }
         
-        .content-meta {
+        .lesson-meta {
             display: flex;
             justify-content: space-between;
             color: #666;
             font-size: 0.9rem;
             margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
         
-        .content-actions {
+        .lesson-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .lesson-actions {
             display: flex;
             gap: 10px;
         }
@@ -357,16 +383,24 @@
             border-radius: 5px;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
             border: none;
             display: flex;
             align-items: center;
             gap: 5px;
+            text-decoration: none;
+            flex: 1;
+            justify-content: center;
         }
         
         .btn-primary {
             background: #3498db;
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
         }
         
         .btn-outline {
@@ -375,9 +409,39 @@
             color: #3498db;
         }
         
+        .btn-outline:hover {
+            background: #f0f8ff;
+        }
+        
         /* أقسام مخفية */
         .hidden {
             display: none;
+        }
+        
+        /* رسالة عدم وجود محتوى */
+        .no-content {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin: 20px 0;
+            grid-column: 1 / -1;
+        }
+        
+        .no-content i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-content h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .no-content p {
+            color: #888;
         }
         
         /* التذييل */
@@ -483,6 +547,10 @@
             .content-tab {
                 text-align: center;
             }
+            
+            .lesson-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -565,14 +633,14 @@
     
     <!-- المحتوى التعليمي -->
     <div class="content-section hidden" id="content-section">
-        <h2 class="section-title">المحتوى التعليمي لمادة <span id="selected-subject"></span></h2>
+        <h2 class="section-title">المحتوى التعليمي لمادة <span id="selected-subject"></span> - الصف <span id="content-grade"></span></h2>
         
         <div class="content-tabs">
-            <div class="content-tab active">جميع المحتويات</div>
-            <div class="content-tab">الدروس النظرية</div>
-            <div class="content-tab">التمارين والتطبيقات</div>
-            <div class="content-tab">الاختبارات</div>
-            <div class="content-tab">الفيديوهات</div>
+            <div class="content-tab active" data-filter="all">جميع المحتويات</div>
+            <div class="content-tab" data-filter="lesson">الدروس النظرية</div>
+            <div class="content-tab" data-filter="exercise">التمارين والتطبيقات</div>
+            <div class="content-tab" data-filter="test">الاختبارات</div>
+            <div class="content-tab" data-filter="video">الفيديوهات</div>
         </div>
         
         <div class="content-grid" id="content-grid">
@@ -674,63 +742,148 @@
             ]
         };
 
-        // بيانات الدروس والاختبارات لكل مادة
-        const subjectContent = {
+        // بيانات الدروس لكل مادة مع تحديد الصف المناسب لكل درس
+        const subjectLessons = {
             "الرياضيات": [
-                { title: "المعادلات من الدرجة الأولى", type: "pdf", grade: "الأول متوسط" },
-                { title: "الهندسة التحليلية", type: "pdf", grade: "الثاني متوسط" },
-                { title: "التمارين التفاعلية - الجبر", type: "exercise", grade: "الثالث متوسط" },
-                { title: "اختبار الفصل الأول", type: "test", grade: "الرابع متوسط" },
-                { title: "شرح النهايات والاتصال", type: "video", grade: "الثالث متوسط" }
+                { 
+                    title: "المعادلات من الدرجة الأولى", 
+                    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الأول متوسط",
+                    description: "تعلم حل المعادلات من الدرجة الأولى بطرق مختلفة مع أمثلة تطبيقية",
+                    duration: "45 دقيقة",
+                    type: "lesson",
+                    link: "math_lesson1.html"
+                },
+                { 
+                    title: "الهندسة التحليلية", 
+                    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثاني متوسط",
+                    description: "دراسة الهندسة التحليلية وتطبيقاتها في حل المسائل",
+                    duration: "60 دقيقة",
+                    type: "lesson",
+                    link: "math_lesson2.html"
+                },
+                { 
+                    title: "التمارين التفاعلية - الجبر", 
+                    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80",
+                    grade: "الثالث متوسط",
+                    description: "مجموعة من التمارين التفاعلية في الجبر مع تصحيح فوري",
+                    duration: "50 دقيقة",
+                    type: "exercise",
+                    link: "math_exercise1.html"
+                },
+                { 
+                    title: "اختبار الفصل الأول", 
+                    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الرابع متوسط",
+                    description: "اختبار شامل لقياس مستوى الطالب في الرياضيات للفصل الأول",
+                    duration: "60 دقيقة",
+                    type: "test",
+                    link: "math_test1.html"
+                },
+                { 
+                    title: "شرح النهايات والاتصال", 
+                    image: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                    grade: "الثالث متوسط",
+                    description: "شرح مفصل لمفهوم النهايات والاتصال في الرياضيات",
+                    duration: "55 دقيقة",
+                    type: "video",
+                    link: "math_video1.html"
+                }
             ],
             "اللغة العربية": [
-                { title: "النصوص الأدبية وتحليلها", type: "pdf", grade: "الأول متوسط" },
-                { title: "قواعد النحو المتقدم", type: "pdf", grade: "الثاني متوسط" },
-                { title: "البلاغة والعروض", type: "pdf", grade: "الثالث متوسط" },
-                { title: "اختبار التعبير الكتابي", type: "test", grade: "الرابع متوسط" },
-                { title: "تحليل النصوص الشعرية", type: "video", grade: "الثاني متوسط" }
+                { 
+                    title: "النصوص الأدبية وتحليلها", 
+                    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                    grade: "الأول متوسط",
+                    description: "تعلم تحليل النصوص الأدبية وفهم عناصرها الأساسية",
+                    duration: "50 دقيقة",
+                    type: "lesson",
+                    link: "arabic_lesson1.html"
+                },
+                { 
+                    title: "قواعد النحو المتقدم", 
+                    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=928&q=80",
+                    grade: "الثاني متوسط",
+                    description: "دراسة قواعد النحو المتقدمة وتطبيقاتها في النصوص",
+                    duration: "60 دقيقة",
+                    type: "lesson",
+                    link: "arabic_lesson2.html"
+                },
+                { 
+                    title: "البلاغة والعروض", 
+                    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1073&q=80",
+                    grade: "الثالث متوسط",
+                    description: "تعلم فنون البلاغة وعلم العروض في الشعر العربي",
+                    duration: "55 دقيقة",
+                    type: "lesson",
+                    link: "arabic_lesson3.html"
+                },
+                { 
+                    title: "اختبار التعبير الكتابي", 
+                    image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الرابع متوسط",
+                    description: "اختبار في التعبير الكتابي لقياس مهارات الطالب اللغوية",
+                    duration: "45 دقيقة",
+                    type: "test",
+                    link: "arabic_test1.html"
+                },
+                { 
+                    title: "تحليل النصوص الشعرية", 
+                    image: "https://images.unsplash.com/photo-1488998527040-85054a85150e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثاني متوسط",
+                    description: "شرح تحليل النصوص الشعرية مع أمثلة تطبيقية",
+                    duration: "40 دقيقة",
+                    type: "video",
+                    link: "arabic_video1.html"
+                }
             ],
             "العلوم الطبيعية": [
-                { title: "تجارب التفاعلات الكيميائية", type: "pdf", grade: "الأول متوسط" },
-                { title: "قوانين الحركة في الفيزياء", type: "pdf", grade: "الثاني متوسط" },
-                { title: "التمارين التفاعلية - الأحياء", type: "exercise", grade: "الثالث متوسط" },
-                { title: "اختبار العمليات الحيوية", type: "test", grade: "الرابع متوسط" },
-                { title: "شرح الجدول الدوري", type: "video", grade: "الأول متوسط" }
-            ],
-            "اللغة الإنجليزية": [
-                { title: "قواعد الزمن الماضي", type: "pdf", grade: "الأول متوسط" },
-                { title: "الكتابة الإنشائية", type: "pdf", grade: "الثاني متوسط" },
-                { title: "تمارين المحادثة", type: "exercise", grade: "الثالث متوسط" },
-                { title: "اختبار الفهم القرائي", type: "test", grade: "الرابع متوسط" },
-                { title: "قواعد الصفات والظروف", type: "video", grade: "الثاني متوسط" }
-            ],
-            "اللغة الفرنسية": [
-                { title: "قواعد النحو الأساسية", type: "pdf", grade: "الأول متوسط" },
-                { title: "المفردات المتقدمة", type: "pdf", grade: "الثاني متوسط" },
-                { title: "تمارين المحادثة", type: "exercise", grade: "الثالث متوسط" },
-                { title: "اختبار التعبير الكتابي", type: "test", grade: "الرابع متوسط" },
-                { title: "شرح قواعد الصرف", type: "video", grade: "الأول متوسط" }
-            ],
-            "التاريخ والجغرافيا": [
-                { title: "الحضارات القديمة", type: "pdf", grade: "الأول متوسط" },
-                { title: "الخريطة السياسية للعالم", type: "pdf", grade: "الثاني متوسط" },
-                { title: "تمارين الخرائط", type: "exercise", grade: "الثالث متوسط" },
-                { title: "اختبار التاريخ الحديث", type: "test", grade: "الرابع متوسط" },
-                { title: "شرح العولمة وتأثيراتها", type: "video", grade: "الرابع متوسط" }
-            ],
-            "التربية الإسلامية": [
-                { title: "تفسير سورة الكهف", type: "pdf", grade: "الأول متوسط" },
-                { title: "أحاديث الأخلاق", type: "pdf", grade: "الثاني متوسط" },
-                { title: "فقه المعاملات", type: "pdf", grade: "الثالث متوسط" },
-                { title: "اختبار العقيدة", type: "test", grade: "الرابع متوسط" },
-                { title: "شرح أركان الإيمان", type: "video", grade: "الأول متوسط" }
-            ],
-            "التكنولوجيا": [
-                { title: "مقدمة في البرمجة", type: "pdf", grade: "الأول متوسط" },
-                { title: "تصميم المواقع الإلكترونية", type: "pdf", grade: "الثاني متوسط" },
-                { title: "تمارين البرمجة", type: "exercise", grade: "الثالث متوسط" },
-                { title: "مشروع التخرج", type: "project", grade: "الرابع متوسط" },
-                { title: "شرح قواعد البيانات", type: "video", grade: "الثالث متوسط" }
+                { 
+                    title: "تجارب التفاعلات الكيميائية", 
+                    image: "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الأول متوسط",
+                    description: "تجارب عملية لدراسة التفاعلات الكيميائية المختلفة",
+                    duration: "50 دقيقة",
+                    type: "lesson",
+                    link: "science_lesson1.html"
+                },
+                { 
+                    title: "قوانين الحركة في الفيزياء", 
+                    image: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                    grade: "الثاني متوسط",
+                    description: "دراسة قوانين الحركة وتطبيقاتها في الحياة اليومية",
+                    duration: "55 دقيقة",
+                    type: "lesson",
+                    link: "science_lesson2.html"
+                },
+                { 
+                    title: "التمارين التفاعلية - الأحياء", 
+                    image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الثالث متوسط",
+                    description: "تمارين تفاعلية في علم الأحياء مع تصحيح فوري",
+                    duration: "45 دقيقة",
+                    type: "exercise",
+                    link: "science_exercise1.html"
+                },
+                { 
+                    title: "اختبار العمليات الحيوية", 
+                    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الرابع متوسط",
+                    description: "اختبار شامل في العمليات الحيوية في الكائنات الحية",
+                    duration: "60 دقيقة",
+                    type: "test",
+                    link: "science_test1.html"
+                },
+                { 
+                    title: "شرح الجدول الدوري", 
+                    image: "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    grade: "الأول متوسط",
+                    description: "شرح مفصل للجدول الدوري وتصنيف العناصر الكيميائية",
+                    duration: "40 دقيقة",
+                    type: "video",
+                    link: "science_video1.html"
+                }
             ]
         };
 
@@ -742,11 +895,13 @@
         const contentGrid = document.getElementById('content-grid');
         const selectedGradeElement = document.getElementById('selected-grade');
         const selectedSubjectElement = document.getElementById('selected-subject');
+        const contentGradeElement = document.getElementById('content-grade');
         const currentPageElement = document.getElementById('current-page');
         const homeLink = document.getElementById('home-link');
 
         let currentGrade = '';
         let currentSubject = '';
+        let currentFilter = 'all';
 
         // تفعيل التبويبات
         document.querySelectorAll('.content-tab').forEach(tab => {
@@ -755,6 +910,9 @@
                     t.classList.remove('active');
                 });
                 tab.classList.add('active');
+                
+                currentFilter = tab.getAttribute('data-filter');
+                filterContent(currentFilter);
             });
         });
 
@@ -822,6 +980,7 @@
         // عرض المحتوى التعليمي للمادة المحددة
         function showContent(subject) {
             selectedSubjectElement.textContent = subject;
+            contentGradeElement.textContent = currentGrade;
             currentPageElement.textContent = `محتوى ${subject} - ${currentGrade}`;
             
             // إخفاء أقسام وإظهار قسم المحتوى
@@ -831,58 +990,95 @@
             // تفريغ شبكة المحتوى
             contentGrid.innerHTML = '';
             
-            // إضافة المحتوى الخاص بالمادة
-            if (subjectContent[subject]) {
-                subjectContent[subject].forEach(item => {
-                    const contentCard = document.createElement('div');
-                    contentCard.className = 'content-card';
+            // إضافة المحتوى الخاص بالمادة والصف المحدد
+            if (subjectLessons[subject]) {
+                const filteredLessons = subjectLessons[subject].filter(lesson => lesson.grade === currentGrade);
+                
+                if (filteredLessons.length > 0) {
+                    let hasContent = false;
                     
-                    // تحديد الأيقونة بناءً على نوع المحتوى
-                    let icon = '';
-                    let buttonText = '';
-                    let buttonIcon = '';
+                    filteredLessons.forEach(lesson => {
+                        // تطبيق الفلترة حسب النوع إذا كان محدداً
+                        if (currentFilter !== 'all' && lesson.type !== currentFilter) {
+                            return;
+                        }
+                        
+                        hasContent = true;
+                        
+                        const lessonCard = document.createElement('div');
+                        lessonCard.className = 'lesson-card';
+                        
+                        lessonCard.innerHTML = `
+                            <div class="lesson-image" style="background-image: url('${lesson.image}')">
+                                <div class="lesson-overlay">
+                                    <i class="fas fa-play-circle" style="color: white; font-size: 3rem;"></i>
+                                </div>
+                            </div>
+                            <div class="lesson-info">
+                                <h4>${lesson.title}</h4>
+                                <div class="lesson-meta">
+                                    <span>${lesson.grade}</span>
+                                    <span>${lesson.duration}</span>
+                                </div>
+                                <p class="lesson-desc">${lesson.description}</p>
+                                <div class="lesson-actions">
+                                    <a href="${lesson.link}" class="btn btn-primary">
+                                        <i class="fas fa-book-open"></i> ابدأ الدرس
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-star"></i> إضافة للمفضلة
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        
+                        contentGrid.appendChild(lessonCard);
+                    });
                     
-                    if (item.type === 'pdf') {
-                        icon = 'file-pdf';
-                        buttonText = 'معاينة';
-                        buttonIcon = 'eye';
-                    } else if (item.type === 'test') {
-                        icon = 'clipboard-check';
-                        buttonText = 'بدء الاختبار';
-                        buttonIcon = 'play-circle';
-                    } else if (item.type === 'video') {
-                        icon = 'video';
-                        buttonText = 'مشاهدة';
-                        buttonIcon = 'play';
-                    } else if (item.type === 'exercise') {
-                        icon = 'dumbbell';
-                        buttonText = 'حل التمارين';
-                        buttonIcon = 'pen';
-                    } else if (item.type === 'project') {
-                        icon = 'project-diagram';
-                        buttonText = 'عرض المشروع';
-                        buttonIcon = 'folder-open';
+                    // إذا لم يكن هناك محتوى بعد التصفية
+                    if (!hasContent) {
+                        showNoContentMessage();
                     }
-                    
-                    contentCard.innerHTML = `
-                        <div class="content-thumbnail">
-                            <i class="fas fa-${icon}"></i>
-                        </div>
-                        <div class="content-info">
-                            <h4>${item.title}</h4>
-                            <div class="content-meta">
-                                <span>${subject}</span>
-                                <span>${item.grade}</span>
-                            </div>
-                            <div class="content-actions">
-                                <button class="btn btn-primary"><i class="fas fa-${buttonIcon}"></i> ${buttonText}</button>
-                                <button class="btn btn-outline"><i class="fas fa-download"></i> تحميل</button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    contentGrid.appendChild(contentCard);
-                });
+                } else {
+                    // عرض رسالة عدم وجود محتوى
+                    showNoContentMessage();
+                }
+            } else {
+                // عرض رسالة عدم وجود محتوى
+                showNoContentMessage();
+            }
+        }
+
+        // عرض رسالة عدم وجود محتوى
+        function showNoContentMessage() {
+            const noContent = document.createElement('div');
+            noContent.className = 'no-content';
+            noContent.innerHTML = `
+                <i class="fas fa-book-open"></i>
+                <h3>لا يوجد محتوى متاح حالياً</h3>
+                <p>لا توجد ${getContentTypeName()} متاحة لمادة ${currentSubject} للصف ${currentGrade} في الوقت الحالي.</p>
+            `;
+            contentGrid.appendChild(noContent);
+        }
+
+        // الحصول على اسم نوع المحتوى بالعربية
+        function getContentTypeName() {
+            switch(currentFilter) {
+                case 'lesson': return 'دروس نظرية';
+                case 'exercise': return 'تمارين وتطبيقات';
+                case 'test': return 'اختبارات';
+                case 'video': return 'فيديوهات';
+                default: return 'محتويات';
+            }
+        }
+
+        // فلترة المحتوى حسب النوع
+        function filterContent(type) {
+            currentFilter = type;
+            
+            // إعادة عرض المحتوى مع التصفية الجديدة
+            if (currentSubject) {
+                showContent(currentSubject);
             }
         }
 
@@ -896,24 +1092,22 @@
         function resetToHome() {
             currentGrade = '';
             currentSubject = '';
+            currentFilter = 'all';
             currentPageElement.textContent = 'جميع صفوف المتوسط';
+            
+            // إعادة تعيين التبويب النشط
+            document.querySelectorAll('.content-tab').forEach(tab => {
+                if (tab.getAttribute('data-filter') === 'all') {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
             
             gradesSection.classList.remove('hidden');
             subjectsSection.classList.add('hidden');
             contentSection.classList.add('hidden');
         }
-
-        // تفعيل أزرار التحميل والمعاينة
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn') || e.target.parentElement.classList.contains('btn')) {
-                const button = e.target.classList.contains('btn') ? e.target : e.target.parentElement;
-                if (button.classList.contains('btn-primary')) {
-                    alert('جاري فتح المحتوى...');
-                } else if (button.classList.contains('btn-outline')) {
-                    alert('جاري تحميل الملف...');
-                }
-            }
-        });
     </script>
 </body>
 </html>

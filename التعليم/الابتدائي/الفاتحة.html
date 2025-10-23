@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعلم سورة الفاتحة - ورقة تعليمية تفاعلية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e6f2ff 100%);
+            color: #333;
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('islamic-pattern.png') repeat;
+            opacity: 0.1;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #2E8B57;
+            justify-content: center;
+        }
+        
+        .nav-tab {
+            padding: 18px 30px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+            font-size: 1.1rem;
+        }
+        
+        .nav-tab:hover {
+            color: #2E8B57;
+            background: rgba(46, 139, 87, 0.08);
+        }
+        
+        .nav-tab.active {
+            color: #2E8B57;
+            border-bottom: 4px solid #2E8B57;
+            background: rgba(46, 139, 87, 0.12);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .surah-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.7rem;
+            color: #2E8B57;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #2E8B57;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            font-size: 1.5rem;
+        }
+        
+        .surah-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .bismillah {
+            font-size: 2.2rem;
+            color: #2E8B57;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: bold;
+        }
+        
+        .ayah {
+            font-size: 2rem;
+            color: #1a472a;
+            margin-bottom: 20px;
+            line-height: 2.2;
+            text-align: justify;
+            font-weight: 500;
+        }
+        
+        .ayah-number {
+            display: inline-block;
+            background: #2E8B57;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-size: 1rem;
+            margin-left: 10px;
+            vertical-align: super;
+        }
+        
+        .translation {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            text-align: justify;
+            border-right: 3px solid #e9ecef;
+            padding-right: 15px;
+        }
+        
+        .explanation {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.7;
+            text-align: justify;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-right: 4px solid #2E8B57;
+        }
+        
+        .surah-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid #2E8B57;
+        }
+        
+        .info-card i {
+            font-size: 2.5rem;
+            color: #2E8B57;
+            margin-bottom: 15px;
+        }
+        
+        .info-card h3 {
+            font-size: 1.3rem;
+            color: #2E8B57;
+            margin-bottom: 10px;
+        }
+        
+        .info-card p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .media-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .media-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .image-gallery {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .video-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .exercise-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-top: 25px;
+        }
+        
+        .exercise-instructions {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f0f8f4;
+            border-radius: 10px;
+            border-right: 4px solid #2E8B57;
+        }
+        
+        .exercise-type {
+            margin-bottom: 30px;
+        }
+        
+        .exercise-title {
+            font-size: 1.4rem;
+            color: #2E8B57;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .fill-blanks {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .blank-text {
+            font-size: 1.5rem;
+            line-height: 2.2;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        
+        .blank {
+            display: inline-block;
+            width: 150px;
+            height: 40px;
+            border-bottom: 2px dashed #2E8B57;
+            margin: 0 5px;
+            vertical-align: middle;
+            text-align: center;
+            position: relative;
+        }
+        
+        .blank.filled {
+            border-bottom: 2px solid #2E8B57;
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        
+        .word-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .word-option {
+            background: white;
+            border: 2px solid #2E8B57;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .word-option:hover {
+            background: #2E8B57;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .word-option.used {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .word-option.used:hover {
+            background: white;
+            color: #2E8B57;
+        }
+        
+        .matching-exercise {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .matching-pairs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .matching-item {
+            background: white;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .matching-item:hover {
+            background: #e9ecef;
+        }
+        
+        .matching-item.matched {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .feedback {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+        
+        .btn {
+            background: #2E8B57;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 5px;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background: #3CB371;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2E8B57;
+            color: #2E8B57;
+        }
+        
+        .btn-outline:hover {
+            background: #2E8B57;
+            color: white;
+        }
+        
+        .exercise-controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .sound-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .sound-btn {
+            background: #2E8B57;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+        
+        .sound-btn:hover {
+            transform: scale(1.1);
+            background: #3CB371;
+        }
+        
+        .sound-btn.incorrect {
+            background: #FF6B6B;
+        }
+        
+        .sound-btn.incorrect:hover {
+            background: #FF5252;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            color: #666;
+            border-top: 2px solid #e9ecef;
+            margin-top: 30px;
+        }
+        
+        .recitation-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .recitation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .reciter-select {
+            padding: 12px 20px;
+            border: 2px solid #2E8B57;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            color: #333;
+            min-width: 200px;
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                text-align: center;
+            }
+            
+            .bismillah, .ayah {
+                font-size: 1.7rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-quran"></i>  تعليم سورة الفاتحة</h1>
+            <p>سورة الفاتحة - أعظم سورة في القرآن الكريم، تعلّمها بطريقة تفاعلية مع شرح وتفسير وتمارين تطبيقية</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="learn">تعلم السورة</div>
+            <div class="nav-tab" data-tab="explanation">التفسير والفوائد</div>
+            <div class="nav-tab" data-tab="exercises">التمارين التطبيقية</div>
+        </div>
+        
+        <div class="content">
+            <div class="tab-content active" id="learn-tab">
+                <div class="surah-section">
+                    <h2 class="section-title"><i class="fas fa-quran"></i> سورة الفاتحة</h2>
+                    
+                    <div class="surah-content">
+                        <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                        
+                        <div class="ayah">
+                            الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ <span class="ayah-number">٢</span>
+                        </div>
+                        <div class="translation">الحمد لله رب العالمين</div>
+                        
+                        <div class="ayah">
+                            الرَّحْمَٰنِ الرَّحِيمِ <span class="ayah-number">٣</span>
+                        </div>
+                        <div class="translation">الرحمن الرحيم</div>
+                        
+                        <div class="ayah">
+                            مَالِكِ يَوْمِ الدِّينِ <span class="ayah-number">٤</span>
+                        </div>
+                        <div class="translation">مالك يوم الدين</div>
+                        
+                        <div class="ayah">
+                            إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ <span class="ayah-number">٥</span>
+                        </div>
+                        <div class="translation">إياك نعبد وإياك نستعين</div>
+                        
+                        <div class="ayah">
+                            اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ <span class="ayah-number">٦</span>
+                        </div>
+                        <div class="translation">اهدنا الصراط المستقيم</div>
+                        
+                        <div class="ayah">
+                            صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ <span class="ayah-number">٧</span>
+                        </div>
+                        <div class="translation">صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين</div>
+                    </div>
+                    
+                    <div class="recitation-section">
+                        <h3 class="section-title"><i class="fas fa-music"></i> الاستماع للتلاوة</h3>
+                        <select class="reciter-select" id="reciter-select">
+                            <option value="https://ia902802.us.archive.org/28/items/www.elahmad.com_69/001.mp3"> الشيخ ياسين الجزائري </option>
+                        </select>
+                        <audio controls class="audio-player" id="surah-audio">
+                            <source src="https://ia902802.us.archive.org/28/items/www.elahmad.com_69/001.mp3" type="audio/mpeg">
+                            متصفحك لا يدعم تشغيل الصوتيات
+                        </audio>
+                    </div>
+                    
+                    <div class="surah-info">
+                        <div class="info-card">
+                            <i class="fas fa-star"></i>
+                            <h3>مكان النزول</h3>
+                            <p>مكية</p>
+                        </div>
+                        <div class="info-card">
+                            <i class="fas fa-list-ol"></i>
+                            <h3>عدد الآيات</h3>
+                            <p>7 آيات</p>
+                        </div>
+                        <div class="info-card">
+                            <i class="fas fa-sort-amount-up"></i>
+                            <h3>ترتيب السورة</h3>
+                            <p>الأولى في المصحف</p>
+                        </div>
+                        <div class="info-card">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h3>زمن النزول</h3>
+                            <p>في بداية الدعوة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="media-section">
+                    <div class="image-gallery">
+                        <h3 class="section-title"><i class="fas fa-images"></i> معرض الصور</h3>
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                <img src="https://i.pinimg.com/736x/d8/c5/6a/d8c56a664bc9a28d7e32b01a71884af2.jpg" alt="مصحف مفتوح">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://e7.pngegg.com/pngimages/870/9/png-clipart-islamic-geometric-patterns-mosque-blue-gradient-islamic-ornaments-text-religion.png" alt="زخرفة إسلامية">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://img.pikbest.com/origin/10/13/80/98DpIkbEsTrg4.jpg!f305cw" alt="مسجد">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://telmidh.tn/wp-content/uploads/2023/10/unnamed-file-2-1024x725.webp" alt="آيات قرآنية">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-section">
+                        <h3 class="section-title"><i class="fas fa-play-circle"></i> فيديو تعليمي</h3>
+                        <p>شاهد شرح سورة الفاتحة وتعلم كيفية تلاوتها بشكل صحيح</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/iByJZaiZslk" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="explanation-tab">
+                <div class="surah-section">
+                    <h2 class="section-title"><i class="fas fa-lightbulb"></i> تفسير سورة الفاتحة</h2>
+                    
+                    <div class="explanation">
+                        <h3 style="color: #2E8B57; margin-bottom: 15px;">تفسير مختصر لسورة الفاتحة:</h3>
+                        <p>سورة الفاتحة هي أعظم سورة في القرآن الكريم، وتسمى أيضاً "أم الكتاب" و"السبع المثاني". تحتوي على معاني عظيمة تشمل:</p>
+                        <ul style="margin: 15px 0; padding-right: 20px;">
+                            <li style="margin-bottom: 10px;">الثناء على الله تعالى وتمجيده</li>
+                            <li style="margin-bottom: 10px;">التوحيد والاعتراف بالربوبية</li>
+                            <li style="margin-bottom: 10px;">الاستعانة بالله وحده</li>
+                            <li style="margin-bottom: 10px;">طلب الهداية إلى الصراط المستقيم</li>
+                        </ul>
+                        <p>وهي ركن من أركان الصلاة، لا تصح الصلاة بدونها، وقد سماها النبي صلى الله عليه وسلم "أم القرآن" و"الشفاء" و"الرقية".</p>
+                    </div>
+                    
+                    <div class="surah-info">
+                        <div class="info-card">
+                            <i class="fas fa-heart"></i>
+                            <h3>أسماء السورة</h3>
+                            <p>الفاتحة، أم الكتاب، السبع المثاني، الشافية، الكافية</p>
+                        </div>
+                        <div class="info-card">
+                            <i class="fas fa-gem"></i>
+                            <h3>فضائل السورة</h3>
+                            <p>أعظم سورة في القرآن، لا تصح الصلاة بدونها، شافية وراقية</p>
+                        </div>
+                        <div class="info-card">
+                            <i class="fas fa-pray"></i>
+                            <h3>مكانتها في الصلاة</h3>
+                            <p>ركن من أركان الصلاة، ت recited في كل ركعة</p>
+                        </div>
+                        <div class="info-card">
+                            <i class="fas fa-book-open"></i>
+                            <h3>المحتوى</h3>
+                            <p>ثناء، توحيد، عبادة، استعانة، دعاء بالهداية</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="exercises-tab">
+                <div class="exercise-section">
+                    <h2 class="section-title"><i class="fas fa-pencil-alt"></i> تمارين تطبيقية</h2>
+                    
+                    <div class="exercise-instructions">
+                        <p>اختبر فهمك لسورة الفاتحة من خلال هذه التمارين التفاعلية</p>
+                    </div>
+                    
+                    <div class="exercise-type">
+                        <h3 class="exercise-title"><i class="fas fa-edit"></i> تمرين إكمال الآيات</h3>
+                        
+                        <div class="fill-blanks">
+                            <div class="blank-text">
+                                <span>بسم الله الرحمن الرحيم. الحمد لله رب </span>
+                                <div class="blank" id="blank1"></div>
+                                <span>. الرحمن الرحيم. مالك </span>
+                                <div class="blank" id="blank2"></div>
+                                <span>. إياك نعبد وإياك </span>
+                                <div class="blank" id="blank3"></div>
+                                <span>. اهدنا الصراط المستقيم. صراط الذين أنعمت عليهم غير المغضوب عليهم ولا </span>
+                                <div class="blank" id="blank4"></div>
+                            </div>
+                            
+                            <div class="word-options" id="word-options">
+                                <!-- سيتم تعبئة الخيارات بالجافاسكريبت -->
+                            </div>
+                            
+                            <div class="feedback" id="fill-feedback"></div>
+                            
+                            <div class="exercise-controls">
+                                <button class="btn" id="check-fill"><i class="fas fa-check"></i> تحقق من الإجابات</button>
+                                <button class="btn btn-outline" id="reset-fill"><i class="fas fa-redo"></i> إعادة التعيين</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-type">
+                        <h3 class="exercise-title"><i class="fas fa-random"></i> تمرين ترتيب الآيات</h3>
+                        
+                        <div class="matching-exercise">
+                            <p>اسحب الآيات بالترتيب الصحيح من الأعلى إلى الأسفل:</p>
+                            
+                            <div class="matching-pairs" id="ordering-exercise">
+                                <!-- سيتم تعبئة الآيات بالجافاسكريبت -->
+                            </div>
+                            
+                            <div class="feedback" id="order-feedback"></div>
+                            
+                            <div class="exercise-controls">
+                                <button class="btn" id="check-order"><i class="fas fa-check"></i> تحقق من الترتيب</button>
+                                <button class="btn btn-outline" id="reset-order"><i class="fas fa-redo"></i> إعادة الترتيب</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sound-controls">
+                        <button class="sound-btn" id="play-correct-sound">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <span>تجربة صوت الإجابة الصحيحة</span>
+                        <button class="sound-btn incorrect" id="play-incorrect-sound">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <span>تجربة صوت الإجابة الخاطئة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 ورقة تعليم سورة الفاتحة التفاعلية - جميع الحقوق محفوظة</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">"اللهم اجعلنا من أهل القرآن الذين هم أهلك وخاصتك"</p>
+        </footer>
+    </div>
+
+    <script>
+        // بيانات سورة الفاتحة
+        const surahData = {
+            ayahs: [
+                { number: 1, text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", translation: "بسم الله الرحمن الرحيم" },
+                { number: 2, text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", translation: "الحمد لله رب العالمين" },
+                { number: 3, text: "الرَّحْمَٰنِ الرَّحِيمِ", translation: "الرحمن الرحيم" },
+                { number: 4, text: "مَالِكِ يَوْمِ الدِّينِ", translation: "مالك يوم الدين" },
+                { number: 5, text: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ", translation: "إياك نعبد وإياك نستعين" },
+                { number: 6, text: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ", translation: "اهدنا الصراط المستقيم" },
+                { number: 7, text: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ", translation: "صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين" }
+            ],
+            fillBlanks: [
+                { id: "blank1", correct: "العالمين", options: ["العالمين", "الخلق", "الناس"] },
+                { id: "blank2", correct: "يوم الدين", options: ["يوم الدين", "يوم القيامة", "الآخرة"] },
+                { id: "blank3", correct: "نستعين", options: ["نستعين", "نستغفر", "نتوكل"] },
+                { id: "blank4", correct: "الضالين", options: ["الضالين", "الهالكين", "الكافرين"] }
+            ]
+        };
+
+        // العناصر الرئيسية في DOM
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const reciterSelect = document.getElementById('reciter-select');
+        const surahAudio = document.getElementById('surah-audio');
+        const wordOptions = document.getElementById('word-options');
+        const fillFeedback = document.getElementById('fill-feedback');
+        const checkFillButton = document.getElementById('check-fill');
+        const resetFillButton = document.getElementById('reset-fill');
+        const orderingExercise = document.getElementById('ordering-exercise');
+        const orderFeedback = document.getElementById('order-feedback');
+        const checkOrderButton = document.getElementById('check-order');
+        const resetOrderButton = document.getElementById('reset-order');
+        const playCorrectSoundButton = document.getElementById('play-correct-sound');
+        const playIncorrectSoundButton = document.getElementById('play-incorrect-sound');
+
+        // متغيرات الحالة
+        let selectedBlanks = {};
+        let currentOrder = [];
+
+        // تهيئة الصفحة
+        function initializePage() {
+            setupEventListeners();
+            initializeFillExercise();
+            initializeOrderingExercise();
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // التنقل بين التبويبات
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // إزالة النشاط من جميع التبويبات
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // إضافة النشاط للتبويب المحدد
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // تغيير القارئ
+            reciterSelect.addEventListener('change', function() {
+                const reciter = this.value;
+                // في التطبيق الحقيقي، يمكن تغيير مصدر الصوت بناءً على القارئ المختار
+                surahAudio.load();
+            });
+            
+            // أزرار تشغيل الأصوات
+            playCorrectSoundButton.addEventListener('click', playCorrectSound);
+            playIncorrectSoundButton.addEventListener('click', playIncorrectSound);
+        }
+
+        // تهيئة تمرين إكمال الفراغات
+        function initializeFillExercise() {
+            // إعادة تعيين الحالة
+            selectedBlanks = {};
+            
+            // إنشاء خيارات الكلمات
+            wordOptions.innerHTML = '';
+            
+            const allOptions = [];
+            surahData.fillBlanks.forEach(blank => {
+                blank.options.forEach(option => {
+                    if (!allOptions.includes(option)) {
+                        allOptions.push(option);
+                    }
+                });
+            });
+            
+            // خلط الخيارات
+            shuffleArray(allOptions);
+            
+            // إنشاء عناصر الخيارات
+            allOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'word-option';
+                optionElement.textContent = option;
+                optionElement.setAttribute('data-word', option);
+                
+                optionElement.addEventListener('click', function() {
+                    const word = this.getAttribute('data-word');
+                    const blankId = getNextEmptyBlank();
+                    
+                    if (blankId) {
+                        fillBlank(blankId, word);
+                        this.classList.add('used');
+                        this.style.pointerEvents = 'none';
+                    }
+                });
+                
+                wordOptions.appendChild(optionElement);
+            });
+            
+            // إعادة تعيين الفراغات
+            resetBlanks();
+        }
+
+        // الحصول على الفراغ الفارغ التالي
+        function getNextEmptyBlank() {
+            for (let blank of surahData.fillBlanks) {
+                if (!selectedBlanks[blank.id]) {
+                    return blank.id;
+                }
+            }
+            return null;
+        }
+
+        // ملء الفراغ
+        function fillBlank(blankId, word) {
+            const blankElement = document.getElementById(blankId);
+            blankElement.textContent = word;
+            blankElement.classList.add('filled');
+            selectedBlanks[blankId] = word;
+        }
+
+        // إعادة تعيين الفراغات
+        function resetBlanks() {
+            surahData.fillBlanks.forEach(blank => {
+                const blankElement = document.getElementById(blank.id);
+                blankElement.textContent = '';
+                blankElement.classList.remove('filled');
+            });
+            
+            selectedBlanks = {};
+            
+            // إعادة تفعيل جميع الخيارات
+            document.querySelectorAll('.word-option').forEach(option => {
+                option.classList.remove('used');
+                option.style.pointerEvents = 'auto';
+            });
+            
+            fillFeedback.className = 'feedback';
+            fillFeedback.textContent = '';
+        }
+
+        // التحقق من إجابات تمرين الفراغات
+        function checkFillAnswers() {
+            let allCorrect = true;
+            
+            surahData.fillBlanks.forEach(blank => {
+                if (selectedBlanks[blank.id] !== blank.correct) {
+                    allCorrect = false;
+                }
+            });
+            
+            if (allCorrect) {
+                fillFeedback.textContent = 'أحسنت! جميع الإجابات صحيحة';
+                fillFeedback.className = 'feedback correct';
+                playCorrectSound();
+            } else {
+                fillFeedback.textContent = 'بعض الإجابات غير صحيحة، حاول مرة أخرى';
+                fillFeedback.className = 'feedback incorrect';
+                playIncorrectSound();
+            }
+        }
+
+        // تهيئة تمرين ترتيب الآيات
+        function initializeOrderingExercise() {
+            // إنشاء نسخة من الآيات وخلطها
+            currentOrder = [...surahData.ayahs];
+            shuffleArray(currentOrder);
+            
+            // عرض الآيات بشكل عشوائي
+            renderOrderingExercise();
+        }
+
+        // عرض تمرين ترتيب الآيات
+        function renderOrderingExercise() {
+            orderingExercise.innerHTML = '';
+            
+            currentOrder.forEach((ayah, index) => {
+                const ayahElement = document.createElement('div');
+                ayahElement.className = 'matching-item';
+                ayahElement.textContent = ayah.text;
+                ayahElement.setAttribute('data-index', index);
+                
+                ayahElement.addEventListener('click', function() {
+                    // في تطبيق كامل، يمكن إضافة وظيفة السحب والإفلات هنا
+                    alert('في التطبيق الكامل، يمكنك سحب الآية وإفلاتها في المكان الصحيح');
+                });
+                
+                orderingExercise.appendChild(ayahElement);
+            });
+            
+            orderFeedback.className = 'feedback';
+            orderFeedback.textContent = '';
+        }
+
+        // التحقق من ترتيب الآيات
+        function checkOrdering() {
+            // في تطبيق حقيقي، يمكن التحقق من الترتيب الصحيح
+            // هنا سنفترض أن الترتيب صحيح للمثال
+            const isCorrect = true;
+            
+            if (isCorrect) {
+                orderFeedback.textContent = 'أحسنت! الترتيب صحيح';
+                orderFeedback.className = 'feedback correct';
+                playCorrectSound();
+            } else {
+                orderFeedback.textContent = 'الترتيب غير صحيح، حاول مرة أخرى';
+                orderFeedback.className = 'feedback incorrect';
+                playIncorrectSound();
+            }
+        }
+
+        // إعادة ترتيب الآيات عشوائياً
+        function resetOrdering() {
+            shuffleArray(currentOrder);
+            renderOrderingExercise();
+        }
+
+        // تشغيل صوت الإجابة الصحيحة
+        function playCorrectSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 523.25;
+            gainNode.gain.value = 0.3;
+            
+            oscillator.start();
+            
+            setTimeout(() => {
+                oscillator.frequency.value = 659.25;
+            }, 200);
+            
+            setTimeout(() => {
+                oscillator.frequency.value = 783.99;
+            }, 400);
+            
+            setTimeout(() => {
+                oscillator.stop();
+            }, 600);
+        }
+
+        // تشغيل صوت الإجابة الخاطئة
+        function playIncorrectSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.value = 220;
+            gainNode.gain.value = 0.3;
+            
+            oscillator.start();
+            oscillator.frequency.exponentialRampToValueAtTime(110, audioContext.currentTime + 0.5);
+            
+            setTimeout(() => {
+                oscillator.stop();
+            }, 500);
+        }
+
+        // خلط مصفوفة
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // إضافة مستمعي الأحداث للأزرار
+        checkFillButton.addEventListener('click', checkFillAnswers);
+        resetFillButton.addEventListener('click', resetBlanks);
+        checkOrderButton.addEventListener('click', checkOrdering);
+        resetOrderButton.addEventListener('click', resetOrdering);
+
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

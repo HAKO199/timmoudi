@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعلم الأعداد العربية - ورقة تعليمية تفاعلية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1E90FF 0%, #00BFFF 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-tab:hover {
+            color: #1E90FF;
+            background: rgba(30, 144, 255, 0.05);
+        }
+        
+        .nav-tab.active {
+            color: #1E90FF;
+            border-bottom: 3px solid #1E90FF;
+            background: rgba(30, 144, 255, 0.08);
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .numbers-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #1E90FF;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E90FF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.3rem;
+        }
+        
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 576px) {
+            .numbers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .number-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+        }
+        
+        .number-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #1E90FF;
+        }
+        
+        .number-card.active {
+            background: #1E90FF;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .number-name {
+            font-size: 0.9rem;
+        }
+        
+        .number-details {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .current-number {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .current-number .number {
+            font-size: 5rem;
+            color: #1E90FF;
+            margin-bottom: 10px;
+        }
+        
+        .number-representations {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .representation {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .representation .form {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .representation .form.objects {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .representation .form.objects i {
+            color: #FF6347;
+        }
+        
+        .form-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .languages-section {
+            background: #f0f8ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e1e1e1;
+        }
+        
+        .language-item:last-child {
+            border-bottom: none;
+        }
+        
+        .language-name {
+            font-weight: bold;
+            color: #1E90FF;
+        }
+        
+        .language-value {
+            color: #333;
+        }
+        
+        .number-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .number-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-height: 200px;
+        }
+        
+        .video-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .exercise-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .exercise-instructions {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 8px;
+            border-right: 4px solid #1E90FF;
+        }
+        
+        .counting-exercise {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .objects-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .object {
+            font-size: 2rem;
+            color: #FF6347;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .number-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .number-option {
+            background: white;
+            border: 2px solid #1E90FF;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .number-option:hover {
+            background: #1E90FF;
+            color: white;
+        }
+        
+        .matching-exercise {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .matching-pairs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .matching-item {
+            background: #f8f9fa;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .matching-item:hover {
+            background: #e9ecef;
+        }
+        
+        .matching-item.matched {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .btn {
+            background: #1E90FF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background: #00BFFF;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1E90FF;
+            color: #1E90FF;
+        }
+        
+        .btn-outline:hover {
+            background: #1E90FF;
+            color: white;
+        }
+        
+        .exercise-controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+            margin-top: 20px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .sound-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .sound-btn {
+            background: #32CD32;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sound-btn:hover {
+            transform: scale(1.1);
+            background: #228B22;
+        }
+        
+        .sound-btn.incorrect {
+            background: #FF4500;
+        }
+        
+        .sound-btn.incorrect:hover {
+            background: #DC143C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i>  تعليم الأعداد العربية</h1>
+            <p>تعلم الأعداد العربية بطريقة تفاعلية مع صور وفيديوهات وتمارين تطبيقية</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="numbers">تعلم الأعداد</div>
+            <div class="nav-tab" data-tab="counting">العد والتمارين</div>
+            <div class="nav-tab" data-tab="matching">تمرين المطابقة</div>
+        </div>
+        
+        <div class="tab-content active" id="numbers-tab">
+            <div class="content">
+                <div class="left-column">
+                    <div class="numbers-section">
+                        <h2 class="section-title"><i class="fas fa-sort-numeric-up"></i> الأعداد العربية</h2>
+                        <div class="numbers-grid" id="numbers-grid">
+                            <!-- سيتم تعبئة الأعداد بالجافاسكريبت -->
+                        </div>
+                    </div>
+                    
+                    <div class="number-details">
+                        <h2 class="section-title"><i class="fas fa-info-circle"></i> تفاصيل العدد</h2>
+                        <div class="current-number">
+                            <div class="number" id="current-number">١</div>
+                            <div class="number-name" id="current-number-name">واحد</div>
+                        </div>
+                        
+                        <div class="number-representations">
+                            <div class="representation">
+                                <div class="form" id="form-arabic">١</div>
+                                <div class="form-label">الرقم العربي</div>
+                            </div>
+                            <div class="representation">
+                                <div class="form" id="form-english">1</div>
+                                <div class="form-label">الرقم الإنجليزي</div>
+                            </div>
+                            <div class="representation">
+                                <div class="form objects" id="form-objects">
+                                    <!-- سيتم تعبئة الأشياء بالجافاسكريبت -->
+                                </div>
+                                <div class="form-label">تمثيل مرئي</div>
+                            </div>
+                        </div>
+                        
+                        <div class="languages-section">
+                            <h3 style="text-align: center; margin-bottom: 10px; color: #1E90FF;">الأعداد باللغات الأخرى</h3>
+                            <div class="language-item">
+                                <span class="language-name">الإنجليزية:</span>
+                                <span class="language-value" id="lang-english">One</span>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">الفرنسية:</span>
+                                <span class="language-value" id="lang-french">Un</span>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">الإسبانية:</span>
+                                <span class="language-value" id="lang-spanish">Uno</span>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">الألمانية:</span>
+                                <span class="language-value" id="lang-german">Eins</span>
+                            </div>
+                        </div>
+                        
+                        <div class="number-image">
+                            <img id="number-image" src="https://via.placeholder.com/300x200/1E90FF/FFFFFF?text=صورة+العدد" alt="صورة العدد">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-column">
+                    <div class="video-section">
+                        <h2 class="section-title"><i class="fas fa-play-circle"></i> فيديو توضيحي</h2>
+                        <p>شاهد كيفية نطق وكتابة العدد بشكل صحيح</p>
+                        <div class="video-container">
+                            <iframe id="number-video" src="https://www.youtube.com/embed/2o0TtxRVX_c" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    
+                    <div class="sound-controls">
+                        <button class="sound-btn" id="play-correct-sound">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="sound-btn incorrect" id="play-incorrect-sound">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="counting-tab">
+            <div class="exercise-section">
+                <h2 class="section-title"><i class="fas fa-pencil-alt"></i> تمرين العد</h2>
+                
+                <div class="exercise-instructions">
+                    <p>عد الأشياء المعروضة واختر العدد المناسب</p>
+                </div>
+                
+                <div class="counting-exercise">
+                    <div class="objects-container" id="objects-container">
+                        <!-- سيتم تعبئة الأشياء بالجافاسكريبت -->
+                    </div>
+                    
+                    <div class="question" id="counting-question">كم عدد الأشياء المعروضة؟</div>
+                    
+                    <div class="number-options" id="counting-options">
+                        <!-- سيتم تعبئة خيارات الأعداد بالجافاسكريبت -->
+                    </div>
+                    
+                    <div class="feedback" id="counting-feedback"></div>
+                    
+                    <div class="exercise-controls">
+                        <button class="btn" id="check-counting"><i class="fas fa-check"></i> تحقق من الإجابة</button>
+                        <button class="btn btn-outline" id="new-counting"><i class="fas fa-redo"></i> تمرين جديد</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="matching-tab">
+            <div class="exercise-section">
+                <h2 class="section-title"><i class="fas fa-random"></i> تمرين المطابقة</h2>
+                
+                <div class="exercise-instructions">
+                    <p>اطبع الرقم العربي مع الرقم الإنجليزي المناسب له</p>
+                </div>
+                
+                <div class="matching-exercise">
+                    <div class="matching-pairs" id="matching-pairs">
+                        <!-- سيتم تعبئة أزواج المطابقة بالجافاسكريبت -->
+                    </div>
+                    
+                    <div class="feedback" id="matching-feedback"></div>
+                    
+                    <div class="exercise-controls">
+                        <button class="btn" id="check-matching"><i class="fas fa-check"></i> تحقق من الإجابات</button>
+                        <button class="btn btn-outline" id="new-matching"><i class="fas fa-redo"></i> تمرين جديد</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 ورقة تعليم الأعداد العربية التفاعلية - جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+
+    <script>
+        // بيانات الأعداد العربية مع الترجمات للغات الأخرى
+        const arabicNumbers = [
+            { 
+                number: '0', name: 'صفر', english: '0', objects: 0, 
+                image: 'https://img.youm7.com/ArticleImgs/2020/11/7/92244-الرقم-صفر.jpg', 
+                video: 'AI0SnXv6Aes',
+                languages: {
+                    english: 'Zero',
+                    french: 'Zéro',
+                    spanish: 'Cero',
+                    german: 'Null'
+                }
+            },
+            { 
+                number: '1', name: 'واحد', english: '1', objects: 1, 
+                image: 'https://i.pinimg.com/564x/15/c3/c9/15c3c9694525ed205f0eebae3ea89b52.jpg', 
+                video: 'LkQFjFcKi_U',
+                languages: {
+                    english: 'One',
+                    french: 'Un',
+                    spanish: 'Uno',
+                    german: 'Eins'
+                }
+            },
+            { 
+                number: '2', name: 'اثنان', english: '2', objects: 2, 
+                image: 'https://i.pinimg.com/474x/6a/5d/bf/6a5dbf9239f3aa8f4c769f3ac607de61.jpg', 
+                video: 'aLTABXDEmdg',
+                languages: {
+                    english: 'Two',
+                    french: 'Deux',
+                    spanish: 'Dos',
+                    german: 'Zwei'
+                }
+            },
+            { 
+                number: '3', name: 'ثلاثة', english: '3', objects: 3, 
+                image: 'https://png.pngtree.com/png-clipart/20200309/ourmid/pngtree-gold-number-3-png-image_2158840.jpg', 
+                video: 'ONJjzAlltC4',
+                languages: {
+                    english: 'Three',
+                    french: 'Trois',
+                    spanish: 'Tres',
+                    german: 'Drei'
+                }
+            },
+            { 
+                number: '4', name: 'أربعة', english: '4', objects: 4, 
+                image: 'https://png.pngtree.com/png-clipart/20200309/ourmid/pngtree-gold-number-4-png-image_2158842.jpg', 
+                video: 'L7P1HV_ExoA',
+                languages: {
+                    english: 'Four',
+                    french: 'Quatre',
+                    spanish: 'Cuatro',
+                    german: 'Vier'
+                }
+            },
+            { 
+                number: '5', name: 'خمسة', english: '5', objects: 5, 
+                image: 'https://png.pngtree.com/png-clipart/20200309/ourmid/pngtree-gold-number-5-png-image_2158844.jpg', 
+                video: '1fkOyz_Gsf0',
+                languages: {
+                    english: 'Five',
+                    french: 'Cinq',
+                    spanish: 'Cinco',
+                    german: 'Fünf'
+                }
+            },
+            { 
+                number: '6', name: 'ستة', english: '6', objects: 6, 
+                image: 'https://i.pinimg.com/736x/9c/98/a1/9c98a1e456d1e2e13395b6b964c7379f.jpg', 
+                video: 'ypfk0tkc9fw',
+                languages: {
+                    english: 'Six',
+                    french: 'Six',
+                    spanish: 'Seis',
+                    german: 'Sechs'
+                }
+            },
+            { 
+                number: '7', name: 'سبعة', english: '7', objects: 7, 
+                image: 'https://png.pngtree.com/png-clipart/20200309/ourmid/pngtree-gold-number-7-png-image_2158848.jpg', 
+                video: '_IBgfq1mbqs',
+                languages: {
+                    english: 'Seven',
+                    french: 'Sept',
+                    spanish: 'Siete',
+                    german: 'Sieben'
+                }
+            },
+            { 
+                number: '8', name: 'ثمانية', english: '8', objects: 8, 
+                image: 'https://png.pngtree.com/png-clipart/20200309/ourmid/pngtree-gold-number-8-png-image_2158851.jpg', 
+                video: 'ftcVq5hkHUQ',
+                languages: {
+                    english: 'Eight',
+                    french: 'Huit',
+                    spanish: 'Ocho',
+                    german: 'Acht'
+                }
+            },
+            { 
+                number: '9', name: 'تسعة', english: '9', objects: 9, 
+                image: 'https://drosama.com/wp-content/uploads/2024/11/pngtree-gold-number-9-png-image_2158853.jpg', 
+                video: 'pNLmKY5s5Mk',
+                languages: {
+                    english: 'Nine',
+                    french: 'Neuf',
+                    spanish: 'Nueve',
+                    german: 'Neun'
+                }
+            },
+            { 
+                number: '10', name: 'عشرة', english: '10', objects: 10, 
+                image: 'https://png.pngtree.com/png-vector/20210202/ourlarge/pngtree-number-10-golden-file-png-image_2880873.jpg', 
+                video: 'OhO0mzirE1s',
+                languages: {
+                    english: 'Ten',
+                    french: 'Dix',
+                    spanish: 'Diez',
+                    german: 'Zehn'
+                }
+            }
+        ];
+
+        // أنواع الأشياء للتمارين
+        const objectTypes = ['apple', 'star', 'heart', 'circle'];
+
+        // العناصر الرئيسية في DOM
+        const numbersGrid = document.getElementById('numbers-grid');
+        const currentNumberElement = document.getElementById('current-number');
+        const currentNumberNameElement = document.getElementById('current-number-name');
+        const formArabicElement = document.getElementById('form-arabic');
+        const formEnglishElement = document.getElementById('form-english');
+        const formObjectsElement = document.getElementById('form-objects');
+        const langEnglishElement = document.getElementById('lang-english');
+        const langFrenchElement = document.getElementById('lang-french');
+        const langSpanishElement = document.getElementById('lang-spanish');
+        const langGermanElement = document.getElementById('lang-german');
+        const numberImageElement = document.getElementById('number-image');
+        const numberVideoElement = document.getElementById('number-video');
+        const objectsContainer = document.getElementById('objects-container');
+        const countingQuestion = document.getElementById('counting-question');
+        const countingOptions = document.getElementById('counting-options');
+        const countingFeedback = document.getElementById('counting-feedback');
+        const checkCountingButton = document.getElementById('check-counting');
+        const newCountingButton = document.getElementById('new-counting');
+        const matchingPairs = document.getElementById('matching-pairs');
+        const matchingFeedback = document.getElementById('matching-feedback');
+        const checkMatchingButton = document.getElementById('check-matching');
+        const newMatchingButton = document.getElementById('new-matching');
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const playCorrectSoundButton = document.getElementById('play-correct-sound');
+        const playIncorrectSoundButton = document.getElementById('play-incorrect-sound');
+
+        // متغيرات الحالة
+        let currentNumberIndex = 1; // نبدأ من الواحد
+        let currentCountingExercise = null;
+        let selectedCountingOption = null;
+        let matchingPairsData = [];
+        let selectedMatchingItems = [];
+
+        // تهيئة الصفحة
+        function initializePage() {
+            renderNumbers();
+            showNumberDetails(1);
+            generateCountingExercise();
+            generateMatchingExercise();
+            setupEventListeners();
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // التنقل بين التبويبات
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // إزالة النشاط من جميع التبويبات
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // إضافة النشاط للتبويب المحدد
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // أزرار تشغيل الأصوات
+            playCorrectSoundButton.addEventListener('click', playCorrectSound);
+            playIncorrectSoundButton.addEventListener('click', playIncorrectSound);
+        }
+
+        // عرض الأعداد في الشبكة
+        function renderNumbers() {
+            numbersGrid.innerHTML = '';
+            
+            arabicNumbers.forEach((numberData, index) => {
+                const numberCard = document.createElement('div');
+                numberCard.className = 'number-card';
+                if (index === currentNumberIndex) {
+                    numberCard.classList.add('active');
+                }
+                
+                numberCard.innerHTML = `
+                    <div class="number">${numberData.number}</div>
+                    <div class="number-name">${numberData.name}</div>
+                `;
+                
+                numberCard.addEventListener('click', () => {
+                    showNumberDetails(index);
+                });
+                
+                numbersGrid.appendChild(numberCard);
+            });
+        }
+
+        // عرض تفاصيل العدد المحدد
+        function showNumberDetails(index) {
+            currentNumberIndex = index;
+            const numberData = arabicNumbers[index];
+            
+            // تحديث العناصر
+            currentNumberElement.textContent = numberData.number;
+            currentNumberNameElement.textContent = numberData.name;
+            formArabicElement.textContent = numberData.number;
+            formEnglishElement.textContent = numberData.english;
+            
+            // تحديث الترجمات للغات الأخرى
+            langEnglishElement.textContent = numberData.languages.english;
+            langFrenchElement.textContent = numberData.languages.french;
+            langSpanishElement.textContent = numberData.languages.spanish;
+            langGermanElement.textContent = numberData.languages.german;
+            
+            // تحديث تمثيل الأشياء
+            formObjectsElement.innerHTML = '';
+            for (let i = 0; i < numberData.objects; i++) {
+                const object = document.createElement('i');
+                object.className = 'fas fa-apple-alt object';
+                formObjectsElement.appendChild(object);
+            }
+            
+            numberImageElement.src = numberData.image;
+            numberVideoElement.src = `https://www.youtube.com/embed/${numberData.video}`;
+            
+            // تحديث الأعداد النشطة
+            document.querySelectorAll('.number-card').forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        // إنشاء تمرين عد جديد
+        function generateCountingExercise() {
+            // اختيار عدد عشوائي بين 1 و 10
+            const randomNumber = Math.floor(Math.random() * 10) + 1;
+            currentCountingExercise = randomNumber;
+            
+            // اختيار نوع الأشياء عشوائياً
+            const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+            
+            // تحديث واجهة التمرين
+            objectsContainer.innerHTML = '';
+            for (let i = 0; i < randomNumber; i++) {
+                const object = document.createElement('i');
+                
+                // تعيين الأيقونة المناسبة بناءً على نوع الشيء
+                switch(objectType) {
+                    case 'apple':
+                        object.className = 'fas fa-apple-alt object';
+                        break;
+                    case 'star':
+                        object.className = 'fas fa-star object';
+                        break;
+                    case 'heart':
+                        object.className = 'fas fa-heart object';
+                        break;
+                    case 'circle':
+                        object.className = 'fas fa-circle object';
+                        break;
+                }
+                
+                objectsContainer.appendChild(object);
+            }
+            
+            countingQuestion.textContent = `كم عدد الأشياء المعروضة؟`;
+            
+            // إخفاء التغذية الراجعة
+            countingFeedback.className = 'feedback';
+            countingFeedback.textContent = '';
+            
+            // إنشاء خيارات الأعداد
+            generateCountingOptions();
+        }
+
+        // إنشاء خيارات الأعداد للتمرين
+        function generateCountingOptions() {
+            countingOptions.innerHTML = '';
+            selectedCountingOption = null;
+            
+            // إنشاء قائمة بالأعداد الممكنة (بما في ذلك العدد الصحيح)
+            const options = [currentCountingExercise];
+            
+            // إضافة أعداد عشوائية أخرى
+            while (options.length < 4) {
+                const randomNumber = Math.floor(Math.random() * 10) + 1;
+                if (!options.includes(randomNumber)) {
+                    options.push(randomNumber);
+                }
+            }
+            
+            // خلط الخيارات عشوائياً
+            shuffleArray(options);
+            
+            // إنشاء عناصر الخيارات
+            options.forEach(number => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'number-option';
+                optionElement.textContent = number;
+                
+                optionElement.addEventListener('click', () => {
+                    // إزالة التحديد من جميع الخيارات
+                    document.querySelectorAll('.number-option').forEach(opt => {
+                        opt.style.background = 'white';
+                        opt.style.color = '#1E90FF';
+                    });
+                    
+                    // تحديد الخيار المختار
+                    optionElement.style.background = '#1E90FF';
+                    optionElement.style.color = 'white';
+                    selectedCountingOption = number;
+                });
+                
+                countingOptions.appendChild(optionElement);
+            });
+        }
+
+        // إنشاء تمرين مطابقة جديد
+        function generateMatchingExercise() {
+            matchingPairs.innerHTML = '';
+            matchingPairsData = [];
+            selectedMatchingItems = [];
+            
+            // اختيار 4 أعداد عشوائية
+            const selectedNumbers = [];
+            while (selectedNumbers.length < 4) {
+                const randomIndex = Math.floor(Math.random() * (arabicNumbers.length - 1)) + 1; // نتجنب الصفر
+                if (!selectedNumbers.includes(randomIndex)) {
+                    selectedNumbers.push(randomIndex);
+                }
+            }
+            
+            // إنشاء أزواج المطابقة
+            selectedNumbers.forEach(index => {
+                const numberData = arabicNumbers[index];
+                
+                // إضافة الرقم العربي
+                matchingPairsData.push({
+                    type: 'arabic',
+                    value: numberData.number,
+                    match: numberData.english
+                });
+                
+                // إضافة الرقم الإنجليزي
+                matchingPairsData.push({
+                    type: 'english',
+                    value: numberData.english,
+                    match: numberData.number
+                });
+            });
+            
+            // خلط أزواج المطابقة
+            shuffleArray(matchingPairsData);
+            
+            // إنشاء عناصر المطابقة
+            matchingPairsData.forEach((item, index) => {
+                const matchingItem = document.createElement('div');
+                matchingItem.className = 'matching-item';
+                matchingItem.textContent = item.value;
+                matchingItem.setAttribute('data-index', index);
+                
+                matchingItem.addEventListener('click', () => {
+                    handleMatchingItemClick(index);
+                });
+                
+                matchingPairs.appendChild(matchingItem);
+            });
+            
+            // إخفاء التغذية الراجعة
+            matchingFeedback.className = 'feedback';
+            matchingFeedback.textContent = '';
+        }
+
+        // التعامل مع النقر على عنصر المطابقة
+        function handleMatchingItemClick(index) {
+            const item = matchingPairsData[index];
+            const matchingElement = document.querySelector(`.matching-item[data-index="${index}"]`);
+            
+            // إذا كان العنصر already matched، لا نفعل شيئاً
+            if (matchingElement.classList.contains('matched')) {
+                return;
+            }
+            
+            // إذا لم يتم اختيار أي عنصر بعد
+            if (selectedMatchingItems.length === 0) {
+                selectedMatchingItems.push(index);
+                matchingElement.style.background = '#e9ecef';
+            } 
+            // إذا تم اختيار عنصر واحد بالفعل
+            else if (selectedMatchingItems.length === 1) {
+                const firstIndex = selectedMatchingItems[0];
+                const firstItem = matchingPairsData[firstIndex];
+                
+                // التحقق إذا كانا متطابقين
+                if (
+                    (firstItem.type === 'arabic' && item.type === 'english' && firstItem.value === item.match) ||
+                    (firstItem.type === 'english' && item.type === 'arabic' && firstItem.value === item.match)
+                ) {
+                    // تطابق صحيح
+                    document.querySelector(`.matching-item[data-index="${firstIndex}"]`).classList.add('matched');
+                    matchingElement.classList.add('matched');
+                    selectedMatchingItems = [];
+                    playCorrectSound();
+                } else {
+                    // تطابق خاطئ
+                    selectedMatchingItems.push(index);
+                    playIncorrectSound();
+                    setTimeout(() => {
+                        document.querySelectorAll('.matching-item').forEach(el => {
+                            if (!el.classList.contains('matched')) {
+                                el.style.background = '#f8f9fa';
+                            }
+                        });
+                        selectedMatchingItems = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        // التحقق من إجابة تمرين العد
+        function checkCountingAnswer() {
+            if (!selectedCountingOption) {
+                alert('يرجى اختيار عدد أولاً!');
+                return;
+            }
+            
+            if (selectedCountingOption === currentCountingExercise) {
+                countingFeedback.textContent = `أحسنت! الإجابة صحيحة: ${currentCountingExercise}`;
+                countingFeedback.className = 'feedback correct';
+                playCorrectSound();
+            } else {
+                countingFeedback.textContent = `الإجابة خاطئة. حاول مرة أخرى! العدد الصحيح هو: ${currentCountingExercise}`;
+                countingFeedback.className = 'feedback incorrect';
+                playIncorrectSound();
+            }
+        }
+
+        // التحقق من إجابات تمرين المطابقة
+        function checkMatchingAnswers() {
+            const allMatched = document.querySelectorAll('.matching-item').length === 
+                              document.querySelectorAll('.matching-item.matched').length;
+            
+            if (allMatched) {
+                matchingFeedback.textContent = `أحسنت! جميع الإجابات صحيحة`;
+                matchingFeedback.className = 'feedback correct';
+                playCorrectSound();
+            } else {
+                const matchedCount = document.querySelectorAll('.matching-item.matched').length;
+                const totalCount = document.querySelectorAll('.matching-item').length;
+                matchingFeedback.textContent = `لديك ${matchedCount/2} من ${totalCount/2} مطابقات صحيحة. استمر في المحاولة!`;
+                matchingFeedback.className = 'feedback incorrect';
+                playIncorrectSound();
+            }
+        }
+
+        // تشغيل صوت الإجابة الصحيحة
+        function playCorrectSound() {
+            // إنشاء صوت النجاح باستخدام Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 523.25; // نغمة C5
+            gainNode.gain.value = 0.3;
+            
+            oscillator.start();
+            
+            // تغيير النغمة بعد فترة قصيرة
+            setTimeout(() => {
+                oscillator.frequency.value = 659.25; // نغمة E5
+            }, 200);
+            
+            setTimeout(() => {
+                oscillator.frequency.value = 783.99; // نغمة G5
+            }, 400);
+            
+            // إيقاف الصوت بعد 600 مللي ثانية
+            setTimeout(() => {
+                oscillator.stop();
+            }, 600);
+        }
+
+        // تشغيل صوت الإجابة الخاطئة
+        function playIncorrectSound() {
+            // إنشاء صوت الخطأ باستخدام Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.value = 220; // نغمة A3
+            gainNode.gain.value = 0.3;
+            
+            oscillator.start();
+            
+            // خفض النغمة تدريجياً
+            oscillator.frequency.exponentialRampToValueAtTime(110, audioContext.currentTime + 0.5);
+            
+            // إيقاف الصوت بعد 500 مللي ثانية
+            setTimeout(() => {
+                oscillator.stop();
+            }, 500);
+        }
+
+        // خلط مصفوفة
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // إضافة مستمعي الأحداث
+        checkCountingButton.addEventListener('click', checkCountingAnswer);
+        newCountingButton.addEventListener('click', generateCountingExercise);
+        checkMatchingButton.addEventListener('click', checkMatchingAnswers);
+        newMatchingButton.addEventListener('click', generateMatchingExercise);
+
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
