@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كتاب الوصفات الجزائرية</title>
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #CD853F;
+            --accent-color: #A52A2A;
+            --light-color: #F5F5DC;
+            --dark-color: #3E2723;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 2px solid var(--secondary-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .recipe-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .recipe-content {
+            padding: 1.5rem;
+        }
+        
+        .recipe-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .recipe-category {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .recipe-description {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        
+        .recipe-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .view-recipe-btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .view-recipe-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .recipe-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 2rem auto;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ingredients-list, .instructions-list {
+            margin-bottom: 1.5rem;
+        }
+        
+        .ingredients-list h3, .instructions-list h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .ingredients-list ul, .instructions-list ol {
+            margin-right: 1.5rem;
+        }
+        
+        .ingredients-list li, .instructions-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .video-container {
+            margin-top: 1.5rem;
+        }
+        
+        .video-container h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .video-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .recipes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>كتاب الوصفات الجزائرية</h1>
+        <p class="subtitle">اكتشف ألوان وأطباق المطبخ الجزائري التقليدي</p>
+    </header>
+    
+    <div class="container">
+        <div class="search-filter">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث عن وصفة...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">جميع الأطباق</button>
+                <button class="filter-btn" data-filter="لحم">أطباق اللحم</button>
+                <button class="filter-btn" data-filter="دجاج">أطباق الدجاج</button>
+                <button class="filter-btn" data-filter="حلويات">حلويات</button>
+                <button class="filter-btn" data-filter="مقبلات">مقبلات</button>
+            </div>
+        </div>
+        
+        <div class="recipes-grid" id="recipesGrid">
+            <!-- سيتم ملء هذا القسم بالوصفات باستخدام JavaScript -->
+        </div>
+    </div>
+    
+    <div class="recipe-modal" id="recipeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">اسم الوصفة</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- سيتم ملء هذا القسم بمحتوى الوصفة باستخدام JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الوصفات
+        const recipes = [
+            {
+                id: 1,
+                title: "الكسكس",
+                category: "لحم",
+                image: "https://akhbaralaan.net/wp-content/uploads/2021/09/16/20210916-1631824510055-original.jpg",
+                description: "طبق تقليدي جزائري أساسي، يتكون من سميد القمح المطهو على البخار مع الخضار واللحم.",
+                prepTime: "30 دقيقة",
+                cookTime: "2 ساعة",
+                servings: "6 أشخاص",
+                ingredients: [
+                    "500 غ سميد الكسكس",
+                    "1 كغ لحم ضأن مقطع",
+                    "4 جزرات مقطعة",
+                    "2 لفت مقطع",
+                    "2 كوسا مقطعة",
+                    "2 فلفل أخضر مقطع",
+                    "1 بصلة مفرومة",
+                    "2 طماطم مفرومة",
+                    "ملح، فلفل، كركم، زعفران حسب الرغبة",
+                    "زيت زيتون"
+                ],
+                instructions: [
+                    "نضع اللحم في قدر مع البصل والزيت ونقليه حتى يتحمر.",
+                    "نضيف الطماطم والبهارات ونقلب جيداً.",
+                    "نضيف الخضار والماء ونتركه يغلي على نار هادئة لمدة ساعة.",
+                    "ننقع السميد في الماء قليلاً ثم نضعه في طبق الكسكسير فوق القدر.",
+                    "نطهو الكسكس على البخار لمدة 45 دقيقة مع تقليبه بين الحين والآخر.",
+                    "نقدم الكسكس مع المرق والخضار واللحم."
+                ],
+                videoUrl: "https://www.youtube.com/embed=UZ-lyvWNtaU"
+            },
+            {
+                id: 2,
+                title: "الطاجين الجزائري",
+                category: "لحم",
+                image: "https://i.ytimg.com/vi/cx26oWNxRm4/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBcQvDGxYAy5334ZBJMy3Avnow06Q",
+                description: "طبق تقليدي بطهي بطيء، يجمع بين اللحم والخضار والبهارات المميزة.",
+                prepTime: "20 دقيقة",
+                cookTime: "2.5 ساعة",
+                servings: "4 أشخاص",
+                ingredients: [
+                    "1 كغ لحم ضأن أو بقر مقطع",
+                    "2 بصل مفروم",
+                    "3 فص ثوم مفروم",
+                    "2 طماطم مفرومة",
+                    "2 جزرة مقطعة",
+                    "2 كوسا مقطعة",
+                    "1 فلفل أخضر مقطع",
+                    "½ كأس زبيب",
+                    "½ كأس لوز محمص",
+                    "بهارات: كركم، قرفة، زعفران، فلفل أسود",
+                    "ملح وزيت زيتون"
+                ],
+                instructions: [
+                    "نقلي اللحم مع البصل والثوم في قدر الطاجين حتى يتحمر.",
+                    "نضيف الطماطم والبهارات والملح ونقلب جيداً.",
+                    "نضيف كأسين من الماء ونتركه يغلي على نار هادئة لمدة ساعة.",
+                    "نضيف الخضار المقطعة والزبيب ونتركه يطهى لمدة ساعة أخرى.",
+                    "نزين الطاجين باللوز المحمص قبل التقديم."
+                ],
+                videoUrl: "https://www.youtube.com/embed/8ecXb8LRBXk"
+            },
+            {
+                id: 3,
+                title: "الشخشوخة",
+                category: "لحم",
+                image: "https://cdn.al-ain.com/images/2021/7/22/133-005952-chakhchoukha-algerian-traditional-food_700x400.jpg",
+                description: "طبق شعبي يتكون من شرائح رقيقة من العجين مع صلصة الطماطم واللحم.",
+                prepTime: "40 دقيقة",
+                cookTime: "1.5 ساعة",
+                servings: "5 أشخاص",
+                ingredients: [
+                    "للعجين: 500 غ دقيق، ملح، ماء",
+                    "للمرق: 500 غ لحم ضأن، 2 بصل، 3 طماطم، 2 فلفل أخضر، بهارات، ملح، زيت"
+                ],
+                instructions: [
+                    "نعجن الدقيق مع الماء والملح حتى نحصل على عجينة متماسكة.",
+                    "نفرد العجينة على سطح مرشوش بالدقيق ونقطعها إلى دوائر رقيقة.",
+                    "نقلي اللحم مع البصل في قدر حتى يتحمر.",
+                    "نضيف الطماطم والفلفل والبهارات والملح والماء ونتركه يغلي.",
+                    "نضيف شرائح العجين واحدة تلو الأخرى إلى المرق.",
+                    "نطهو على نار هادئة لمدة 45 دقيقة حتى تنضج العجين."
+                ],
+                videoUrl: "https://www.youtube.com/embed/oTWhvtHc01I"
+            },
+            {
+                id: 4,
+                title: "الدولمة",
+                category: "لحم",
+                image: "https://i.ytimg.com/vi/LoH7qW9lXZU/maxresdefault.jpg",
+                description: "خضار محشوة بالأرز واللحم المفروم والبهارات.",
+                prepTime: "45 دقيقة",
+                cookTime: "1 ساعة",
+                servings: "6 أشخاص",
+                ingredients: [
+                    "12 حبة فلفل أخضر أو كوسا للحشو",
+                    "500 غ لحم مفروم",
+                    "1 كوب أرز",
+                    "1 بصل مفروم",
+                    "2 طماطم مفرومة",
+                    "بهارات: نعناع جاف، قرفة، ملح، فلفل",
+                    "عصير ليمون",
+                    "زيت زيتون"
+                ],
+                instructions: [
+                    "نقطع رأس الفلفل أو الكوسا وننظفها من الداخل.",
+                    "نخلط اللحم المفروم مع الأرز والبصل والطماطم والبهارات.",
+                    "نحشو الخضار بالمزيج مع ترك مساحة للأرز ليكبر.",
+                    "نرص الخضار المحشو في قدر ونضيف الماء حتى منتصف الخضار.",
+                    "نضيف عصير الليمون والزيت ونطهو على نار متوسطة لمدة ساعة."
+                ],
+                videoUrl: "https://www.youtube.com/embed/vbWWoKB7_cE"
+            },
+            {
+                id: 5,
+                title: "الرفيس",
+                category: "حلويات",
+                image: "https://www.oln.tv/big/oln-thumb-sweet-25-05-2015.jpg",
+                description: "حلوى تقليدية تصنع من السميد والعسل والزبد.",
+                prepTime: "30 دقيقة",
+                cookTime: "45 دقيقة",
+                servings: "8 أشخاص",
+                ingredients: [
+                    "500 غ سميد ناعم",
+                    "250 غ زبد مذاب",
+                    "1 كوب عسل",
+                    "½ كوب سكر",
+                    "1 كوب ماء",
+                    "قرفة مطحونة، فانيليا",
+                    "لوز أو جوز للزينة"
+                ],
+                instructions: [
+                    "نخلط السميد مع الزبد المذاب حتى يتشرب السميد الزبد تماماً.",
+                    "نضيف القرفة والفانيليا ونخلط جيداً.",
+                    "نضع الخليط في صينية فرن وندهنها بالزبد.",
+                    "ندعك الخليط بأطراف الأصابع حتى يصبح متماسكاً.",
+                    "نخبز في فرن محمى على 180 درجة مئوية لمدة 30 دقيقة حتى يتحمر.",
+                    "نحضر شراب السكر بغلي الماء مع السكر والعسل لمدة 10 دقائق.",
+                    "نسكب الشراب الساخن على الرفيس مباشرة بعد إخراجه من الفرن.",
+                    "نزين باللوز أو الجوز ونتركه يبرد قبل التقديم."
+                ],
+                videoUrl: "https://www.youtube.com/embed/jtVmHRhqz7g"
+            },
+            {
+                id: 7,
+                title: "البريك",
+                category: "مقبلات",
+                image: "https://i.ytimg.com/vi/4Xds93MZnH8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAhxE-bgKb0KMen1yAv7Piuj9Z-AA",
+                description: "فطيرة رقيقة محشوة بالبطاطس والبيض والتونة.",
+                prepTime: "20 دقيقة",
+                cookTime: "15 دقيقة",
+                servings: "4 أشخاص",
+                ingredients: [
+                    "8 أوراق بريك (ورق عجين رقيق)",
+                    "4 بيضات",
+                    "2 بطاطس مسلوقة ومهروسة",
+                    "1 علبة تونة مصفاة",
+                    "بقدونس مفروم",
+                    "ملح، فلفل، كمون",
+                    "زيت للقلي"
+                ],
+                instructions: [
+                    "نخلط البطاطس المهروسة مع التونة والبقدونس والبهارات.",
+                    "نضع ورقة البرك على سطح العمل ونضع في وسطها ملعقة من خليط البطاطس.",
+                    "نصنع حفرة في وسط الخليط ونكسر بيضة فيها.",
+                    "نطوي ورقة البرك على شكل مثلث مع الضغط على الحواف جيداً.",
+                    "نقلي البرك في زيت غزير حتى يصبح ذهبياً ومقرمشاً.",
+                    "نقدم البرك ساخناً مع عصير الليمون."
+                ],
+                videoUrl: "https://www.youtube.com/embed/Ewk9srUoLVg"
+            },
+            {
+                id: 8,
+                title: "الملوخية",
+                category: "دجاج",
+                image: "https://i.ytimg.com/vi/7kdqwy2_51Q/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBTiHBHnH5QLtVc_zWIJXBCw3_S9w",
+                description: "طبق تقليدي يصنع من أوراق الملوخية مع مرق الدجاج.",
+                prepTime: "15 دقيقة",
+                cookTime: "1.5 ساعة",
+                servings: "6 أشخاص",
+                ingredients: [
+                    "500 غ ملوخية طازجة أو مجمدة",
+                    "دجاجة كاملة",
+                    "1 بصل مقطع",
+                    "رأس ثوم كامل",
+                    "بهارات: كزبرة جافة، فلفل أسود، ملح",
+                    "عصير ليمون",
+                    "زيت زيتون"
+                ],
+                instructions: [
+                    "نضع الدجاجة في قدر مع البصل والثوم والماء والملح.",
+                    "نطهو الدجاج حتى تنضج تماماً (حوالي ساعة).",
+                    "نرفع الدجاج من المرق ونضيف الملوخية والبهارات.",
+                    "نترك الملوخية تغلي على نار هادئة لمدة 20 دقيقة.",
+                    "نضيف عصير الليمون في النهاية.",
+                    "نقدم الملوخية مع الأرز الأبيض والدجاج المسلوق."
+                ],
+                videoUrl: "https://www.youtube.com/embed/zqkZ_2DKVYk"
+            },
+            {
+                id: 9,
+                title: "كعب الغزال",
+                category: "حلويات",
+                image: "https://img-global.cpcdn.com/recipes/6b54f12edc95cba4/1200x630cq80/photo.jpg",
+                description: "حلوى تقليدية محشوة باللوز والمعطرة بماء الزهر.",
+                prepTime: "1 ساعة",
+                cookTime: "30 دقيقة",
+                servings: "10 أشخاص",
+                ingredients: [
+                    "500 غ دقيق",
+                    "200 غ زبدة مذابة",
+                    "100 غ سكر بودرة",
+                    "1 ملعقة صغيرة ماء زهر",
+                    "للحشوة: 300 غ لوز مطحون، 150 غ سكر، 1 ملعقة صغيرة قرفة، ماء زهر"
+                ],
+                instructions: [
+                    "نخلط الدقيق مع الزبدة والسكر وماء الزهر حتى نحصل على عجينة ناعمة.",
+                    "نترك العجينة ترتاح لمدة 30 دقيقة.",
+                    "نخلط مكونات الحشوة جيداً حتى تتجانس.",
+                    "نفرد العجينة ونقطعها إلى دوائر صغيرة.",
+                    "نضع ملعقة من الحشوة في وسط كل دائرة ونغلقها على شكل هلال.",
+                    "نخبز في فرن محمى على 180 درجة مئوية لمدة 25-30 دقيقة حتى تصبح ذهبية.",
+                    "نرش السكر البودرة على الكعب الغزال قبل التقديم."
+                ],
+                videoUrl: "https://www.youtube.com/embed/ctKez37H2nQ"
+              },
+              {
+                id: 10,
+                title: "الشكشوكة الجزائرية",
+                category: "مقبلات",
+                image: "https://i.ytimg.com/vi/n16-Lj7xXz4/sddefault.jpg",
+                description: "طبق مقبلات شهير يتكون من بيض مطهو في صلصة الطماطم والفلفل.",
+                prepTime: "15 دقيقة",
+                cookTime: "20 دقيقة",
+                servings: "4 أشخاص",
+                ingredients: [
+                    "4 بيضات",
+                    "4 طماطم مفرومة",
+                    "1 فلفل أخضر مقطع",
+                    "1 بصل مفروم",
+                    "2 فص ثوم مفروم",
+                    "بهارات: ملح، فلفل، كمون، فلفل أحمر",
+                    "زيت زيتون"
+                ],
+                instructions: [
+                    "نقلي البصل والثوم في زيت الزيتون حتى يذبلا.",
+                    "نضيف الفلفل والطماطم والبهارات ونتركها تطهى على نار متوسطة لمدة 10 دقائق.",
+                    "نصنع فجوات في الصلصة ونكسر البيض فيها.",
+                    "نغطي القدر ونترك البيض يطهى حتى ينضج حسب الرغبة.",
+                    "نقدم الشكشوكة ساخنة مع الخبز الطازج."
+                ],
+                videoUrl: "https://www.youtube.com/embed/3YeBH_u5Q7E"
+            },
+           {
+                id: 11,
+                title: "المقروط",
+                category: "حلويات",
+                image: "https://i.ytimg.com/vi/9F5MaEbFX1A/maxresdefault.jpg",
+                description: "حلوى تقليدية مصنوعة من السميد ومحشوة بالتمر ومقلية في الزيت.",
+                prepTime: "1 ساعة",
+                cookTime: "30 دقيقة",
+                servings: "8 أشخاص",
+                ingredients: [
+                    "500 غ سميد خشن",
+                    "200 غ زبد مذابة",
+                    "1 ملعقة صغيرة ماء زهر",
+                    "للحشوة: 300 غ تمر مفروم، 50 غ سكر، 1 ملعقة صغيرة قرفة، ماء زهر",
+                    "زيت للقلي، عسل للرش"
+                ],
+                instructions: [
+                    "نخلط السميد مع الزبد وماء الزهر حتى نحصل على عجينة متماسكة.",
+                    "نترك العجينة ترتاح لمدة 30 دقيقة.",
+                    "نخلط مكونات الحشوة جيداً حتى تتجانس.",
+                    "نفرد العجينة ونقطعها إلى مستطيلات طويلة.",
+                    "نضع ملعقة من الحشوة في وسط كل مستطيل ونلفها بإحكام.",
+                    "نقطع اللفائف إلى قطع مائلة ونقليها في زيت غزير حتى تصبح ذهبية.",
+                    "نرش المقروط بالعسل قبل التقديم."
+                ],
+                videoUrl: "https://www.youtube.com/embed/9F5MaEbFX1A"
+            },
+             {
+                id: 12,
+                title: "الزلابية",
+                category: "حلويات",
+                image: "https://www.echoroukonline.com/wp-content/uploads/2021/04/زلابية.jpg",
+                description: "حلوى مقرمشة مقلية ومغطاة بالعسل أو الشراب السكري.",
+                prepTime: "20 دقيقة",
+                cookTime: "15 دقيقة",
+                servings: "6 أشخاص",
+                ingredients: [
+                    "2 كوب دقيق",
+                    "1 ملعقة صغيرة خميرة فورية",
+                    "1 ملعقة كبيرة سكر",
+                    "½ ملعقة صغيرة ملح",
+                    "1 كوب ماء دافئ",
+                    "زيت للقلي، عسل أو شراب سكري للرش"
+                ],
+                instructions: [
+                    "نخلط الدقيق مع الخميرة والسكر والملح.",
+                    "نضيف الماء تدريجياً ونخلط حتى نحصل على عجينة سائلة ومتجانسة.",
+                    "نترك العجينة تختمر في مكان دافئ لمدة ساعة.",
+                    "نسخن الزيت في قدر عميق.",
+                    "نستخدم ملعقة لصب العجينة في الزيت الساخن على شكل دوائر صغيرة.",
+                    "نقلي الزلابية حتى تصبح ذهبية ومقرمشة.",
+                    "نخرجها من الزيت ونصفها على ورق ماص ثم نرشها بالعسل أو الشراب السكري."
+                ],
+                videoUrl: "https://www.youtube.com/embed/YxKmVLKzdE4"
+            },
+            {
+                id: 13,
+                title: "الطاجين الحلو",
+                category: "حلويات",
+                image: "https://i.ytimg.com/vi/BoiLhMUhqys/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLANv9BAwPqC8a8EAqRRlOzq455wnA",
+                description: "طبق حلو تقليدي يجمع بين الفواكه المجففة والمكسرات مع العسل والبهارات.",
+                prepTime: "30 دقيقة",
+                cookTime: "1 ساعة",
+                servings: "6 أشخاص",
+                ingredients: [
+                    "500 غ لحم ضأن مقطع إلى مكعبات",
+                    "1 بصل مفروم",
+                    "2 ملعقة كبيرة زيت زيتون",
+                    "1 كوب مشمش مجفف",
+                    "1 كوب تمر مفروم",
+                    "½ كوب لوز محمص",
+                    "½ كوب جوز محمص",
+                    "1 ملعقة صغيرة قرفة",
+                    "½ ملعقة صغيرة زنجبيل مطحون",
+                    "½ كوب عسل",
+                    "ملح وفلفل حسب الرغبة"
+                ],
+                instructions: [
+                    "نقلي اللحم مع البصل في زيت الزيتون حتى يتحمر.",
+                    "نضيف القرفة والزنجبيل والملح والفلفل ونقلب جيداً.",
+                    "نضيف المشمش والتمر والماء الكافي لتغطية المكونات.",
+                    "نتركه يغلي على نار هادئة لمدة 45 دقيقة حتى ينضج اللحم.",
+                    "نضيف العسل ونقلب بلطف.",
+                    "نزين الطاجين باللوز والجوز المحمص قبل التقديم."
+                ],
+                videoUrl: "https://www.youtube.com/embed/BoiLhMUhqys"
+             }
+        ];
+
+        // عناصر DOM
+        const recipesGrid = document.getElementById('recipesGrid');
+        const recipeModal = document.getElementById('recipeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModal = document.getElementById('closeModal');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // عرض الوصفات في الشبكة
+        function displayRecipes(recipesToDisplay) {
+            recipesGrid.innerHTML = '';
+            
+            recipesToDisplay.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'recipe-card';
+                recipeCard.setAttribute('data-category', recipe.category);
+                
+                recipeCard.innerHTML = `
+                    <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">${recipe.title}</h3>
+                        <span class="recipe-category">${recipe.category}</span>
+                        <p class="recipe-description">${recipe.description}</p>
+                        <div class="recipe-details">
+                            <span>التحضير: ${recipe.prepTime}</span>
+                            <span>الطهي: ${recipe.cookTime}</span>
+                            <span>لـ ${recipe.servings}</span>
+                        </div>
+                        <button class="view-recipe-btn" data-id="${recipe.id}">عرض الوصفة</button>
+                    </div>
+                `;
+                
+                recipesGrid.appendChild(recipeCard);
+            });
+            
+            // إضافة مستمعي الأحداث لأزرار عرض الوصفة
+            document.querySelectorAll('.view-recipe-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const recipeId = parseInt(this.getAttribute('data-id'));
+                    openRecipeModal(recipeId);
+                });
+            });
+        }
+
+        // فتح نافذة الوصفة
+        function openRecipeModal(recipeId) {
+            const recipe = recipes.find(r => r.id === recipeId);
+            
+            if (!recipe) return;
+            
+            modalTitle.textContent = recipe.title;
+            
+            // تحضير تضمين الفيديو وتصحيح بعض أنماط الروابط الشائعة
+            let videoEmbed = '';
+            if (recipe.videoUrl) {
+                // إصلاح أخطاء شائعة في صيغة رابط التضمين
+                let vUrl = recipe.videoUrl
+                    .replace('embed=', 'embed/')          // https://www.youtube.com/embed=ID  -> embed/ID
+                    .replace('watch?v=', 'embed/')       // https://www.youtube.com/watch?v=ID -> embed/ID
+                    .replace('youtu.be/', 'www.youtube.com/embed/'); // short link -> embed link
+
+                // إذا الرابط لا يحتوي على بروتوكول نضيفه
+                if (!/^https?:\/\//i.test(vUrl)) {
+                    vUrl = 'https://' + vUrl;
+                }
+
+                videoEmbed = `<iframe class="modal-video" src="${vUrl}" width="100%" height="300" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:4px;"></iframe>`;
+            } else {
+                videoEmbed = `<div class="video-placeholder"><p>سيتم تضمين فيديو توضيحي هنا</p></div>`;
+            }
+
+            modalBody.innerHTML = `
+                <img src="${recipe.image}" alt="${recipe.title}" class="modal-image">
+                <div class="recipe-details">
+                    <span>التحضير: ${recipe.prepTime}</span>
+                    <span>الطهي: ${recipe.cookTime}</span>
+                    <span>لـ ${recipe.servings}</span>
+                </div>
+                <p class="recipe-description">${recipe.description}</p>
+                
+                <div class="ingredients-list">
+                    <h3>المكونات:</h3>
+                    <ul>
+                        ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="instructions-list">
+                    <h3>طريقة التحضير:</h3>
+                    <ol>
+                        ${recipe.instructions.map(instruction => `<li>${instruction}</li>`).join('')}
+                    </ol>
+                </div>
+                
+                <div class="video-container">
+                    <h3>فيديو توضيحي:</h3>
+                    ${videoEmbed}
+                    <p>ملاحظة: في التطبيق الحقيقي، سيتم تضمين فيديو حقيقي من YouTube أو مصدر آخر.</p>
+                </div>
+            `;
+            
+            recipeModal.style.display = 'block';
+        }
+
+        // تصفية الوصفات
+        function filterRecipes(category, searchTerm = '') {
+            let filteredRecipes = recipes;
+            
+            if (category !== 'all') {
+                filteredRecipes = filteredRecipes.filter(recipe => recipe.category === category);
+            }
+            
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                filteredRecipes = filteredRecipes.filter(recipe => 
+                    recipe.title.toLowerCase().includes(term) || 
+                    recipe.description.toLowerCase().includes(term) ||
+                    recipe.ingredients.some(ingredient => ingredient.toLowerCase().includes(term))
+                );
+            }
+            
+            displayRecipes(filteredRecipes);
+        }
+
+        // تهيئة التطبيق
+        function init() {
+            displayRecipes(recipes);
+            
+            // البحث
+            searchInput.addEventListener('input', function() {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+                filterRecipes(activeFilter, this.value);
+            });
+            
+            // تصفية حسب الفئة
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-filter');
+                    filterRecipes(category, searchInput.value);
+                });
+            });
+            
+            // إغلاق النافذة المنبثقة
+            closeModal.addEventListener('click', function() {
+                recipeModal.style.display = 'none';
+            });
+            
+            // إغلاق النافذة المنبثقة بالنقر خارجها
+            window.addEventListener('click', function(event) {
+                if (event.target === recipeModal) {
+                    recipeModal.style.display = 'none';
+                }
+            });
+        }
+
+        // تشغيل التطبيق
+        init();
+    </script>
+</body>
+</html>
