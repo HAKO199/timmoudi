@@ -158,6 +158,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
         }
         
         .card:hover {
@@ -192,6 +193,7 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 500;
+            z-index: 2;
         }
         
         .card-content {
@@ -240,6 +242,7 @@
             align-items: center;
             gap: 8px;
             font-weight: 500;
+            pointer-events: none; /* لمنع التداخل مع النقر على البطاقة */
         }
         
         .card-btn:hover {
@@ -359,6 +362,28 @@
             100% {
                 box-shadow: 0 0 0 0 rgba(78, 84, 200, 0);
             }
+        }
+        
+        /* تأثير النقر على البطاقة */
+        .card.clicked {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* طبقة شفافة فوق البطاقة لتحسين التفاعل */
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover .card-overlay {
+            opacity: 1;
         }
     </style>
 </head>
@@ -598,7 +623,9 @@
             cardsToShow.forEach(card => {
                 const cardElement = document.createElement('div');
                 cardElement.className = 'card';
+                cardElement.setAttribute('data-link', card.link);
                 cardElement.innerHTML = `
+                    <div class="card-overlay"></div>
                     <div class="card-image">
                         <img src="${card.image}" alt="${card.title}">
                         <div class="card-category">${getCategoryName(card.category)}</div>
@@ -608,7 +635,7 @@
                         <p class="card-description">${card.description}</p>
                         <div class="card-footer">
                             <span class="card-date">${card.date}</span>
-                            <button class="card-btn" data-link="${card.link}">
+                            <button class="card-btn">
                                 <i class="fas fa-external-link-alt"></i> اقرأ المزيد
                             </button>
                         </div>
@@ -618,11 +645,27 @@
                 cardsContainer.appendChild(cardElement);
             });
             
-            // إضافة مستمعي الأحداث لأزرار "اقرأ المزيد"
-            document.querySelectorAll('.card-btn').forEach(button => {
-                button.addEventListener('click', function() {
+            // إضافة مستمعي الأحداث للبطاقات
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // منع النقر على الزر من فتح الصفحة مرتين
+                    if (e.target.closest('.card-btn')) return;
+                    
                     const link = this.getAttribute('data-link');
-                    openExternalPage(link);
+                    openExternalPage(link, this);
+                });
+                
+                // إضافة تأثير النقر
+                card.addEventListener('mousedown', function() {
+                    this.classList.add('clicked');
+                });
+                
+                card.addEventListener('mouseup', function() {
+                    this.classList.remove('clicked');
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('clicked');
                 });
             });
             
@@ -643,15 +686,28 @@
         }
 
         // فتح صفحة خارجية
-        function openExternalPage(link) {
-            // في التطبيق الحقيقي، يمكن فتح الصفحة في نافذة جديدة أو نفس النافذة
-            // هنا سنقوم بمحاكاة فتح صفحة جديدة
-            alert(`سيتم فتح صفحة: ${link}\n\nفي التطبيق الحقيقي، سيتم توجيهك إلى الصفحة المطلوبة.`);
+        function openExternalPage(link, cardElement) {
+            // إضافة تأثير النقر المؤقت
+            if (cardElement) {
+                cardElement.classList.add('clicked');
+                setTimeout(() => {
+                    cardElement.classList.remove('clicked');
+                }, 300);
+            }
             
-            // في التطبيق الحقيقي، يمكن استخدام:
-            // window.open(link, '_blank');
-            // أو
-            // window.location.href = link;
+            // التحقق من أن الرابط موجود
+            if (!link) {
+                alert('عذراً، هذه الصفحة غير متوفرة حالياً.');
+                return;
+            }
+            
+            // فتح الصفحة في نافذة جديدة
+            try {
+                window.open(link, '_blank');
+            } catch (error) {
+                // إذا فشل فتح النافذة الجديدة، افتح في نفس النافذة
+                window.location.href = link;
+            }
         }
 
         // تهيئة الصفحة عند التحميل
