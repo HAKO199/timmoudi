@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجهودات بلدية تيمودي لمكافحة التصحر</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --secondary: #4caf50;
+            --accent: #8bc34a;
+            --light: #f1f8e9;
+            --dark: #1b5e20;
+            --brown: #5d4037;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://source.unsplash.com/random/1200x600/?tree,planting') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+        
+        .logo i {
+            font-size: 3rem;
+            color: var(--accent);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-bottom: 1rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-item {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--primary-dark);
+            padding: 1rem 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin: 3rem 0;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        /* Initiatives Section */
+        .initiatives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .initiative-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .initiative-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .team-member {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent);
+        }
+        
+        .member-name {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-role {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        /* Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            height: 250px;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Video Section */
+        .video-section {
+            margin: 3rem 0;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Call to Action */
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary-dark);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--light);
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .contact-info {
+            list-style: none;
+        }
+        
+        .contact-info li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .social-link:hover {
+            background-color: var(--accent);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .stats {
+                gap: 1rem;
+            }
+            
+            .stat-item {
+                padding: 0.8rem 1rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-tree"></i>
+                    <div>
+                        <h1>بلدية تيمودي</h1>
+                        <p class="subtitle">مكافحة التصحر وزراعة الأشجار من أجل مستقبل أخضر</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">5,000+</span>
+                        <span class="stat-label">شجرة مزروعة</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">35</span>
+                        <span class="stat-label">شارع تم تشجيره</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">1,200+</span>
+                        <span class="stat-label">متطوع</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">حملة تشجير</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#about"><i class="fas fa-info-circle"></i> عن المبادرة</a></li>
+                <li><a href="#initiatives"><i class="fas fa-seedling"></i> المبادرات</a></li>
+                <li><a href="#team"><i class="fas fa-users"></i> فريق العمل</a></li>
+                <li><a href="#gallery"><i class="fas fa-images"></i> معرض الصور</a></li>
+                <li><a href="#video"><i class="fas fa-video"></i> الفيديو</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> اتصل بنا</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- About Section -->
+            <section id="about" class="section">
+                <h2 class="section-title"><i class="fas fa-leaf"></i> عن مبادرة مكافحة التصحر</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>تعتبر بلدية تيمودي من البلديات الرائدة في مجال مكافحة التصحر والحفاظ على البيئة. في إطار استراتيجية البلدية للتنمية المستدامة، تم إطلاق مبادرة طموحة لتشجير جميع شوارع المدينة ومحيطها بهدف زيادة المساحات الخضراء ومكافحة التصحر.</p>
+                        <p>تهدف المبادرة إلى زراعة أكثر من 10,000 شجرة من الأنواع المحلية المقاومة للجفاف، بمشاركة فعالة من رئيس المجلس البلدي وأعضائه، إلى جانب متطوعين من المجتمع المدني وطلاب المدارس.</p>
+                        <p>تشمل المبادرة أيضاً حملات توعوية للمواطنين حول أهمية التشجير والمحافظة على البيئة، وتوزيع الشتلات مجاناً لتشجيع السكان على زراعة الأشجار في محيط منازلهم.</p>
+                    </div>
+                    <div class="about-image">
+                        <img src="رئيس.jpg" alt="مبادرة زراعة الأشجار في تيمودي">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Initiatives Section -->
+            <section id="initiatives" class="section">
+                <h2 class="section-title"><i class="fas fa-seedling"></i> أبرز المبادرات</h2>
+                <div class="initiatives-grid">
+                    <div class="initiative-card">
+                        <img src="شارع.jpg" alt="تشجير الشوارع" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">تشجير جميع شوارع المدينة</h3>
+                            <p>مبادرة لزراعة الأشجار في جميع شوارع تيمودي الرئيسية والفرعية، باستخدام أنواع محلية متكيفة مع المناخ.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <img src="مؤسسة.jpg" alt="تشجير المدارس" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">تشجير المؤسسات التعليمية</h3>
+                            <p>تشجير جميع المدارس والمؤسسات التعليمية في البلدية، بمشاركة طلابية فعالة لتعزيز الوعي البيئي.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <img src="مساحات.jpg" alt="إنشاء المساحات الخضراء" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">إنشاء المساحات الخضراء</h3>
+                            <p>تحويل المساحات الفارغة إلى حدائق عمومية ومنتزهات لخدمة السكان وتعزيز جودة الحياة.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Team Section -->
+            <section id="team" class="section">
+                <h2 class="section-title"><i class="fas fa-users"></i> فريق العمل</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="رئيس.jpg" alt="رئيس المجلس البلدي" class="member-image">
+                        <h3 class="member-name">السيّد  خنوس بلقاسم</h3>
+                        <p class="member-role">رئيس المجلس البلدي</p>
+                        <p>قائد مبادرة مكافحة التصحر والمشرف العام على جميع حملات التشجير.</p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <img src="متطوعين.jpg" alt="نائب الرئيس" class="member-image">
+                        <h3 class="member-name"> السادة المتطوعون  </h3>
+                        <p class="member-role">الناشطون في بلدية تيمودي</p>
+                        <p>المشرفون على التنسيق مع المجتمع المدني والمتطوعين في حملات التشجير.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Gallery Section -->
+            <section id="gallery" class="section">
+                <h2 class="section-title"><i class="fas fa-images"></i> معرض الصور</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="كاتب.jpg" alt="حملة التشجير" class="gallery-img">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="سعادة.jpg" alt="المتطوعين في العمل" class="gallery-img">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="مجتمع.jpg" alt="شوارع مخضرة" class="gallery-img">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="مدير.jpg" alt="حفل زراعة الأشجار" class="gallery-img">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="شباب.jpg" alt="طلاب يزرعون الأشجار" class="gallery-img">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="طموحين.jpg" alt="فعاليات توعوية" class="gallery-img">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Video Section -->
+            <section id="video" class="section">
+                <h2 class="section-title"><i class="fas fa-video"></i> فيديو عن المبادرة</h2>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle"></i>
+                        <h3>فيديو: مجهودات بلدية تيمودي في مكافحة التصحر</h3>
+                        <p>شاهد تقريراً مصوراً عن حملات التشجير ومبادرات مكافحة التصحر في بلدية تيمودي</p>
+                        <p>(في التطبيق الحقيقي، سيكون هنا فيديو مضمن من YouTube أو أي منصة أخرى)</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Call to Action -->
+            <section class="cta">
+                <h2 class="cta-title">انضم إلى مبادرتنا الخضراء</h2>
+                <p>ساهم معنا في جعل تيمودي مدينة أكثر اخضراراً وجمالاً</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-hand-holding-water"></i> تبرع بالشتلات
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fas fa-hands-helping"></i> تطوع معنا
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fas fa-tree"></i> اطلب شتلة مجانية
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>بلدية تيمودي</h3>
+                    <p>بلدية تيمودي ملتزمة بحماية البيئة ومكافحة التصحر من خلال مبادرات التشجير والمشاريع البيئية المستدامة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#about"><i class="fas fa-chevron-left"></i> عن المبادرة</a></li>
+                        <li><a href="#initiatives"><i class="fas fa-chevron-left"></i> المبادرات</a></li>
+                        <li><a href="#team"><i class="fas fa-chevron-left"></i> فريق العمل</a></li>
+                        <li><a href="#gallery"><i class="fas fa-chevron-left"></i> معرض الصور</a></li>
+                        <li><a href="#video"><i class="fas fa-chevron-left"></i> الفيديو</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>جميع الحقوق محفوظة &copy; 2023 بلدية تيمودي - مبادرة مكافحة التصحر وتشجير المدينة</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
