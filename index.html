@@ -194,6 +194,61 @@ body {
     color: var(--primary-dark);
 }
 
+/* إصلاح أنماط عداد الإشعارات */
+.notification-container {
+    position: relative;
+    margin-left: 15px;
+}
+
+.notification-bell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-light);
+    color: var(--text-light);
+    border-radius: 50%;
+    text-decoration: none;
+    transition: var(--transition);
+    position: relative;
+}
+
+.notification-bell:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-dark);
+    transform: translateY(-3px);
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+    z-index: 1002;
+    border: 2px solid var(--primary-dark);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* تأكد من أن العداد مرئي */
+.notification-count:not(:empty) {
+    display: flex !important;
+}
 .theme-toggle {
     background: none;
     border: none;
@@ -659,6 +714,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <a href="https://discord.com/invite/g5BWtQ6zTy" class="social-link"><i class="fab fa-discord"></i></a>
                     <a href="https://tiktok.com/@hako.pro?is_from_webapp=1&sender_device=pc" class="social-link"><i class="fab fa-tiktok"></i></a>
                     <a href="https://top4top.io/downloadf-357157o251-apk.html" class="social-link"><i class="fab fa-android"></i></a>
+                </div>
+                <!-- زر الإشعارات المضاف -->
+                <div class="notification-container">
+                    <a href="notifications.html" class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count" id="notificationCount">9</span>
+                    </a>
                 </div>
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
@@ -1127,6 +1189,244 @@ const observer = new IntersectionObserver((entries) => {
 // مراقبة العناصر
 document.querySelectorAll('.card, .review-card').forEach(el => {
     observer.observe(el);
+});
+
+// ========== إدارة الإشعارات ========== //
+
+// بيانات الإشعارات اليدوية
+const manualNotifications = [
+    {
+        id: 1,
+                title: "🌐   أخبار مكافحة التصحر تيمودي ",
+                content: " تم إطلاق مبادرة جديدة لمكافحة التصحر في منطقة تيمودي، تهدف إلى زراعة الأشجار وتحسين جودة التربة. انضم إلينا في هذا الجهد البيئي الهام!",
+                date: "2025-10-25",
+                read: true,
+                link: "تيمودي/الاخبار.html"
+    },
+    {
+        id: 2,
+        title: "📚 إطلاق الموسوعة الشاملة",
+        content: "تم إطلاق الموسوعة الشاملة الجديدة بمحتوى مميز ومتنوع! اكتشف عالماً من المعرفة والثقافة الآن.",
+        date: "2024-01-10",
+        read: false,
+        link: "الموسوعة/tkafa.html",
+        badge: "مهم"
+    },
+    {
+        id: 3,
+        title: "🛒 عرض خاص في المتجر",
+        content: "خصم 30% على جميع المنتجات لمدة محدودة! تسوق الآن واستفد من العروض الحصرية.",
+        date: "2024-01-08",
+        read: false,
+        link: "المتجر/shop.html",
+        badge: "عرض"
+    },
+    {
+        id: 4,
+        title: "🎮 تحديث الألعاب التعليمية",
+        content: "تم إضافة 5 ألعاب تعليمية جديدة لتنمية المهارات العقلية. جربها الآن!",
+        date: "2024-01-05",
+        read: false,
+        link: "العقل/شغل_عقلك.html",
+        badge: "تحديث"
+    },
+    {
+        id: 5,
+        title: "📖 المنظومة التعليمية الشاملة",
+        content: "تم تحديث المنظومة التعليمية بمحتوى جديد ومميز. ابدأ رحلة التعلم الآن!",
+        date: "2024-01-03",
+        read: false,
+        link: "التعليم/الصفحة_تعليم.html",
+        badge: "تعليم"
+    },
+    {
+        id: 6,
+        title: "🎵 الأناشيد الإسلامية",
+        content: "تم إضافة مجموعة جديدة من الأناشيد الإسلامية بصوتيات عالية الجودة. استمع الآن!",
+        date: "2024-01-01",
+        read: false,
+        link: "mp3.html",
+        badge: "جديد"
+    },
+    {
+        id: 7,
+        title: "🔔 نظام الإشعارات الجديد",
+        content: "تم تفعيل نظام الإشعارات الجديد. ستتلقى إشعارات فورية عن جميع التحديثات والمستجدات.",
+        date: "2023-12-28",
+        read: true,
+        link: "notifications.html"
+    },
+    {
+        id: 8,
+        title: "🚀 تحسينات في الأداء",
+        content: "تم إجراء تحسينات كبيرة في أداء الموقع لتحسين تجربة المستخدم وسرعة التصفح.",
+        date: "2023-12-25",
+        read: true
+    },
+    {
+        id: 9,
+        title: "📱 تطبيق تيمودي قريباً",
+        content: "يتم حالياً تطوير تطبيق تيمودي للهواتف الذكية. ترقبوا الإطلاق قريباً!",
+        date: "2023-12-20",
+        read: true,
+        urgent: true
+    },
+    {
+        id: 10,
+        title: "🏆 مسابقة شهرية",
+        content: "انضم إلى مسابتنا الشهرية واربح جوائز قيمة! المسابقة متاحة لجميع الأعمار.",
+        date: "2023-12-15",
+        read: true,
+        link: "game.html"
+    }
+];
+
+// دالة تحديث عدد الإشعارات
+function updateNotificationCount() {
+    const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    
+    // دمج الإشعارات وإزالة التكرارات
+    const allNotifications = [...manualNotifications, ...savedNotifications];
+    const uniqueNotifications = allNotifications.filter((notification, index, self) =>
+        index === self.findIndex((n) => n.id === notification.id)
+    );
+
+    // حساب الإشعارات غير المقروءة
+    const unreadCount = uniqueNotifications.filter(n => !n.read).length;
+    const notificationCount = document.getElementById('notificationCount');
+    
+    if (notificationCount) {
+        notificationCount.textContent = unreadCount > 9 ? '9+' : unreadCount;
+        notificationCount.style.display = unreadCount > 0 ? 'flex' : 'none';
+        
+        // تخزين عدد الإشعارات غير المقروءة
+        localStorage.setItem('unreadNotifications', unreadCount);
+        
+        // تحديث title لزر الجرس
+        const notificationBell = document.querySelector('.notification-bell');
+        if (notificationBell) {
+            notificationBell.title = unreadCount > 0 ? 
+                `لديك ${unreadCount} إشعار غير مقروء` : 
+                "لا توجد إشعارات جديدة";
+        }
+    }
+}
+
+// تهيئة الإشعارات
+function initializeNotifications() {
+    if (!localStorage.getItem('notifications')) {
+        localStorage.setItem('notifications', JSON.stringify([]));
+    }
+    updateNotificationCount();
+}
+
+// دالة لإضافة إشعار جديد
+function addNotification(title, content, link) {
+    const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const newNotification = {
+        id: Date.now(),
+        title: title,
+        content: content,
+        date: new Date().toISOString().split('T')[0],
+        read: false,
+        link: link
+    };
+    
+    savedNotifications.unshift(newNotification);
+    localStorage.setItem('notifications', JSON.stringify(savedNotifications));
+    updateNotificationCount();
+    
+    // إظهار تنبيه فوري
+    showNotificationAlert(newNotification);
+}
+
+// إظهار تنبيه فوري
+function showNotificationAlert(notification) {
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: linear-gradient(145deg, var(--primary-medium), var(--primary-light));
+        color: var(--text-light);
+        padding: 15px 20px;
+        border-radius: 10px;
+        border-right: 4px solid var(--accent-color);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 10000;
+        max-width: 300px;
+        cursor: pointer;
+        animation: slideIn 0.5s ease-out;
+    `;
+    
+    alertDiv.innerHTML = `
+        <strong>${notification.title}</strong>
+        <p style="margin: 5px 0 0 0; font-size: 0.9em;">${notification.content}</p>
+        <small style="color: var(--text-dark);">انقر للانتقال</small>
+    `;
+    
+    alertDiv.addEventListener('click', () => {
+        if (notification.link) {
+            window.location.href = notification.link;
+        }
+    });
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.style.animation = 'slideOut 0.5s ease-in forwards';
+        setTimeout(() => {
+            if (document.body.contains(alertDiv)) {
+                document.body.removeChild(alertDiv);
+            }
+        }, 500);
+    }, 5000);
+}
+
+// إضافة أنماط CSS للتنبيهات
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(notificationStyles);
+
+// تحديث عدد الإشعارات عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    initializeNotifications();
+    
+    // تحديث العداد كل 3 ثوانٍ
+    setInterval(updateNotificationCount, 3000);
+    
+    // تحديث العداد عند العودة إلى الصفحة
+    window.addEventListener('focus', updateNotificationCount);
+    
+    // إضافة إشعارات تلقائية عند زيارة الأقسام
+    document.querySelectorAll('.card-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.card');
+            const title = card.querySelector('.card-title').textContent;
+            const link = this.getAttribute('href');
+            
+            addNotification(
+                `تم زيارة ${title}`,
+                `لقد قمت بزيارة قسم ${title}. اضغط على هذا الإشعار للعودة إليه.`,
+                link
+            );
+            
+            // الانتقال إلى الصفحة بعد إضافة الإشعار
+            setTimeout(() => {
+                window.location.href = link;
+            }, 1000);
+        });
+    });
 });
         </script>
 </body>
